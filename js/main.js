@@ -2,7 +2,7 @@ const IMG=window.WEDDING_IMAGES;
 const PRE=window.WEDDING_PRESETS;
 const FH=window.WEDDING_FONTS.heading;
 const FB=window.WEDDING_FONTS.body;
-const SHEET_URL='';/* paste your Google Apps Script Web App URL between the quotes */
+const RSVP_ENDPOINT='/.netlify/functions/rsvp';
 const LEGACY_DEF={groom:'Lalith',bride:'Anjana',bless:'With the blessings of our families, friends and elders',inv1:'We cordially invite you to celebrate our wedding and reception with the blessings of our families and elders.',inv2:'',inv3:'Your presence would make our celebration truly special.',blessSub:'Your presence and good wishes will make our celebration complete.',wEnd:'09:20',rDate:'2026-12-06T18:00',rEnd:'22:30',rVenue:'Annalakshmi Restaurant',rAddr:'6 Mayor Ramanathan Salai, Chennai, India',rMap:'https://maps.app.goo.gl/vN3tiGAB5BfHAyBB8',tag:'Together with their families',shloka:'॥ श्री गणेशाय नमः ॥',date:'2026-11-29T08:00',venue:'Central Auditorium',addr:'North Paravur, Kerala, India',map:'https://maps.app.goo.gl/XAEM92g9pdnygrfF6',rsvpBy:'Leave your wishes for the couple',
 groomStory:'A gentle soul with a laugh that fills every room. Always the first to say yes to an adventure.',brideStory:'Graceful, warm and full of wonder. She turns every ordinary day into a celebration.',
 story:`It all began in Bangalore, where traffic moves slowly, but somehow love found the express lane.
@@ -43,17 +43,70 @@ $('#app').innerHTML=`
 <section class="sec rv" id="gallery"><div class="eyebrow">Moments</div><h2>Our Gallery</h2><div class="div">${man(8)}</div><div class="gal">${D.gal.map((g,index)=>{const dimensions={p1:[1125,1500],p2:[1125,1500],p3:[960,1280],p4:[1163,1500],p5:[1500,1000],p6:[1500,1000],p7:[1500,1000],p8:[1500,1000],p9:[1500,1000]}[g]||[1200,1200];const orientation=dimensions[0]>dimensions[1]?'landscape':'portrait';return `<figure class="gal-item gal-item--${orientation}"><img src="${src(g)}" alt="Wedding photo ${index+1}" width="${dimensions[0]}" height="${dimensions[1]}" loading="lazy" decoding="async"></figure>`}).join('')}</div></section>
 <section class="mar" id="s5"><div class="sec rv" id="rsvp"><div class="eyebrow">${esc(D.rsvpBy)}</div><h2>Will you join us?</h2><div class="div">${man(8)}</div><form class="rs" id="rf"><div class="ch"><label><input type="radio" name="a" value="Yes, we will come" checked><span>Yes, we will come</span></label><label><input type="radio" name="a" value="Can’t make it, but all blessings"><span>Can’t make it, but all blessings</span></label></div><input name="n" placeholder="Your name" required><input name="em" type="email" placeholder="Your email address" required><textarea name="m" rows="4" placeholder="Write your wishes for the couple"></textarea><button class="btn">Send</button><p id="ok" style="text-align:center;color:var(--gold);margin:0"></p></form></div></section>
 <footer>${man(8)}<div class="shl" style="margin-top:8px">${esc(D.groom)} &amp; ${esc(D.bride)}</div><p>With love &amp; gratitude</p></footer></main>`;
+const couple=$('#couple'),eyebrows=couple.querySelectorAll(':scope > .eyebrow'),storyLabel=eyebrows[1],coupleLabel=eyebrows[0],storyPhotos=couple.querySelector('.sp'),storyCaption=couple.querySelector('.cap'),loveStory=couple.querySelector('.lsd');
+const main=$('#main');
+main.insertBefore($('#s1'),couple);
+main.insertBefore($('#gallery'),$('#s2'));
+storyLabel.style.marginTop='0';
+loveStory.open=true;
+couple.insertBefore(storyLabel,couple.firstChild);
+couple.insertBefore(loveStory,coupleLabel);
+couple.insertBefore(storyPhotos,coupleLabel);
+if(storyCaption)couple.insertBefore(storyCaption,coupleLabel);
 document.querySelectorAll('.rv').forEach(e=>{if(first)io.observe(e);else e.classList.add('in')});first=0;
 document.querySelectorAll('.gal img').forEach(i=>i.onclick=()=>{$('#lb img').src=i.src;$('#lb').style.display='grid'});
-$('#rf').onsubmit=async e=>{e.preventDefault();const form=e.target,f=new FormData(form),btn=form.querySelector('button'),ok=$('#ok'),nm=f.get('n');
-if(SHEET_URL){btn.disabled=true;ok.textContent='Sending…';
-try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams({name:nm,email:f.get('em'),attending:f.get('a'),wishes:f.get('m')||''})});
-ok.textContent='Thank you, '+nm+'! Your wishes have reached us. 🙏';form.reset()}catch(x){ok.textContent='Sorry, that did not go through. Please check your connection and try again.'}
-btn.disabled=false;return}
-const t=`RSVP from ${nm}: ${f.get('a')} (${f.get('em')}). Wishes: ${f.get('m')}`;
-if(D.wa)open('https://wa.me/'+D.wa.replace(/\D/g,'')+'?text='+encodeURIComponent(t));else if(D.email)location.href='mailto:'+D.email+'?subject='+encodeURIComponent('RSVP – '+nm)+'&body='+encodeURIComponent(t);
-ok.textContent='Thank you, '+nm+'! Your RSVP is noted. 🙏';form.reset()};
+setupRsvp($('#rf'));
 $('#op').onclick=()=>pg(1);pg(PG);scratch();tick()}
+function setupRsvp(form){
+const choices=form.querySelectorAll('input[name="a"]'),email=form.querySelector('[name="em"]'),name=form.querySelector('[name="n"]'),wishes=form.querySelector('[name="m"]'),submit=form.querySelector('.btn'),status=$('#ok');submit.type='submit';
+choices[0].value='attending';choices[1].value='declined';
+const wishesChoice=document.createElement('label'),wishesRadio=document.createElement('input'),wishesText=document.createElement('span');
+wishesRadio.type='radio';wishesRadio.name='a';wishesRadio.value='wishes_only';wishesText.textContent='Send us your wishes';wishesChoice.append(wishesRadio,wishesText);choices[1].closest('label').after(wishesChoice);
+email.required=false;email.maxLength=254;email.autocomplete='email';email.setAttribute('aria-label','Your email address (optional)');
+name.required=true;name.maxLength=120;name.autocomplete='name';name.setAttribute('aria-label','Your name');
+wishes.maxLength=1000;
+status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+const guestStep=document.createElement('fieldset'),guestLegend=document.createElement('legend'),stepper=document.createElement('div'),minus=document.createElement('button'),count=document.createElement('output'),plus=document.createElement('button');
+guestStep.className='guest-step';guestStep.setAttribute('aria-label','Guest count');
+guestLegend.textContent='Number of guests (including you)';
+stepper.className='guest-stepper';minus.type=plus.type='button';minus.className=plus.className='guest-step-button';minus.textContent='−';plus.textContent='+';
+minus.setAttribute('aria-label','Remove one guest');plus.setAttribute('aria-label','Add one guest');
+count.className='guest-count-value';count.setAttribute('aria-live','polite');count.textContent='1';
+stepper.append(minus,count,plus);guestStep.append(guestLegend,stepper);form.querySelector('.ch').after(guestStep);
+const total=document.createElement('p');total.className='rsvp-total';total.setAttribute('role','status');total.setAttribute('aria-live','polite');total.textContent='Loading confirmed guest total…';form.after(total);
+let guestCount=1,pending=null,sending=false,totalRequest=0;
+const updateGuestStep=()=>{const attending=form.querySelector('input[name="a"]:checked').value==='attending';guestStep.hidden=!attending;minus.disabled=guestCount<=1;plus.disabled=guestCount>=10};
+const updateTotal=value=>{total.textContent=`Confirmed guests: ${value}`};
+const newSubmissionId=()=>{if(!globalThis.crypto?.getRandomValues)throw new Error('Secure submission IDs are unavailable in this browser.');if(globalThis.crypto.randomUUID)return globalThis.crypto.randomUUID();const bytes=new Uint8Array(16);globalThis.crypto.getRandomValues(bytes);return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('')};
+const clearStatus=()=>{if(!sending)status.textContent=''};
+choices.forEach(input=>input.addEventListener('change',updateGuestStep));
+form.addEventListener('input',clearStatus);form.addEventListener('change',clearStatus);
+minus.addEventListener('click',()=>{guestCount=Math.max(1,guestCount-1);count.textContent=String(guestCount);updateGuestStep();clearStatus()});
+plus.addEventListener('click',()=>{guestCount=Math.min(10,guestCount+1);count.textContent=String(guestCount);updateGuestStep();clearStatus()});
+name.addEventListener('input',()=>name.setCustomValidity(''));wishes.addEventListener('input',()=>wishes.setCustomValidity(''));
+updateGuestStep();
+const requestTotal=++totalRequest;
+fetch(RSVP_ENDPOINT,{headers:{Accept:'application/json'},cache:'no-store'}).then(async response=>{const data=await response.json();if(!response.ok||data.ok!==true||!Number.isSafeInteger(data.totalConfirmed)||data.totalConfirmed<0)throw new Error('Unable to load confirmed guest total');if(requestTotal===totalRequest)updateTotal(data.totalConfirmed)}).catch(()=>{if(requestTotal===totalRequest)total.textContent='Confirmed guest total is unavailable right now.'});
+form.onsubmit=async event=>{
+event.preventDefault();if(sending)return;
+status.textContent='';
+const attendance=form.querySelector('input[name="a"]:checked').value;
+name.setCustomValidity(name.value.trim()?'':'Please enter your name.');
+wishes.setCustomValidity(attendance!=='wishes_only'||wishes.value.trim()?'':'Please include your wishes.');
+if(!form.reportValidity())return;
+const payload={name:name.value.trim(),email:email.value.trim(),attendance,guestCount:attendance==='attending'?guestCount:0,wishes:wishes.value.trim()};
+let fingerprint;try{fingerprint=JSON.stringify(payload);if(!pending||pending.fingerprint!==fingerprint)pending={fingerprint,id:newSubmissionId()}}catch(error){status.textContent=error.message;return}
+payload.submissionId=pending.id;sending=true;status.textContent='Submitting your response…';form.querySelectorAll('input,textarea,button').forEach(control=>control.disabled=true);
+try{
+const response=await fetch(RSVP_ENDPOINT,{method:'POST',headers:{Accept:'application/json','Content-Type':'application/json'},body:JSON.stringify(payload)});
+const data=await response.json();
+if(!response.ok||data.ok!==true||!Number.isSafeInteger(data.totalConfirmed)||data.totalConfirmed<0)throw new Error(data.message||'We could not verify that your response was saved.');
+pending=null;form.reset();guestCount=1;count.textContent='1';updateGuestStep();totalRequest++;updateTotal(data.totalConfirmed);
+status.textContent=data.duplicate?'This response was already recorded. Thank you.':'Thank you, '+payload.name+'! Your response has been recorded. 🙏';
+}catch(error){status.textContent=error.name==='Error'?error.message:'We could not verify that your response was saved. Check your connection and try again.'}
+finally{form.querySelectorAll('input,textarea,button').forEach(control=>control.disabled=false);sending=false;updateGuestStep()}
+};
+}
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 $('#lb').onclick=()=>$('#lb').style.display='none';
 function tick(){const el=$('#cd');if(!el)return;const V=EVS(),i=cur(),now=new Date();let s=Math.max(0,(new Date(V[i].s)-now)/1e3);if(isNaN(s))return;document.querySelectorAll('.ec').forEach((c,j)=>c.classList.toggle('on',j==i));const L=$('#cdl');if(now>new Date(V[1].e)){L.textContent='Thank you for celebrating with us 🙏';el.innerHTML='';return}if(s==0){L.textContent='The '+V[i].n+' is happening now 🎉';el.innerHTML='';return}L.textContent='Countdown to the '+V[i].n;const v=[['Days',s/86400],['Hours',s%86400/3600],['Minutes',s%3600/60],['Seconds',s%60]];el.innerHTML=v.map(([l,n])=>`<div><b>${String(Math.floor(n)).padStart(2,'0')}</b><span>${l}</span></div>`).join('')}setInterval(tick,1000);

@@ -43,7 +43,7 @@ form.rs{max-width:520px;margin:auto;display:grid;gap:14px;text-align:left}
 #hero:after{position:absolute;left:0;right:0;bottom:0}footer:before{margin:-50px -20px 40px}
 #pg2{position:fixed;inset:0;z-index:45;background:var(--maroon);color:var(--cream);display:grid;place-items:center;text-align:center;padding:calc(30px + env(safe-area-inset-top,0px)) 24px calc(30px + env(safe-area-inset-bottom,0px));overflow:auto;opacity:0;visibility:hidden;transition:opacity .8s,visibility .8s}#pg2.o{opacity:1;visibility:visible}.pi{max-width:620px}.pn{font-size:clamp(46px,11vw,92px);color:var(--gold)!important;margin:10px 0 18px}.pi p{margin:0 0 18px}.pl{font:italic 400 clamp(20px,3.6vw,28px)/1.5 var(--fh)}.pl b{color:var(--gold);font-weight:600}
 .pi>*{opacity:0;transform:translateY(16px);transition:opacity 1s,transform 1s}#pg2.o .pi>*{opacity:1;transform:none}#pg2.o .pi>:nth-child(2){transition-delay:.3s}#pg2.o .pi>:nth-child(3){transition-delay:.6s}#pg2.o .pi>:nth-child(4){transition-delay:.9s}#pg2.o .pi>:nth-child(5){transition-delay:1.2s}#pg2.o .pi>:nth-child(6){transition-delay:1.5s}body #mu{z-index:50}
-body.opened #hero{display:none}body:not(.opened) #main{display:none}#main{display:flex;flex-direction:column}#main>*{width:100%}#s1{order:0}#s2{order:1}#couple{order:2}#gallery{order:3}#s5{order:4}#main>footer{order:5}body.opened #main{animation:fi 1.2s}@keyframes fi{from{opacity:0}}
+body.opened #hero{display:none}body:not(.opened) #main{display:none}#main{display:flex;flex-direction:column}#main>*{width:100%}#s1{order:0}#couple{order:1}#gallery{order:2}#s2{order:3}#s5{order:4}#main>footer{order:5}body.opened #main{animation:fi 1.2s}@keyframes fi{from{opacity:0}}
 #date{display:flex;flex-direction:column;align-items:center}#date .ecs{order:1;width:100%}#date .sw{order:2}#date #cdl,#date #cd{order:3}
 .ch{display:grid;gap:10px}.ch label{cursor:pointer;position:relative}.ch input{position:absolute;opacity:0;width:0;height:0;padding:0;border:0}.ch span{display:block;text-align:center;padding:13px;border:1px solid var(--gold);transition:.3s}.ch input:checked+span{background:var(--gold);color:#2a0a0f}
 body #mu{width:46px;height:46px;border-radius:50%;border:1px solid var(--gold);background:#2a0a0fcc;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;gap:3px;align-items:center;justify-content:center;padding:0;cursor:pointer;z-index:50;box-shadow:0 4px 18px #0005}
@@ -240,3 +240,25 @@ body.opened{overflow-x:hidden}
 #s2 .ec .btn.o{display:inline-flex;align-items:center;gap:10px;background:transparent;color:#f6df96;border:1px solid #d9b862;padding:13px 28px;font:500 11.5px/1 var(--fb);letter-spacing:.26em;font-weight:500;box-shadow:none;position:relative;z-index:4}
 #s2 .ec .btn.o:hover,#s2 .ec .btn.o:active{background:#f6df96;color:#2a0a0f}
 @media(max-width:480px){#s2 .det{margin-left:20px;margin-right:20px}#s2 .det b{font-size:19px}#s2 .det .vn b{font-size:25px}#s2 .det span{font-size:15px}}
+
+#couple,#gallery,#date,#rsvp{padding-block:clamp(44px,7vw,76px)}
+#couple>.eyebrow[style]{margin:0!important}
+#couple .lsd{margin:18px auto 26px}
+#couple .sp{margin:22px auto 0}
+#couple .cap{margin:16px 0 28px}
+#couple>.eyebrow:not([style]){margin-top:32px!important}
+#couple>.cards{margin-top:20px}
+@media(max-width:480px){
+  #couple,#gallery,#date,#rsvp{padding-block:38px}
+  #couple .sp{width:min(100%,360px);gap:22px}
+  #couple .lstory{margin-top:10px}
+}
+
+.guest-step{border:0;padding:0;margin:0;min-width:0}
+.guest-step legend{font-size:13px;letter-spacing:.08em;margin-bottom:8px}
+.guest-stepper{display:flex;align-items:center;justify-content:center;gap:20px}
+.guest-step-button{width:42px;height:42px;border:1px solid var(--gold);border-radius:50%;background:#ffffff12;color:var(--cream);font:400 24px/1 var(--fb);cursor:pointer}
+.guest-step-button:disabled{opacity:.45;cursor:not-allowed}
+.guest-count-value{min-width:2ch;text-align:center;font:500 24px/1 var(--fh);color:var(--gold)}
+.rsvp-total{margin:14px auto 0;text-align:center;font:400 14px/1.5 var(--fb);color:var(--cream)}
+#ok{min-height:1.5em}
