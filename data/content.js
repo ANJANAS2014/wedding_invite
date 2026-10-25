@@ -1,0 +1,19 @@
+// Edit text, dates, venues, and image keys here. Keep strings quoted.
+window.WEDDING_CONTENT = {groom:'Lalith',bride:'Anjana',bless:'With the blessings of our families, friends and elders',inv1:'We cordially invite you to celebrate our wedding and reception with the blessings of our families and elders.',inv2:'',inv3:'Your presence would make our celebration truly special.',blessSub:'Your presence and good wishes will make our celebration complete.',wEnd:'09:20',rDate:'2026-12-06T18:00',rEnd:'22:30',rVenue:'Annalakshmi Restaurant',rAddr:'6 Mayor Ramanathan Salai, Chennai, India',rMap:'https://maps.app.goo.gl/vN3tiGAB5BfHAyBB8',tag:'Together with their families',shloka:'॥ श्री गणेशाय नमः ॥',date:'2026-11-29T08:00',venue:'Central Auditorium',addr:'North Paravur, Kerala, India',map:'https://maps.app.goo.gl/XAEM92g9pdnygrfF6',rsvpBy:'Leave your wishes for the couple',
+groomStory:'A gentle soul with a laugh that fills every room. Always the first to say yes to an adventure.',brideStory:'Graceful, warm and full of wonder. She turns every ordinary day into a celebration.',
+story:`It all began in Bangalore, where traffic moves slowly, but somehow love found the express lane.
+
+She is from Keralam, and he is from Chennai. They speak different mother tongues but share one language perfectly: laughter.
+
+A trip to Wayanad with friends brought them closer through long drives, off-key singing, and jokes only they understood. She is quiet and observant, happiest in life’s little moments. He can turn any ordinary moment into fun, sometimes intentionally.
+
+She has a checklist for love: respect, reassurance, and someone who makes life lighter. He has no checklist — he simply knows she is the one. After learning almost every South Indian language except Malayalam, he finds himself falling for a Malayali girl. Clearly, fate has a sense of humour and it has a particularly amusing plan for him.
+
+Between his keyboard, her ukulele, countless conversations, and endless laughter, they find something that feels like home. He becomes her constant, always checking in, making time to talk, and reminding her that he is there.
+
+Their journey brought challenges, but patience, understanding, and love gave them even more reasons to choose each other. No matter the disagreement, they always find their way back to peace, the one thing they both prefer over everything else. Along the way, they discovered that what they share is worth holding on to.
+
+Now, with their families’ blessings, they are ready to begin a new chapter filled with songs, adventures, memories, and a lifetime of choosing each other.`,
+groomFam:'The Groom’s Family',groomParents:'Mr. & Mrs. Groom’s Parents\nSon of the family\nEdit these names in Customize',brideFam:'The Bride’s Family',brideParents:'Mr. & Mrs. Bride’s Parents\nDaughter of the family\nEdit these names in Customize',
+email:'',wa:'',maroon:'#6b1a24',cream:'#f8efdc',gold:'#c19a3d',fh:'Cormorant Garamond',fb:'Jost',hero:'p6',cover:'p2',b1:'p15',b2:'p16',b3:'p17',sp:['p13','p14'],spCap:'Where our story began',gImg:'p12',bImg:'p10',gal:['p7','p5','p2','p8','p4','p1','p3','p9','p6'],
+ev:[{n:'Mehendi',w:'19 Feb · 4:00 PM',d:'Henna, music and laughter with family and friends.'},{n:'Haldi',w:'20 Feb · 10:00 AM',d:'A joyful, golden morning of blessings.'},{n:'Vivaham (Muhurtham)',w:'21 Feb · 10:30 AM',d:'The sacred wedding ceremony before the holy fire.'},{n:'Reception & Sadhya',w:'21 Feb · 12:30 PM',d:'Join us for a traditional feast and celebration.'}]};

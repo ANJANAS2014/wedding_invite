@@ -1,0 +1,14 @@
+# Python development environment and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Editor and operating-system artifacts
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local logs and generated inspection output
+*.log
+assets/images/_asset-contact-sheet.jpg
