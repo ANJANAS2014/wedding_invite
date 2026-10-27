@@ -6,6 +6,7 @@ const vm = require('node:vm');
 
 const scriptSource = fs.readFileSync(path.join(__dirname, '..', 'apps-script', 'Code.gs'), 'utf8');
 const clientSource = fs.readFileSync(path.join(__dirname, '..', 'js', 'main.js'), 'utf8');
+const styleSource = fs.readFileSync(path.join(__dirname, '..', 'css', 'base.css'), 'utf8');
 const demoRows = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'demo-responses.json'), 'utf8'));
 const rsvpFunction = require('../netlify/functions/rsvp');
 const wishesFunction = require('../netlify/functions/wishes');
@@ -54,6 +55,7 @@ test('RSVP submit handler resolves the hidden anti-spam field from its own form'
 test('local preview has clearly marked sample RSVPs and approved sample wishes', () => {
   assert.match(clientSource, /LOCAL_DEMO_MODE=\['localhost','127\.0\.0\.1'\]\.includes\(location\.hostname\)&&location\.port==='8080'/);
   assert.match(clientSource, /localStorage\.setItem\(DEMO_STORAGE_KEY,JSON\.stringify\(submissions\)\)/);
+  assert.match(styleSource, /#main>#wishes-wall\{order:5\}/);
   assert.equal(demoRows.length, 3);
   assert.equal(demoRows.filter((row) => row.approval === 'APPROVED').length, 2);
   assert.equal(demoRows.every((row) => row.email === ''), true);
