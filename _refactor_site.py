@@ -70,7 +70,6 @@ window.WEDDING_FONTS = {
 (root / "data" / "content.js").write_text("window.WEDDING_CONTENT = " + def_object + ";\n", encoding="utf-8")
 
 # Preserve behavior modules as explicitly organized entry points; main.js owns the existing renderer.
-(root / "js" / "gallery.js").write_text("// Gallery behavior is initialized by main.js after rendering.\n", encoding="utf-8")
 (root / "js" / "countdown.js").write_text("// Countdown behavior is initialized by main.js.\n", encoding="utf-8")
 (root / "js" / "music.js").write_text("// Music behavior is initialized by main.js.\n", encoding="utf-8")
 (root / "js" / "editor.js").write_text("// Customization behavior is initialized by main.js.\n", encoding="utf-8")
@@ -97,13 +96,12 @@ window.WEDDING_FONTS = {
 </head>
 <body>
   <div id="app"></div>
-  <div id="lb"><img alt="Expanded gallery image" decoding="async"></div>
+  <div id="lb"><img alt="Wedding memory" decoding="async"></div>
   <button id="mu" aria-label="Mute or unmute music"><i></i><i></i><i></i><i></i></button>
   <script src="data/theme.js"></script>
   <script src="data/images.js"></script>
   <script src="data/content.js"></script>
   <script src="js/main.js" defer></script>
-  <script src="js/gallery.js" defer></script>
   <script src="js/countdown.js" defer></script>
   <script src="js/music.js" defer></script>
   <script src="js/editor.js" defer></script>

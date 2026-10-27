@@ -25,6 +25,9 @@ window.WEDDING_IMAGES = {
   "bride_portrait":"assets/images/bride-office-portrait.jpg",
   "hero_scene_desktop":"assets/images/hero-scene-desktop.webp",
   "hero_scene_mobile":"assets/images/hero-scene-mobile.webp",
+  // Real landscape photography: Rishi Sreekar / Unsplash; BEN BENJAMIN / Pexels.
+  "cover_kerala_photo":"https://images.unsplash.com/photo-1720445821834-1db9c765cb82?auto=format&fit=crop&fm=jpg&q=78&w=1600",
+  "cover_tamil_photo":"https://images.pexels.com/photos/28777675/pexels-photo-28777675/free-photo-of-vibrant-south-indian-temple-gopuram.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1400",
   "hero_cover":"assets/images/wedding-couple-cutout.webp",
   "wedding_event_photo":"assets/images/wedding-venue-central-auditorium.jpg",
   "reception_event_photo":"assets/images/reception-venue-annalakshmi.jpg",

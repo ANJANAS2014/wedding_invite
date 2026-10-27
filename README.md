@@ -1,6 +1,6 @@
 # Wedding Invitation
 
-A static, no-build wedding invitation for Lalith and Anjana. The original design, animations, countdown, music, gallery, editor, map links, and RSVP behavior are preserved in the refactored files.
+A static, no-build wedding invitation for Lalith and Anjana. The original design, animations, countdown, music, photo reel, editor, map links, and RSVP behavior are preserved in the refactored files.
 
 ## Project structure
 
@@ -14,7 +14,6 @@ css/
   responsive.css
 js/
   main.js
-  gallery.js
   countdown.js
   music.js
   editor.js
@@ -59,10 +58,12 @@ Place replacement images in `assets/images/`, then change the matching path in `
 - Couple portraits: `gImg` (`p12`) and `bImg` (`p10`)
 - Story photos: `sp` (`story_photo_one` through `story_photo_four`), mapped to the four files in `resized_couple_photos/`
 - Couple/story background: `p15`, `p16`, `p17`
-- Gallery: `gal`, preserving order
+- Our Memories circular photo reel: `gal`, preserving order. Each entry can be a key string or an object with `src`, `alt`, optional `ratio`, `position`, and `caption` fields.
 - Wedding/reception venue photos: `w1` and `r1`
 
 Replace a file in place, preserving its filename, to update the page without editing JavaScript. Do not upscale small originals unnecessarily. Prefer JPEG/WebP output with dimensions appropriate to its rendered size.
+
+The reel's photo list is in `data/content.js`. Reorder entries in `gal`, remove an entry to remove that photo, or add one with an object such as `{src:'p7',alt:'Together among the lotus blooms',ratio:'3/2',position:'center',caption:'A quiet afternoon'}`. `ratio` is optional when using an existing image key with known dimensions; `position` is an optional CSS object position for the full-size contained image.
 
 ## Edit colors and fonts
 

@@ -4,7 +4,7 @@ from pathlib import Path
 root = Path(__file__).parent
 files = [
     "js/main.js", "data/content.js", "data/images.js", "data/theme.js",
-    "js/gallery.js", "js/countdown.js", "js/music.js", "js/editor.js", "js/rsvp.js"
+    "js/countdown.js", "js/music.js", "js/editor.js", "js/rsvp.js"
 ]
 missing = []
 for name in files:
