@@ -1,0 +1,4 @@
+Timestamp,Submission ID,Guest name,Email,Attendance,Guest count,Wishes,Wedding attendance,Wedding guest count,Reception attendance,Reception guest count,Public photo URL,Photo metadata,Wish approval
+2026-10-01T10:30:00.000Z,demo-0000-0000-4000-8000-000000000001,Asha & Kiran,,,,"Wishing you both a lifetime of laughter, kindness, and beautiful adventures together.",attending,2,attending,2,,,APPROVED
+2026-10-02T12:15:00.000Z,demo-0000-0000-4000-8000-000000000002,Priya Nair,,,,"May your home always be filled with music, warmth, and love. Congratulations!",declined,0,attending,1,,,APPROVED
+2026-10-03T09:00:00.000Z,demo-0000-0000-4000-8000-000000000003,Rohan & Anu,,,,"So happy for you both. Here's to a joyful new chapter!",attending,2,attending,2,,,

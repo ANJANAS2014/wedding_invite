@@ -1,4 +1,4 @@
-const RSVP_HEADERS = [
+const RSVP_LEGACY_HEADERS = [
   "Timestamp",
   "Submission ID",
   "Guest name",
@@ -7,14 +7,27 @@ const RSVP_HEADERS = [
   "Guest count",
   "Wishes",
 ];
+const RSVP_EVENT_HEADERS = [
+  "Wedding attendance",
+  "Wedding guest count",
+  "Reception attendance",
+  "Reception guest count",
+];
+const RSVP_WISH_HEADERS = ["Public photo URL", "Photo metadata", "Wish approval"];
+const RSVP_HEADERS = [...RSVP_LEGACY_HEADERS, ...RSVP_EVENT_HEADERS, ...RSVP_WISH_HEADERS];
 const RSVP_MAX_GUESTS = 10;
 const RSVP_MAX_NAME_LENGTH = 120;
 const RSVP_MAX_EMAIL_LENGTH = 254;
 const RSVP_MAX_WISHES_LENGTH = 1000;
+const RSVP_MAX_PHOTO_METADATA_LENGTH = 300;
+const RSVP_PHOTO_HOST = "res.cloudinary.com";
 
 function doPost(event) {
   try {
     const request = JSON.parse(event.postData.contents);
+    if (!request || typeof request !== "object" || Array.isArray(request)) {
+      throw invalid_("Invalid RSVP request.");
+    }
     const properties = PropertiesService.getScriptProperties();
     const expectedSecret = properties.getProperty("RSVP_SHARED_SECRET");
     if (!expectedSecret || expectedSecret.length < 32) {
@@ -29,7 +42,10 @@ function doPost(event) {
     }
 
     if (request.action === "total") {
-      return output_({ ok: true, totalConfirmed: totalConfirmed_(getSheet_()) });
+      return output_({ ok: true, ...confirmedTotals_(getSheet_()) });
+    }
+    if (request.action === "approved_wishes") {
+      return output_({ ok: true, wishes: approvedWishes_(getSheet_()) });
     }
     if (request.action !== "submit") {
       return output_({ ok: false, error: "invalid_request", message: "Invalid RSVP request." });
@@ -47,7 +63,7 @@ function doPost(event) {
           return output_({
             ok: true,
             duplicate: true,
-            totalConfirmed: totalConfirmed_(sheet),
+            ...confirmedTotals_(sheet),
           });
         }
       }
@@ -57,14 +73,21 @@ function doPost(event) {
         submission.submissionId,
         safeCell_(submission.name),
         safeCell_(submission.email),
-        submission.attendance,
-        submission.guestCount,
+        "",
+        "",
         safeCell_(submission.wishes),
+        submission.weddingAttendance,
+        submission.weddingGuestCount,
+        submission.receptionAttendance,
+        submission.receptionGuestCount,
+        submission.photoUrl,
+        safeCell_(submission.photoMetadata),
+        "",
       ]);
       return output_({
         ok: true,
         duplicate: false,
-        totalConfirmed: totalConfirmed_(sheet),
+        ...confirmedTotals_(sheet),
       });
     } finally {
       lock.releaseLock();
@@ -95,12 +118,15 @@ function validateSubmission_(request) {
   const name = typeof request.name === "string" ? request.name.trim() : "";
   const rawEmail = request.email === undefined || request.email === null ? "" : request.email;
   const rawWishes = request.wishes === undefined || request.wishes === null ? "" : request.wishes;
-  if (typeof rawEmail !== "string" || typeof rawWishes !== "string") {
-    throw invalid_("Please enter a valid email address and wishes.");
+  const rawPhotoUrl = request.photoUrl === undefined || request.photoUrl === null ? "" : request.photoUrl;
+  const rawPhotoMetadata = request.photoMetadata === undefined || request.photoMetadata === null ? "" : request.photoMetadata;
+  if (typeof rawEmail !== "string" || typeof rawWishes !== "string" || typeof rawPhotoUrl !== "string" || typeof rawPhotoMetadata !== "string") {
+    throw invalid_("Please enter valid RSVP details.");
   }
   const email = rawEmail.trim();
   const wishes = rawWishes.trim();
-  const attendance = request.attendance;
+  const photoUrl = validatePhotoUrl_(rawPhotoUrl.trim());
+  const photoMetadata = rawPhotoMetadata.trim();
   const submissionId = request.submissionId;
 
   if (!name || name.length > RSVP_MAX_NAME_LENGTH || /[\u0000-\u001f\u007f]/.test(name)) {
@@ -115,11 +141,8 @@ function validateSubmission_(request) {
   if (wishes.length > RSVP_MAX_WISHES_LENGTH) {
     throw invalid_("Wishes must be 1,000 characters or fewer.");
   }
-  if (!["attending", "declined", "wishes_only"].includes(attendance)) {
-    throw invalid_("Choose an attendance response.");
-  }
-  if (attendance === "wishes_only" && !wishes) {
-    throw invalid_("Please include your wishes.");
+  if (photoMetadata.length > RSVP_MAX_PHOTO_METADATA_LENGTH || /[\u0000-\u001f\u007f]/.test(photoMetadata)) {
+    throw invalid_("Photo details are invalid.");
   }
   if (
     typeof submissionId !== "string" ||
@@ -128,28 +151,98 @@ function validateSubmission_(request) {
     throw invalid_("Please retry your submission.");
   }
 
-  let guestCount = 0;
-  if (attendance === "attending") {
-    guestCount = Number(request.guestCount);
-    if (!Number.isInteger(guestCount) || guestCount < 1 || guestCount > RSVP_MAX_GUESTS) {
-      throw invalid_("Choose between 1 and 10 attending guests.");
-    }
-  }
-  return { name, email, attendance, guestCount, wishes, submissionId };
+  const weddingGuestCount = validateEvent_(
+    request.weddingAttendance,
+    request.weddingGuestCount,
+    "wedding",
+  );
+  const receptionGuestCount = validateEvent_(
+    request.receptionAttendance,
+    request.receptionGuestCount,
+    "reception",
+  );
+  return {
+    name,
+    email,
+    wishes,
+    photoUrl,
+    photoMetadata,
+    weddingAttendance: request.weddingAttendance,
+    weddingGuestCount,
+    receptionAttendance: request.receptionAttendance,
+    receptionGuestCount,
+    submissionId,
+  };
 }
 
-function totalConfirmed_(sheet) {
+function validatePhotoUrl_(value) {
+  if (!value) return "";
+  let url;
+  try { url = new URL(value); } catch (_) { throw invalid_("The photo URL is invalid."); }
+  if (value.length > 2048 || url.protocol !== "https:" || url.hostname !== RSVP_PHOTO_HOST || !/^\/[^?#]+\.(jpg|jpeg|png|webp)$/i.test(url.pathname)) {
+    throw invalid_("The photo URL is not an approved image URL.");
+  }
+  return url.toString();
+}
+
+function approvedWishes_(sheet) {
   const lastRow = sheet.getLastRow();
-  if (lastRow < 2) return 0;
-  return sheet
-    .getRange(2, 5, lastRow - 1, 2)
-    .getValues()
-    .reduce((total, row) => {
-      const count = Number(row[1]);
-      return row[0] === "attending" && Number.isInteger(count) && count > 0
-        ? total + count
-        : total;
-    }, 0);
+  if (lastRow < 2) return [];
+  const rows = sheet.getRange(2, 3, lastRow - 1, 12).getValues();
+  return rows.filter((row) => row[11] === "APPROVED" && String(row[4] || "").trim())
+    .map((row) => ({
+      displayName: String(row[0] || "").trim().slice(0, RSVP_MAX_NAME_LENGTH),
+      wish: String(row[4] || "").trim().slice(0, RSVP_MAX_WISHES_LENGTH),
+      photoUrl: safePublicPhotoUrl_(row[9]),
+    }))
+    .filter((item) => item.displayName && item.wish)
+    .slice(-100);
+}
+
+function safePublicPhotoUrl_(value) {
+  try { return validatePhotoUrl_(String(value || "")); } catch (_) { return ""; }
+}
+
+function validateEvent_(attendance, rawGuestCount, eventName) {
+  if (!["attending", "declined"].includes(attendance)) {
+    throw invalid_("Choose an attendance response for " + eventName + ".");
+  }
+  const guestCount = Number(rawGuestCount);
+  if (attendance === "declined") {
+    if (guestCount !== 0) throw invalid_("Guest count must be zero when not attending.");
+    return 0;
+  }
+  if (!Number.isInteger(guestCount) || guestCount < 1 || guestCount > RSVP_MAX_GUESTS) {
+    throw invalid_("Choose between 1 and 10 attending guests for " + eventName + ".");
+  }
+  return guestCount;
+}
+
+function confirmedTotals_(sheet) {
+  const lastRow = sheet.getLastRow();
+  const totals = { weddingTotalConfirmed: 0, receptionTotalConfirmed: 0 };
+  if (lastRow < 2) return totals;
+  sheet.getRange(2, 8, lastRow - 1, 4).getValues().forEach((row) => {
+    const weddingCount = Number(row[1]);
+    if (
+      row[0] === "attending" &&
+      Number.isInteger(weddingCount) &&
+      weddingCount > 0 &&
+      weddingCount <= RSVP_MAX_GUESTS
+    ) {
+      totals.weddingTotalConfirmed += weddingCount;
+    }
+    const receptionCount = Number(row[3]);
+    if (
+      row[2] === "attending" &&
+      Number.isInteger(receptionCount) &&
+      receptionCount > 0 &&
+      receptionCount <= RSVP_MAX_GUESTS
+    ) {
+      totals.receptionTotalConfirmed += receptionCount;
+    }
+  });
+  return totals;
 }
 
 function getSheet_() {
@@ -165,9 +258,28 @@ function getSheet_() {
   let sheet = spreadsheet.getSheetByName(sheetName);
   if (!sheet) sheet = spreadsheet.insertSheet(sheetName);
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(RSVP_HEADERS);
+    sheet.getRange(1, 1, 1, RSVP_HEADERS.length).setValues([RSVP_HEADERS]);
     sheet.setFrozenRows(1);
+    return sheet;
   }
+  const currentHeaders = sheet
+    .getRange(1, 1, 1, Math.max(sheet.getLastColumn(), RSVP_LEGACY_HEADERS.length))
+    .getValues()[0];
+  if (RSVP_LEGACY_HEADERS.some((header, index) => currentHeaders[index] !== header)) {
+    const error = new Error("The RSVP sheet headers do not match the existing schema.");
+    error.name = "ConfigurationError";
+    throw error;
+  }
+  [...RSVP_EVENT_HEADERS, ...RSVP_WISH_HEADERS].forEach((header, index) => {
+    const currentHeader = currentHeaders[RSVP_LEGACY_HEADERS.length + index];
+    if (currentHeader && currentHeader !== header) {
+      const error = new Error("The RSVP sheet event columns do not match the expected schema.");
+      error.name = "ConfigurationError";
+      throw error;
+    }
+  });
+  sheet.getRange(1, RSVP_LEGACY_HEADERS.length + 1, 1, RSVP_EVENT_HEADERS.length + RSVP_WISH_HEADERS.length)
+    .setValues([[...RSVP_EVENT_HEADERS, ...RSVP_WISH_HEADERS]]);
   return sheet;
 }
 

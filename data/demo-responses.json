@@ -1,0 +1,50 @@
+[
+  {
+    "timestamp": "2026-10-01T10:30:00.000Z",
+    "submissionId": "demo-0000-0000-4000-8000-000000000001",
+    "name": "Asha & Kiran",
+    "email": "",
+    "attendance": "",
+    "guestCount": "",
+    "wishes": "Wishing you both a lifetime of laughter, kindness, and beautiful adventures together.",
+    "weddingAttendance": "attending",
+    "weddingGuestCount": 2,
+    "receptionAttendance": "attending",
+    "receptionGuestCount": 2,
+    "photoUrl": "",
+    "photoMetadata": "",
+    "approval": "APPROVED"
+  },
+  {
+    "timestamp": "2026-10-02T12:15:00.000Z",
+    "submissionId": "demo-0000-0000-4000-8000-000000000002",
+    "name": "Priya Nair",
+    "email": "",
+    "attendance": "",
+    "guestCount": "",
+    "wishes": "May your home always be filled with music, warmth, and love. Congratulations!",
+    "weddingAttendance": "declined",
+    "weddingGuestCount": 0,
+    "receptionAttendance": "attending",
+    "receptionGuestCount": 1,
+    "photoUrl": "",
+    "photoMetadata": "",
+    "approval": "APPROVED"
+  },
+  {
+    "timestamp": "2026-10-03T09:00:00.000Z",
+    "submissionId": "demo-0000-0000-4000-8000-000000000003",
+    "name": "Rohan & Anu",
+    "email": "",
+    "attendance": "",
+    "guestCount": "",
+    "wishes": "So happy for you both. Here's to a joyful new chapter!",
+    "weddingAttendance": "attending",
+    "weddingGuestCount": 2,
+    "receptionAttendance": "attending",
+    "receptionGuestCount": 2,
+    "photoUrl": "",
+    "photoMetadata": "",
+    "approval": ""
+  }
+]

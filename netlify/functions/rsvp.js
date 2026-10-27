@@ -66,13 +66,19 @@ exports.handler = async (event) => {
     }
     try {
       const body = JSON.parse(event.body);
+      if (body && typeof body.website === "string" && body.website.trim()) {
+        return jsonResponse(400, { ok: false, message: "Invalid RSVP submission." });
+      }
       request = {
         action: "submit",
         name: body.name,
-        email: body.email,
-        attendance: body.attendance,
-        guestCount: body.guestCount,
+        weddingAttendance: body.weddingAttendance,
+        weddingGuestCount: body.weddingGuestCount,
+        receptionAttendance: body.receptionAttendance,
+        receptionGuestCount: body.receptionGuestCount,
         wishes: body.wishes,
+        photoUrl: body.photoUrl,
+        photoMetadata: body.photoMetadata,
         submissionId: body.submissionId,
       };
     } catch {
@@ -94,12 +100,23 @@ exports.handler = async (event) => {
         { ok: false, message: result?.message || "The RSVP service could not complete your request." },
       );
     }
-    if (!Number.isSafeInteger(result.totalConfirmed) || result.totalConfirmed < 0) {
-      return jsonResponse(502, { ok: false, message: "The RSVP service returned an invalid total." });
+    if (
+      !Number.isSafeInteger(result.weddingTotalConfirmed) ||
+      result.weddingTotalConfirmed < 0 ||
+      !Number.isSafeInteger(result.receptionTotalConfirmed) ||
+      result.receptionTotalConfirmed < 0
+    ) {
+      return jsonResponse(502, { ok: false, message: "The RSVP service returned invalid totals." });
+    }
+    const totalConfirmed = result.weddingTotalConfirmed + result.receptionTotalConfirmed;
+    if (!Number.isSafeInteger(totalConfirmed)) {
+      return jsonResponse(502, { ok: false, message: "The RSVP service returned invalid totals." });
     }
     return jsonResponse(200, {
       ok: true,
-      totalConfirmed: result.totalConfirmed,
+      weddingTotalConfirmed: result.weddingTotalConfirmed,
+      receptionTotalConfirmed: result.receptionTotalConfirmed,
+      totalConfirmed,
       ...(result.duplicate === true ? { duplicate: true } : {}),
     });
   } catch {
