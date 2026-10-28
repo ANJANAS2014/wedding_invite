@@ -481,10 +481,10 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid #e8
 #hero .bgT,#hero .bgB,#hero .bgBL{display:none!important}
 #hero .cover-scene{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#f4ecdf var(--cover-scene-desktop) center/100% 100% no-repeat}
 #hero .cover-paper-grain{position:absolute;inset:0;z-index:0;opacity:.018;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='.34'/%3E%3C/svg%3E");background-size:180px 180px}
-#hero .cover-thali-frame{position:absolute;inset:0;z-index:2;display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
+#hero .cover-thali-frame{position:absolute;inset:0;z-index:4;display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
 #hero .cover-thali-frame--mobile{display:none}
 #hero .thali-string{fill:none;stroke:#aa8843;stroke-width:1.1px;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:none;stroke-dashoffset:0;opacity:.9}
-#hero .thali-locket{opacity:0;filter:drop-shadow(0 2px 3px #76582755)}
+#hero .thali-locket{opacity:1;filter:drop-shadow(0 2px 3px #76582755)}
 #hero .thali-locket-heart{fill:#b99b55;stroke:#81632c;stroke-width:.45px;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 #hero .thali-locket-inlay{fill:none;stroke:#ead9a5;stroke-width:.4px;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;opacity:.9}
 #hero .thali-locket-pin{fill:#f1dfad;stroke:#9d7c3c;stroke-width:.25px;vector-effect:non-scaling-stroke}
@@ -504,11 +504,11 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid #e8
 #hero.cover-intro-complete .cover-date{animation:cover-type-in .72s .94s ease-out forwards}
 #hero.cover-intro-complete .ob{animation:cover-type-in .72s 1.08s ease-out forwards}
 #hero.cover-intro-complete .thali-string{animation:thali-chain-draw 2s .3s cubic-bezier(.22,.65,.2,1) forwards}
-#hero.cover-intro-complete .thali-locket{animation:thali-locket-join .7s 2.35s ease-out forwards}
+#hero.cover-intro-complete .thali-locket{animation:thali-locket-join .7s .3s ease-out forwards}
 @keyframes cover-photo-focus{from{opacity:0;filter:blur(3px);transform:translateY(7px)}to{opacity:1;filter:blur(0);transform:translateY(0)}}
 @keyframes cover-type-in{to{opacity:1;transform:translateY(0)}}
 @keyframes thali-chain-draw{to{stroke-dashoffset:0}}
-@keyframes thali-locket-join{0%{opacity:0;filter:drop-shadow(0 0 0 #d6b45c00)}58%{opacity:1;filter:drop-shadow(0 0 8px #d6b45cbb)}100%{opacity:1;filter:drop-shadow(0 2px 3px #76582755)}}
+@keyframes thali-locket-join{0%{opacity:1;filter:drop-shadow(0 0 0 #d6b45c00)}58%{opacity:1;filter:drop-shadow(0 0 8px #d6b45cbb)}100%{opacity:1;filter:drop-shadow(0 2px 3px #76582755)}}
 @media(min-width:900px) and (min-height:560px){#hero .cover-scene{background-size:100% 100%}#hero .cv{padding-top:clamp(78px,11svh,122px);padding-bottom:34px}#hero .cover-couple img{height:min(48svh,515px);max-width:min(46vw,520px)}#hero .names{font-size:clamp(76px,7vw,100px);margin-top:1.5svh}#hero .cover-date{margin-top:1.3svh}#hero .ob{margin-top:1.8svh}}
 @media(max-width:720px){#hero .cover-scene{background-image:var(--cover-scene-mobile);background-position:center;background-size:100% 100%}#hero .cover-thali-frame--desktop{display:none}#hero .cover-thali-frame--mobile{display:block}#hero .cv{min-height:100svh;justify-content:flex-start;padding:clamp(54px,8svh,78px) 14px calc(25px + env(safe-area-inset-bottom,0px))}#hero .cover-couple img{height:min(40svh,332px);max-width:min(88vw,420px)}#hero .names{margin-top:9px;font-size:clamp(62px,13vw,80px)}#hero .cover-date{margin-top:8px;font-size:10px;letter-spacing:.23em}#hero .ob{margin-top:15px}#hero .btn{min-width:198px;padding:14px 24px}}
 @media(max-width:360px){#hero .cv{padding-top:50px}#hero .cover-couple img{height:min(38svh,300px)}#hero .names{font-size:58px}#hero .btn{min-width:190px}}
@@ -565,4 +565,23 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid #e8
 }
 @media(prefers-reduced-motion:reduce){
   #main .rv{transition:none!important}
+}
+
+/* Compact, more legible mobile scrapbook reel. */
+#couple .reel-photo{transition-duration:.42s}
+@media(max-width:560px){
+  #couple .story-reel{gap:18px;margin-top:24px;padding-top:18px}
+  #couple .memory-reel{height:clamp(280px,78vw,330px);margin-top:0}
+  #couple .reel-photo{width:clamp(185px,58vw,230px);padding:6px}
+  #couple .reel-controls{gap:7px}
+}
+@media(max-width:420px){
+  #couple .story-reel{gap:16px;margin-top:20px;padding-top:16px}
+  #couple .memory-reel{height:280px}
+  #couple .reel-photo{width:clamp(180px,58vw,220px);padding:5px}
+}
+@media(max-width:340px){
+  #couple .story-reel{gap:14px;margin-top:16px;padding-top:14px}
+  #couple .memory-reel{height:270px}
+  #couple .reel-photo{width:180px}
 }
