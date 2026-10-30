@@ -5,6 +5,9 @@ import { LotusCurtain } from './components/LotusCurtain';
 import { MusicPlayer } from './components/MusicPlayer';
 import { InvitationIntroSection } from './components/InvitationIntroSection';
 import { CoupleSection } from './components/CoupleSection';
+import { OurStorySection } from './components/OurStorySection';
+import { OurReelsSection } from './components/OurReelsSection';
+import { OurGallerySection } from './components/OurGallerySection';
 import { EventsSection } from './components/EventsSection';
 import { RsvpSection } from './components/RsvpSection';
 import { WishesWall } from './components/WishesWall';
@@ -102,7 +105,6 @@ export const App: React.FC = () => {
   const handleOpenInvitation = () => {
     if (isOpened || curtainStatus !== 'idle') return;
 
-    // Reduced motion check
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
       playChime(0);
@@ -146,16 +148,31 @@ export const App: React.FC = () => {
         {/* Section 2: Events (Muhurtham & Reception) */}
         <EventsSection />
 
-        {/* Section 3: Couple Profiles & Our Story & Memory Reel */}
-        <CoupleSection onOpenLightbox={(index) => setLightboxIndex(index)} />
+        {/* Section 3: Couple Profiles (Bride & Groom) */}
+        <CoupleSection />
 
-        {/* Section 4: Upgraded RSVP */}
+        {/* Section 4: Our Story & Our Reels – Side by side on Desktop (>=1024px), Stacked on Mobile */}
+        <section className="story-reels-section" id="story-reels-section">
+          <div className="story-reels-container">
+            <div className="story-col">
+              <OurStorySection />
+            </div>
+            <div className="reels-col">
+              <OurReelsSection />
+            </div>
+          </div>
+        </section>
+
+        {/* Section 5: Our Gallery – Separate upgraded photo collection */}
+        <OurGallerySection onOpenLightbox={(index) => setLightboxIndex(index)} />
+
+        {/* Section 6: Upgraded RSVP */}
         <RsvpSection
           guestName={guestName}
           inviteToken={inviteToken}
         />
 
-        {/* Section 5: Wishes Wall */}
+        {/* Section 7: Wishes Wall */}
         <WishesWall />
 
         {/* Footer */}

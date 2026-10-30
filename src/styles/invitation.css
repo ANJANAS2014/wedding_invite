@@ -904,149 +904,469 @@ body.opened #main {
   }
 }
 
-/* Our Story and Memory Reel */
-#couple .story-reel {
-  display: grid;
-  grid-template-columns: minmax(250px, .78fr) minmax(0, 1.22fr);
-  align-items: center;
-  gap: clamp(30px, 6vw, 84px);
-  width: min(1180px, 100%);
-  margin: clamp(48px, 7vw, 90px) auto 8px;
-  padding: clamp(26px, 5vw, 62px) 0 0;
-  border-top: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
-}
+/* ==========================================================================
+   THREE SEPARATE EXPERIENCES: OUR STORY, OUR REELS, OUR GALLERY
+   ========================================================================== */
 
-#couple .story-copy {
-  text-align: left;
-  max-width: 42ch;
-  padding: 0 clamp(2px, 2vw, 24px);
-}
-
-#couple .story-copy h2 {
-  margin: 0;
-  color: var(--maroon);
-  font: 400 clamp(36px, 4.8vw, 54px)/.98 var(--fh);
-  letter-spacing: -.02em;
-}
-
-#couple .story-excerpt, #couple .story-rest {
-  margin-top: 18px;
-  color: #463638;
-  font: 400 15px/1.85 var(--fb);
-  text-align: left;
-}
-
-#couple .story-excerpt p, #couple .story-rest p {
-  margin: 0 0 14px;
-}
-
-#couple .story-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 9px;
-  padding: 9px 0;
-  border: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--gold) 75%, transparent);
-  background: transparent;
-  color: var(--maroon);
-  font: 500 11px/1.4 var(--fb);
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-#couple .memory-copy {
-  min-width: 0;
-  text-align: left;
-}
-
-#couple .memory-reel {
+/* 1 & 2: Story & Reels side-by-side row on desktop, stacked on mobile */
+.story-reels-section {
+  padding: clamp(38px, 6vw, 68px) 20px;
+  background: var(--paper);
   position: relative;
-  perspective: 1100px;
-  perspective-origin: 50% 48%;
-  height: clamp(320px, 37vw, 480px);
-  margin: 5px auto 0;
-  overflow: hidden;
-  isolation: isolate;
-  touch-action: pan-y;
 }
 
-#couple .reel-stage {
+.story-reels-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(36px, 5vw, 60px);
+  align-items: start;
+}
+
+@media(min-width: 1024px) {
+  .story-reels-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: stretch;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   EXPERIENCE 1: OUR STORY (WRITTEN LOVE STORY)
+   -------------------------------------------------------------------------- */
+.our-story-editorial {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(28px, 4vw, 42px) clamp(22px, 3.5vw, 36px);
+  background: #fbf6ec;
+  border: 1px solid color-mix(in srgb, var(--gold) 60%, transparent);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px -24px rgba(74, 26, 26, 0.25);
+  position: relative;
+  text-align: left;
+}
+
+.our-story-editorial:before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.story-header {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.story-prompt {
+  display: block;
+  font-size: 11px;
+  letter-spacing: .35em;
+  color: #8c681d;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.story-title {
+  color: var(--maroon);
+  font: 500 clamp(36px, 4.2vw, 48px)/1.05 var(--fh);
+  margin: 0 0 4px;
+}
+
+.story-div {
+  margin: 8px 0 18px;
+  justify-content: flex-start;
+}
+
+.story-div:before {
+  display: none;
+}
+
+.story-div:after {
+  width: 90px;
+}
+
+.story-body {
+  font: 400 16px/1.85 var(--fb);
+  color: #3e262a;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.story-body p {
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.story-lead-p:first-letter {
+  font: 400 3.6em/.8 var(--fh);
+  float: left;
+  margin: 6px 12px 0 0;
+  color: var(--maroon);
+  text-shadow: 1px 1px 0 rgba(193, 154, 61, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   EXPERIENCE 2: OUR REELS (ANIMATED VISUAL EXPERIENCE)
+   -------------------------------------------------------------------------- */
+.our-reels-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(28px, 4vw, 42px) clamp(20px, 3.5vw, 34px);
+  background: #fbf6ec;
+  border: 1px solid color-mix(in srgb, var(--gold) 60%, transparent);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px -24px rgba(74, 26, 26, 0.25);
+  position: relative;
+  text-align: left;
+}
+
+.our-reels-container:before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.reels-header {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.reels-prompt {
+  display: block;
+  font-size: 11px;
+  letter-spacing: .35em;
+  color: #8c681d;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.reels-title {
+  color: var(--maroon);
+  font: 500 clamp(36px, 4.2vw, 48px)/1.05 var(--fh);
+  margin: 0 0 4px;
+}
+
+.reels-div {
+  margin: 8px 0 18px;
+  justify-content: flex-start;
+}
+
+.reels-div:before {
+  display: none;
+}
+
+.reels-div:after {
+  width: 90px;
+}
+
+.reel-stage-viewport {
+  width: 100%;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reel-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--gold) 75%, transparent);
+  box-shadow: 0 18px 40px -20px rgba(46, 12, 19, 0.4);
+  background: #25090f;
+}
+
+.reel-slide {
   position: absolute;
   inset: 0;
-  transform-style: preserve-3d;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.85s;
 }
 
-#couple .reel-photo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: clamp(155px, 20vw, 235px);
-  aspect-ratio: var(--photo-ratio, 1);
-  margin: 0;
-  padding: 7px;
-  border: 1px solid color-mix(in srgb, var(--gold) 60%, transparent);
-  background: #f6f0e5;
-  box-shadow: 0 14px 34px -20px #27141999;
-  backface-visibility: hidden;
-  cursor: zoom-in;
-  transform-origin: center;
-  transition: filter .7s cubic-bezier(.22, 1, .36, 1), opacity .7s cubic-bezier(.22, 1, .36, 1), transform .7s cubic-bezier(.22, 1, .36, 1);
-  will-change: transform, opacity;
+.reel-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
 }
 
-#couple .reel-photo img {
-  display: block;
+.reel-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: #eee5d6;
+  object-position: center;
+  transition: transform 7s ease-out;
+  transform: scale(1);
 }
 
-#couple .reel-controls {
+.reel-slide.is-active .reel-image {
+  transform: scale(1.06);
+}
+
+@media(prefers-reduced-motion: reduce) {
+  .reel-slide.is-active .reel-image {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+.reel-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,0,0,0.08) 0%, transparent 40%, rgba(20,4,7,0.85) 100%);
+}
+
+.reel-caption-card {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 3;
+  color: #fff8ea;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.reel-caption-title {
+  font: 500 clamp(20px, 2.2vw, 24px)/1.2 var(--fh);
+  color: #f7dfa4;
+  margin: 0 0 3px;
+}
+
+.reel-caption-sub {
+  font: 400 13px/1.4 var(--fb);
+  color: #f1e2c8;
+  margin: 0;
+}
+
+.reel-action-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin: 12px auto 0;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 6px;
 }
 
-#couple .reel-control {
+.reel-btn {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  border: 1px solid color-mix(in srgb, var(--gold) 65%, transparent);
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: transparent;
-  color: var(--maroon);
-  font: 400 22px/1 var(--fh);
-  cursor: pointer;
-  transition: background .2s, color .2s;
-}
-
-#couple .reel-control:hover {
-  background: #eedbc2;
-}
-
-#couple .reel-pause {
-  font: 500 14px/1 var(--fb);
-}
-
-#couple .reel-view {
-  min-height: 42px;
-  padding: 0 18px;
   border: 1px solid color-mix(in srgb, var(--gold) 70%, transparent);
-  border-radius: 999px;
-  background: transparent;
+  background: #fdf9f2;
   color: var(--maroon);
-  font: 500 11px/1 var(--fb);
-  letter-spacing: .14em;
-  text-transform: uppercase;
+  font: 500 18px/1 var(--fh);
   cursor: pointer;
+  transition: all .2s ease;
+  user-select: none;
+}
+
+.reel-btn:hover {
+  background: var(--gold);
+  color: #2a0a0f;
+  border-color: var(--gold);
+}
+
+.reel-btn-play {
+  font-size: 13px;
+}
+
+.reel-progress-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.reel-pill {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all .25s;
+}
+
+.reel-pill.active {
+  width: 22px;
+  border-radius: 999px;
+  background: var(--maroon);
+  border-color: var(--maroon);
+}
+
+/* --------------------------------------------------------------------------
+   EXPERIENCE 3: OUR GALLERY (UPGRADED SCRAPBOOK COLLECTION)
+   -------------------------------------------------------------------------- */
+.our-gallery-section {
+  padding: clamp(48px, 7vw, 84px) 20px;
+  background: radial-gradient(ellipse at 50% 20%, #fdf7ec 0%, var(--paper) 70%);
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.gallery-header {
+  margin-bottom: 32px;
+}
+
+.gallery-prompt {
+  display: block;
+  font-size: 11.5px;
+  letter-spacing: .35em;
+  color: #8c681d;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.gallery-title {
+  color: var(--maroon);
+  font: 500 clamp(36px, 5.5vw, 54px)/1.05 var(--fh);
+  margin: 0;
+}
+
+.gallery-div {
+  margin: 10px auto 26px;
+}
+
+/* Scrapbook Masonry Grid */
+.scrapbook-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: clamp(20px, 3vw, 32px);
+  justify-content: center;
+  align-items: start;
+}
+
+@media(min-width: 992px) {
+  .scrapbook-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.scrapbook-item {
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  transition: transform .35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow .35s;
+}
+
+.scrapbook-item:hover, .scrapbook-item:focus-visible {
+  transform: translateY(-5px);
+}
+
+.scrapbook-frame {
+  position: relative;
+  padding: 10px 10px 14px;
+  background: #fffefb;
+  border: 1px solid color-mix(in srgb, var(--gold) 58%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 14px 34px -18px rgba(60, 20, 25, 0.28), 0 0 0 3px #fffefb;
+  overflow: hidden;
+  transition: border-color .3s, box-shadow .3s;
+}
+
+.scrapbook-item:hover .scrapbook-frame {
+  border-color: var(--gold);
+  box-shadow: 0 20px 44px -16px rgba(60, 20, 25, 0.38), 0 0 0 3px #fffefb, 0 0 20px rgba(193, 154, 61, 0.3);
+}
+
+.scrapbook-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 4px;
+  background: #f4ecdf;
+  transition: transform .6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.item-landscape .scrapbook-image {
+  aspect-ratio: 3/2;
+}
+
+.scrapbook-item:hover .scrapbook-image {
+  transform: scale(1.025);
+}
+
+/* Subtle Archival Gold Corners */
+.scrapbook-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  opacity: .75;
+}
+
+.corner-tl {
+  top: 6px;
+  left: 6px;
+  border-top: 2px solid var(--gold);
+  border-left: 2px solid var(--gold);
+}
+
+.corner-tr {
+  top: 6px;
+  right: 6px;
+  border-top: 2px solid var(--gold);
+  border-right: 2px solid var(--gold);
+}
+
+.corner-bl {
+  bottom: 8px;
+  left: 6px;
+  border-bottom: 2px solid var(--gold);
+  border-left: 2px solid var(--gold);
+}
+
+.corner-br {
+  bottom: 8px;
+  right: 6px;
+  border-bottom: 2px solid var(--gold);
+  border-right: 2px solid var(--gold);
+}
+
+.scrapbook-hover-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .35s;
+}
+
+.scrapbook-item:hover .scrapbook-hover-sheen {
+  opacity: 1;
+}
+
+.scrapbook-caption {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.scrapbook-caption span {
+  font: italic 400 14px/1.35 var(--fh);
+  color: #6e4c27;
+  letter-spacing: .02em;
 }
 
 @media(max-width: 760px) {

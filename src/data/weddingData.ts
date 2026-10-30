@@ -63,6 +63,45 @@ export const WEDDING_GALLERY: GalleryPhoto[] = [
   { src: 'p6', alt: 'The couple surrounded by the lotus field', ratio: '3/2' }
 ];
 
+export interface ReelPhoto {
+  src: string;
+  caption: string;
+  subcaption?: string;
+}
+
+export const REELS_PHOTOS: ReelPhoto[] = [
+  {
+    src: WEDDING_IMAGES.story_photo_one,
+    caption: 'Where our story began',
+    subcaption: 'Bangalore laughs & endless conversations'
+  },
+  {
+    src: WEDDING_IMAGES.story_photo_two,
+    caption: 'The Wayanad getaway',
+    subcaption: 'Winding roads, off-key songs & happy moments'
+  },
+  {
+    src: WEDDING_IMAGES.story_photo_three,
+    caption: 'Finding home in each other',
+    subcaption: 'Ukuleles, keyboards, and warmth'
+  },
+  {
+    src: WEDDING_IMAGES.story_photo_four,
+    caption: 'Choosing each other, always',
+    subcaption: 'A lifetime of adventures together'
+  },
+  {
+    src: WEDDING_IMAGES.p13,
+    caption: 'Cherished memories',
+    subcaption: 'Every day turned into a celebration'
+  },
+  {
+    src: WEDDING_IMAGES.p14,
+    caption: 'Ready for our new chapter',
+    subcaption: 'With love and gratitude'
+  }
+];
+
 export const GALLERY_DIMENSIONS: Record<string, [number, number]> = {
   p1: [1125, 1500],
   p2: [1125, 1500],
