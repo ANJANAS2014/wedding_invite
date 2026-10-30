@@ -22,6 +22,7 @@ export const App: React.FC = () => {
   const [language, setLanguage] = useState<'en' | 'ta' | 'ml'>('en');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isTrackerOpen, setIsTrackerOpen] = useState<boolean>(false);
+  const [wishesRefreshKey, setWishesRefreshKey] = useState<number>(0);
 
   // Play Web Audio synthesized temple bell chime
   const playChime = (delay = 0) => {
@@ -158,10 +159,11 @@ export const App: React.FC = () => {
         <RsvpSection
           guestName={guestName}
           inviteToken={inviteToken}
+          onSubmittedSuccess={() => setWishesRefreshKey((prev) => prev + 1)}
         />
 
         {/* Section 7: Wishes Wall */}
-        <WishesWall />
+        <WishesWall refreshKey={wishesRefreshKey} />
 
         {/* Footer */}
         <footer>
@@ -177,24 +179,6 @@ export const App: React.FC = () => {
             {WEDDING_CONTENT.groom} &amp; {WEDDING_CONTENT.bride}
           </div>
           <p style={{ marginTop: '6px', color: '#c5a882' }}>With love &amp; gratitude</p>
-
-          <div style={{ marginTop: '24px' }}>
-            <button
-              type="button"
-              onClick={() => setIsTrackerOpen(true)}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'rgba(193, 154, 61, 0.45)',
-                fontSize: '11px',
-                cursor: 'pointer',
-                letterSpacing: '.1em',
-                textTransform: 'uppercase'
-              }}
-            >
-              Host Guest Tracker &amp; Links
-            </button>
-          </div>
         </footer>
       </main>
 

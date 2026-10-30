@@ -1,45 +1,60 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 export interface WishRecord {
   id: string;
   displayName: string;
   wish: string;
   photoUrl?: string;
-  submittedAt: string;
+  submittedAt?: string;
   likesCount: number;
+}
+
+interface WishesWallProps {
+  refreshKey?: number;
 }
 
 const LOCAL_STORAGE_LIKES_KEY = 'wedding_wish_likes_v1';
 const LOCAL_STORAGE_WISHES_KEY = 'wedding_user_wishes_v1';
 
-export const WishesWall: React.FC = () => {
+function buildStableWishId(name: string, wish: string, fallbackIndex: number): string {
+  const raw = `${name.trim().toLowerCase()}|${wish.trim().toLowerCase()}`;
+  let hash = 0;
+  for (let i = 0; i < raw.length; i += 1) {
+    hash = (hash * 31 + raw.charCodeAt(i)) | 0;
+  }
+  return `wish_${Math.abs(hash).toString(36)}_${fallbackIndex}`;
+}
+
+export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
   const [wishes, setWishes] = useState<WishRecord[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [likesMap, setLikesMap] = useState<Record<string, number>>({});
   const [userLikedMap, setUserLikedMap] = useState<Record<string, boolean>>({});
+  const [failedPhotos, setFailedPhotos] = useState<Record<string, boolean>>({});
   const [selectedWish, setSelectedWish] = useState<WishRecord | null>(null);
 
-  useEffect(() => {
-    try {
-      const storedLikes = localStorage.getItem(LOCAL_STORAGE_LIKES_KEY);
-      if (storedLikes) {
-        const parsed = JSON.parse(storedLikes);
-        if (parsed && typeof parsed === 'object') {
-          setUserLikedMap(parsed.userLiked || {});
-          setLikesMap(parsed.counts || {});
-        }
-      }
-    } catch {
-      // ignore
-    }
-
-    fetchWishes();
-  }, []);
-
-  const fetchWishes = async () => {
+  const fetchWishes = useCallback(async () => {
     setIsLoading(true);
     try {
+      let storedCounts: Record<string, number> = {};
+      let storedLiked: Record<string, boolean> = {};
+
+      try {
+        const storedLikes = localStorage.getItem(LOCAL_STORAGE_LIKES_KEY);
+        if (storedLikes) {
+          const parsed = JSON.parse(storedLikes);
+          if (parsed && typeof parsed === 'object') {
+            storedLiked = parsed.userLiked || {};
+            storedCounts = parsed.counts || {};
+            setUserLikedMap(storedLiked);
+            setLikesMap(storedCounts);
+          }
+        }
+      } catch {
+        // ignore storage errors
+      }
+
       let fetched: WishRecord[] = [];
 
       try {
@@ -47,18 +62,20 @@ export const WishesWall: React.FC = () => {
         if (res.ok) {
           const data = await res.json();
           if (data && data.ok && Array.isArray(data.wishes)) {
-            fetched = data.wishes.map((w: any, idx: number) => ({
-              id: w.id || `api_wish_${idx}`,
-              displayName: w.displayName,
-              wish: w.wish,
-              photoUrl: w.photoUrl,
-              submittedAt: w.submittedAt || new Date().toISOString(),
-              likesCount: Number(w.likesCount) || 0
-            }));
+            fetched = data.wishes
+              .filter((w: any) => w && w.displayName && w.wish)
+              .map((w: any, idx: number) => ({
+                id: w.id || buildStableWishId(String(w.displayName), String(w.wish), idx),
+                displayName: String(w.displayName).trim(),
+                wish: String(w.wish).trim(),
+                photoUrl: w.photoUrl || undefined,
+                submittedAt: w.submittedAt || undefined,
+                likesCount: Number(w.likesCount) || 0
+              }));
           }
         }
       } catch {
-        // ignore
+        // ignore offline / local dev without Netlify Functions
       }
 
       try {
@@ -67,15 +84,26 @@ export const WishesWall: React.FC = () => {
           const parsed = JSON.parse(rsvpStored);
           if (Array.isArray(parsed)) {
             parsed.forEach((r, idx) => {
-              if (r.wishes && r.wishes.trim().length > 0) {
-                const id = r.id || `rsvp_wish_${idx}`;
-                if (!fetched.some((item) => item.id === id || item.displayName.toLowerCase() === r.name.toLowerCase())) {
+              if (r && r.name && r.wishes && String(r.wishes).trim().length > 0) {
+                const trimmedName = String(r.name).trim();
+                const trimmedWish = String(r.wishes).trim();
+                const id = r.id || buildStableWishId(trimmedName, trimmedWish, idx);
+                const firstName = trimmedName.split(/\s+/)[0].toLowerCase();
+                const alreadyPresent = fetched.some(
+                  (item) =>
+                    item.id === id ||
+                    (item.displayName.toLowerCase() === firstName &&
+                      item.wish.toLowerCase() === trimmedWish.toLowerCase()) ||
+                    (item.displayName.toLowerCase() === trimmedName.toLowerCase() &&
+                      item.wish.toLowerCase() === trimmedWish.toLowerCase())
+                );
+                if (!alreadyPresent) {
                   fetched.push({
                     id,
-                    displayName: r.name,
-                    wish: r.wishes,
-                    photoUrl: r.photoPreview || r.photoUrl,
-                    submittedAt: r.submittedAt || new Date().toISOString(),
+                    displayName: trimmedName,
+                    wish: trimmedWish,
+                    photoUrl: r.photoPreview || r.photoUrl || undefined,
+                    submittedAt: r.submittedAt || undefined,
                     likesCount: 0
                   });
                 }
@@ -89,25 +117,73 @@ export const WishesWall: React.FC = () => {
           const parsed = JSON.parse(userWishesStored);
           if (Array.isArray(parsed)) {
             parsed.forEach((w) => {
-              if (!fetched.some((item) => item.id === w.id)) {
+              if (w && w.id && w.displayName && w.wish && !fetched.some((item) => item.id === w.id)) {
                 fetched.push(w);
               }
             });
           }
         }
       } catch {
-        // ignore
+        // ignore storage errors
       }
 
-      // Sort newest first
-      fetched.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+      // If running locally or if no wishes exist yet, include exquisite dummy sample postcards for local inspection
+      const isLocalDev = Boolean((import.meta as any).env?.DEV) || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const userWishesCount = fetched.length;
+      if (isLocalDev || userWishesCount === 0) {
+        const dummyPostcards: WishRecord[] = [
+          {
+            id: 'dummy_vm',
+            displayName: 'Vikram & Meera',
+            wish: 'Wishing you both a lifetime of boundless happiness, shared laughter, and beautiful adventures together! So thrilled for you both.',
+            submittedAt: '2026-10-15T10:00:00.000Z',
+            likesCount: 12
+          },
+          {
+            id: 'dummy_kd',
+            displayName: 'Karthik & Divya',
+            wish: 'May your journey together be as harmonious as your favorite songs! Congratulations Lalith and Anjana!',
+            submittedAt: '2026-10-18T12:00:00.000Z',
+            likesCount: 8
+          },
+          {
+            id: 'dummy_pn',
+            displayName: 'Pooja Narayanan',
+            wish: 'Sending you so much love from Bangalore! Can’t wait to celebrate the big day with you both.',
+            submittedAt: '2026-10-20T14:30:00.000Z',
+            likesCount: 15
+          },
+          {
+            id: 'dummy_sr',
+            displayName: 'Sneha & Rahul',
+            wish: 'Here is to a wonderful beginning of a forever love story. God bless you both!',
+            submittedAt: '2026-10-22T09:15:00.000Z',
+            likesCount: 6
+          }
+        ];
 
-      // Merge likes count
+        dummyPostcards.forEach((dummy) => {
+          if (!fetched.some((item) => item.id === dummy.id || item.displayName.toLowerCase() === dummy.displayName.toLowerCase())) {
+            fetched.push(dummy);
+          }
+        });
+      }
+
+      // Sort wishes with explicit timestamps newest-first while preserving API order
+      fetched.sort((a, b) => {
+        const timeA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
+        const timeB = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;
+        if (timeA && timeB) return timeB - timeA;
+        if (timeB && !timeA) return 1;
+        if (timeA && !timeB) return -1;
+        return 0;
+      });
+
       const updated = fetched.map((item) => {
-        const extraLikes = likesMap[item.id] || 0;
+        const extraLikes = storedCounts[item.id] || 0;
         return {
           ...item,
-          likesCount: (item.likesCount || 0) + extraLikes
+          likesCount: Math.max(0, (item.likesCount || 0) + extraLikes)
         };
       });
 
@@ -117,7 +193,23 @@ export const WishesWall: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchWishes();
+  }, [fetchWishes, refreshKey]);
+
+  // Close modal on Escape key
+  useEffect(() => {
+    if (!selectedWish) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedWish(null);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [selectedWish]);
 
   const handleToggleLike = (e: React.MouseEvent, wishId: string) => {
     e.stopPropagation();
@@ -144,136 +236,222 @@ export const WishesWall: React.FC = () => {
       )
     );
 
-    if (selectedWish && selectedWish.id === wishId) {
-      setSelectedWish((prev) =>
-        prev ? { ...prev, likesCount: Math.max(0, prev.likesCount + diff) } : null
-      );
-    }
+    setSelectedWish((prev) =>
+      prev && prev.id === wishId
+        ? { ...prev, likesCount: Math.max(0, prev.likesCount + diff) }
+        : prev
+    );
   };
 
   const getInitials = (name: string) => {
-    return name
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((part) => part[0] || '')
-      .join('')
-      .toUpperCase() || '♥';
+    return (
+      name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part[0] || '')
+        .join('')
+        .toUpperCase() || '♥'
+    );
+  };
+
+  const shouldAutoScroll = wishes.length >= 3;
+  const displayItems = shouldAutoScroll ? [...wishes, ...wishes] : wishes;
+
+  const renderPostcard = (item: WishRecord, index: number) => {
+    const isLiked = !!userLikedMap[item.id];
+    const showPhoto = Boolean(item.photoUrl && !failedPhotos[item.id]);
+
+    return (
+      <article
+        key={`${item.id}_${index}`}
+        className="postcard-card carousel-card"
+        onClick={() => setSelectedWish(item)}
+        tabIndex={0}
+        role="button"
+        aria-label={`View wish from ${item.displayName}`}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setSelectedWish(item);
+          }
+        }}
+      >
+        <div className="postcard-photo-frame">
+          {showPhoto ? (
+            <img
+              src={item.photoUrl}
+              alt={`Photo shared by ${item.displayName}`}
+              className="postcard-photo"
+              loading="lazy"
+              onError={() =>
+                setFailedPhotos((prev) => ({ ...prev, [item.id]: true }))
+              }
+            />
+          ) : (
+            <div className="postcard-monogram" aria-hidden="true">
+              <span className="postcard-monogram-ring">
+                {getInitials(item.displayName)}
+              </span>
+            </div>
+          )}
+          <div className="postcard-photo-sheen" aria-hidden="true" />
+          <div className="postcard-stamp" aria-hidden="true">
+            <span>29 NOV</span>
+            <span className="stamp-seal">♥</span>
+          </div>
+        </div>
+
+        <div className="postcard-content">
+          <p className="postcard-message">“{item.wish}”</p>
+
+          <div className="postcard-footer">
+            <span className="postcard-author">{item.displayName}</span>
+            <button
+              type="button"
+              className={`postcard-like-btn ${isLiked ? 'liked' : ''}`}
+              onClick={(e) => handleToggleLike(e, item.id)}
+              aria-label={`Like wish from ${item.displayName}${item.likesCount > 0 ? ` (${item.likesCount} likes)` : ''}`}
+            >
+              <span className="like-heart" aria-hidden="true">
+                {isLiked ? '♥' : '♡'}
+              </span>
+              {item.likesCount > 0 && (
+                <span className="like-count">{item.likesCount}</span>
+              )}
+            </button>
+          </div>
+        </div>
+      </article>
+    );
   };
 
   return (
-    <section className="sec rv in wishes-wall-section" id="wishes" aria-labelledby="wishes-title">
-      <div className="filmstrip-header-bar" style={{ borderBottom: 'none', padding: '0 0 12px' }}>
-        <h2 id="wishes-title">With love, from our people</h2>
-        <div className="filmstrip-controls">
-          <button
-            type="button"
-            className="filmstrip-toggle-btn"
-            onClick={() => setIsPaused(!isPaused)}
-            aria-label={isPaused ? 'Resume wishes carousel' : 'Pause wishes carousel'}
-            title={isPaused ? 'Resume' : 'Pause'}
-          >
-            {isPaused ? '▶ Play' : '⏸ Pause'}
-          </button>
+    <section
+      className="sec rv in wishes-wall-section"
+      id="wishes"
+      aria-labelledby="wishes-title"
+    >
+      <div className="wishes-section-header">
+        <div className="wishes-heart-crest" aria-hidden="true">
+          ♥
         </div>
-      </div>
-      <div className="div" style={{ margin: '4px auto 20px' }}>
-        <svg viewBox="-50 -50 100 100" className="man">
-          {Array.from({ length: 8 }, (_, i) => (
-            <ellipse key={i} rx="4" ry="22" cy="-26" transform={`rotate(${(i * 360) / 8})`} />
-          ))}
-          <circle r="2" style={{ fill: 'var(--gold)' }} />
-        </svg>
+        <h2 id="wishes-title">With love, from our people</h2>
+        <p className="wishes-subtitle">
+          A little love from everyone celebrating with us
+        </p>
+        <div className="div wishes-divider">
+          <svg viewBox="-50 -50 100 100" className="man">
+            {Array.from({ length: 8 }, (_, i) => (
+              <ellipse
+                key={i}
+                rx="4"
+                ry="22"
+                cy="-26"
+                transform={`rotate(${(i * 360) / 8})`}
+              />
+            ))}
+            <circle r="2" style={{ fill: 'var(--gold)' }} />
+          </svg>
+        </div>
+
+        {shouldAutoScroll && !isLoading && (
+          <div className="wishes-controls-row">
+            <button
+              type="button"
+              className="wishes-pause-btn"
+              onClick={() => setIsPaused(!isPaused)}
+              aria-label={
+                isPaused ? 'Resume wishes carousel' : 'Pause wishes carousel'
+              }
+              title={isPaused ? 'Resume' : 'Pause'}
+            >
+              {isPaused ? '▶ Play' : '⏸ Pause'}
+            </button>
+          </div>
+        )}
       </div>
 
       {isLoading && (
-        <div className="filmstrip-viewport">
-          <div className="filmstrip-track">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="skeleton-postcard" style={{ width: '260px', flex: '0 0 auto' }}>
-                <div className="skeleton-photo" />
-                <div className="skeleton-lines">
-                  <div className="skeleton-line w-80" />
-                  <div className="skeleton-line w-60" />
-                </div>
+        <div className="wishes-static-row" aria-label="Loading wishes">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="skeleton-postcard">
+              <div className="skeleton-photo" />
+              <div className="skeleton-lines">
+                <div className="skeleton-line w-80" />
+                <div className="skeleton-line w-60" />
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       )}
 
       {!isLoading && wishes.length === 0 && (
-        <div className="empty-wishes-state" role="region" aria-label="No wishes yet">
-          <div className="empty-envelope-icon" aria-hidden="true">💌</div>
+        <div
+          className="empty-wishes-state"
+          role="region"
+          aria-label="No wishes yet"
+        >
+          <div className="empty-envelope-icon" aria-hidden="true">
+            <svg
+              width="44"
+              height="36"
+              viewBox="0 0 44 36"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="1.5"
+                y="4.5"
+                width="41"
+                height="29"
+                rx="4"
+                fill="#FBF5EA"
+                stroke="#C19A3D"
+                strokeWidth="1.3"
+              />
+              <path
+                d="M2.5 6.5L22 21L41.5 6.5"
+                stroke="#C19A3D"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M22 22.8C22 22.8 17 19.3 17 16.5C17 15 18.2 13.9 19.6 13.9C20.6 13.9 21.5 14.5 22 15.3C22.5 14.5 23.4 13.9 24.4 13.9C25.8 13.9 27 15 27 16.5C27 19.3 22 22.8 22 22.8Z"
+                fill="#8B2233"
+              />
+            </svg>
+          </div>
           <h3>No wishes received yet.</h3>
           <p>Be the first to share your wishes with us ❤️</p>
         </div>
       )}
 
-      {!isLoading && wishes.length > 0 && (
-        <div className="filmstrip-viewport" aria-label="Wedding wishes carousel">
+      {!isLoading && wishes.length > 0 && shouldAutoScroll && (
+        <div
+          className="wishes-rail-viewport"
+          aria-label="Wedding wishes carousel"
+        >
           <div
-            className={`filmstrip-track ${isPaused ? 'is-paused' : ''}`}
-            style={{ '--total-items': wishes.length } as React.CSSProperties}
+            className={`wishes-rail-track ${isPaused ? 'is-paused' : ''}`}
+            style={
+              {
+                '--wishes-duration': `${Math.max(28, wishes.length * 8)}s`
+              } as React.CSSProperties
+            }
           >
-            {[...wishes, ...wishes].map((item, index) => {
-              const isLiked = !!userLikedMap[item.id];
-              return (
-                <article
-                  key={`${item.id}_${index}`}
-                  className="postcard-card carousel-card"
-                  onClick={() => setSelectedWish(item)}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`View wish from ${item.displayName}`}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelectedWish(item);
-                    }
-                  }}
-                >
-                  <div className="postcard-stamp" aria-hidden="true">
-                    <span>29 NOV</span>
-                    <span className="stamp-seal">♥</span>
-                  </div>
-
-                  <div className="postcard-photo-frame">
-                    {item.photoUrl ? (
-                      <img
-                        src={item.photoUrl}
-                        alt={`Photo shared by ${item.displayName}`}
-                        className="postcard-photo"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="postcard-monogram" aria-hidden="true">
-                        {getInitials(item.displayName)}
-                      </div>
-                    )}
-                    <div className="postcard-photo-sheen" aria-hidden="true" />
-                  </div>
-
-                  <div className="postcard-content">
-                    <p className="postcard-message">“{item.wish}”</p>
-                    
-                    <div className="postcard-footer">
-                      <span className="postcard-author">{item.displayName}</span>
-                      <button
-                        type="button"
-                        className={`postcard-like-btn ${isLiked ? 'liked' : ''}`}
-                        onClick={(e) => handleToggleLike(e, item.id)}
-                        aria-label={`Like wish from ${item.displayName} (${item.likesCount} likes)`}
-                      >
-                        <span className="like-heart" aria-hidden="true">{isLiked ? '♥' : '♡'}</span>
-                        {item.likesCount > 0 && <span className="like-count">{item.likesCount}</span>}
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
+            {displayItems.map((item, index) => renderPostcard(item, index))}
           </div>
+        </div>
+      )}
+
+      {!isLoading && wishes.length > 0 && !shouldAutoScroll && (
+        <div
+          className="wishes-static-row"
+          aria-label="Wedding wishes collection"
+        >
+          {wishes.map((item, index) => renderPostcard(item, index))}
         </div>
       )}
 
@@ -289,9 +467,6 @@ export const WishesWall: React.FC = () => {
           <div
             className="postcard-modal-card"
             onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') setSelectedWish(null);
-            }}
           >
             <button
               type="button"
@@ -303,44 +478,67 @@ export const WishesWall: React.FC = () => {
             </button>
 
             <div className="modal-photo-container">
-              {selectedWish.photoUrl ? (
+              {selectedWish.photoUrl && !failedPhotos[selectedWish.id] ? (
                 <img
                   src={selectedWish.photoUrl}
                   alt={`Photo shared by ${selectedWish.displayName}`}
                   className="modal-photo"
+                  onError={() =>
+                    setFailedPhotos((prev) => ({
+                      ...prev,
+                      [selectedWish.id]: true
+                    }))
+                  }
                 />
               ) : (
                 <div className="modal-monogram">
-                  {getInitials(selectedWish.displayName)}
+                  <span className="postcard-monogram-ring modal-monogram-ring">
+                    {getInitials(selectedWish.displayName)}
+                  </span>
                 </div>
               )}
             </div>
 
             <div className="modal-body-content">
               <p className="modal-wish-text">“{selectedWish.wish}”</p>
-              
+
               <div className="modal-author-row">
-                <div>
-                  <h4 className="modal-author-name">{selectedWish.displayName}</h4>
-                  <span className="modal-date-tag">
-                    {new Date(selectedWish.submittedAt).toLocaleDateString(undefined, {
-                      month: 'long',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
-                  </span>
+                <div className="modal-author-meta">
+                  <h4 className="modal-author-name">
+                    {selectedWish.displayName}
+                  </h4>
+                  {selectedWish.submittedAt && (
+                    <span className="modal-date-tag">
+                      {new Date(selectedWish.submittedAt).toLocaleDateString(
+                        undefined,
+                        {
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric'
+                        }
+                      )}
+                    </span>
+                  )}
                 </div>
 
                 <button
                   type="button"
-                  className={`postcard-like-btn large ${!!userLikedMap[selectedWish.id] ? 'liked' : ''}`}
+                  className={`postcard-like-btn large ${
+                    userLikedMap[selectedWish.id] ? 'liked' : ''
+                  }`}
                   onClick={(e) => handleToggleLike(e, selectedWish.id)}
-                  aria-label={`Like wish from ${selectedWish.displayName} (${selectedWish.likesCount} likes)`}
+                  aria-label={`Like wish from ${selectedWish.displayName}${
+                    selectedWish.likesCount > 0
+                      ? ` (${selectedWish.likesCount} likes)`
+                      : ''
+                  }`}
                 >
                   <span className="like-heart" aria-hidden="true">
-                    {!!userLikedMap[selectedWish.id] ? '♥' : '♡'}
+                    {userLikedMap[selectedWish.id] ? '♥' : '♡'}
                   </span>
-                  {selectedWish.likesCount > 0 && <span className="like-count">{selectedWish.likesCount}</span>}
+                  {selectedWish.likesCount > 0 && (
+                    <span className="like-count">{selectedWish.likesCount}</span>
+                  )}
                 </button>
               </div>
             </div>

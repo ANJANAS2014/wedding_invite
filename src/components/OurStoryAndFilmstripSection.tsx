@@ -54,8 +54,7 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
 
         {/* Part 2: Moving 35mm Photographic Filmstrip */}
         <div className="filmstrip-wrapper" aria-label="35mm photographic memory filmstrip">
-          <div className="filmstrip-header-bar">
-            <span className="eyebrow">Archival Memories</span>
+          <div className="filmstrip-header-bar" style={{ justifyContent: 'flex-end', borderBottom: 'none', paddingBottom: 0, marginBottom: 12 }}>
             <div className="filmstrip-controls">
               <button
                 type="button"

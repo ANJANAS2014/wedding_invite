@@ -7,7 +7,7 @@
   --ink: #3a1218;
   --fh: 'Cormorant Garamond', Georgia, serif;
   --fb: 'Jost', system-ui, sans-serif;
-  color-scheme: light;
+  color-scheme: only light;
   box-sizing: border-box;
 
   --b1: url('/assets/images/invitation-floral-background.jpg');
@@ -18,14 +18,6 @@
   --cover-altar: url('/assets/images/hero-decoration-bottom-right.jpg');
   --cover-procession: url('/assets/images/wedding-procession.png');
   --cover-cutout: url('/assets/images/wedding-couple-cutout-refined.webp');
-}
-
-@media(prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #1b0a0d;
-    --ink: #f1e4cf;
-    color-scheme: dark;
-  }
 }
 
 html {
@@ -1041,41 +1033,40 @@ body:not(.opened) #mh {
 
 .pt {
   position: absolute;
-  top: -60px;
-  width: 18px;
-  height: 24px;
+  top: -30px;
+  width: 11px;
+  height: 15px;
   pointer-events: none;
   animation: petal-fall linear infinite, petal-drift ease-in-out infinite alternate;
   will-change: transform;
 }
 
-.pt i {
+.petal-svg {
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 50% 50% 50% 10% / 60% 60% 40% 40%;
   transform: rotate(var(--r, 45deg)) scale(var(--s, 1));
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.03));
 }
 
-.pt--blush i {
-  background: linear-gradient(135deg, #fde4ea, #f6b6c8);
-  opacity: .75;
+.pt--blush {
+  color: #f7d4de;
+  opacity: 0.55;
 }
 
-.pt--rose i {
-  background: linear-gradient(135deg, #f7c5d3, #e587a3);
-  opacity: .8;
+.pt--rose {
+  color: #f1b3c6;
+  opacity: 0.6;
 }
 
-.pt--pink i {
-  background: linear-gradient(135deg, #fedce5, #f39db7);
-  opacity: .7;
+.pt--pink {
+  color: #f9c2d1;
+  opacity: 0.5;
 }
 
-.pt--gold i {
-  background: linear-gradient(135deg, #fff3cf, #e2be67);
-  opacity: .65;
+.pt--gold {
+  color: #ebd79e;
+  opacity: 0.45;
 }
 
 @keyframes petal-fall {
@@ -3098,84 +3089,132 @@ footer:before {
 }
 
 /* ==========================================================================
-   WISHES MARQUEE RAIL (Matching Archival Memories Filmstrip style)
+   PHOTO-LED WISHES POSTCARD WALL & AUTO-SCROLLING RAIL
    ========================================================================== */
-.wishes-marquee-section {
-  background: color-mix(in srgb, var(--paper) 90%, var(--gold));
-  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
-  border-radius: 12px;
-  padding: 24px 0 28px;
-  max-width: 1040px;
-  margin: 40px auto;
-  box-shadow: 0 16px 40px -15px rgba(20, 5, 8, 0.15);
-  position: relative;
+.wishes-wall-section {
+  max-width: none;
+  width: 100%;
+  padding: clamp(52px, 7vw, 76px) 0 clamp(60px, 8vw, 84px);
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, #fcf7ee 0%, #f6ecda 68%, #f1e4cd 100%);
+  color: var(--ink);
   overflow: hidden;
+  position: relative;
+}
+
+.wishes-section-header {
+  max-width: 780px;
+  margin: 0 auto 24px;
+  padding: 0 20px;
   text-align: center;
 }
 
-.wishes-marquee-header-bar {
+.wishes-heart-crest {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(193, 154, 61, 0.55);
+  background: rgba(255, 252, 245, 0.85);
+  color: #8b2233;
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(107, 26, 36, 0.08);
+}
+
+.wishes-section-header h2 {
+  color: var(--maroon);
+  font-size: clamp(32px, 5.2vw, 48px);
+  margin: 0 0 6px;
+}
+
+.wishes-subtitle {
+  margin: 0 auto;
+  font: italic 400 clamp(16px, 2.2vw, 19px) / 1.45 var(--fh);
+  color: #6b4338;
+  letter-spacing: 0.01em;
+}
+
+.wishes-divider {
+  margin: 12px auto 16px;
+}
+
+.wishes-controls-row {
   display: flex;
+  justify-content: flex-end;
+  max-width: 1040px;
+  margin: 4px auto 0;
+}
+
+@media (max-width: 640px) {
+  .wishes-controls-row {
+    justify-content: center;
+  }
+}
+
+.wishes-pause-btn {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 24px 16px;
-  border-bottom: 1px solid rgba(193, 154, 61, 0.2);
-  margin-bottom: 20px;
-}
-
-.wishes-marquee-header-bar .eyebrow {
-  margin: 0;
-  color: var(--maroon);
-  font-size: 13px;
-  letter-spacing: .25em;
-  text-transform: uppercase;
-}
-
-.wishes-toggle-btn {
-  background: rgba(107, 26, 36, 0.08);
-  border: 1px solid rgba(193, 154, 61, 0.4);
-  color: var(--maroon);
-  padding: 6px 14px;
+  gap: 6px;
+  min-height: 36px;
+  padding: 7px 16px;
   border-radius: 999px;
-  font: 500 11px/1 var(--fb);
-  letter-spacing: .15em;
+  border: 1px solid rgba(193, 154, 61, 0.65);
+  background: #fffdf8;
+  color: var(--maroon);
+  font: 500 11.5px / 1 var(--fb);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: all .2s;
+  box-shadow: 0 4px 12px rgba(58, 18, 24, 0.07);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-.wishes-toggle-btn:hover {
+.wishes-pause-btn:hover {
   background: var(--maroon);
-  color: var(--cream);
+  color: #fff8ea;
   border-color: var(--maroon);
+  transform: translateY(-1px);
 }
 
-.wishes-marquee-viewport {
+/* Marquee Rail Viewport (3+ wishes) */
+.wishes-rail-viewport {
   width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  position: relative;
-  padding: 10px 0;
+  padding: 10px 0 18px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 3.5%, #000 96.5%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 3.5%, #000 96.5%, transparent 100%);
 }
 
-.wishes-marquee-viewport::-webkit-scrollbar {
+.wishes-rail-viewport::-webkit-scrollbar {
   display: none;
 }
 
-.wishes-marquee-track {
+.wishes-rail-track {
   display: flex;
-  gap: 16px;
+  align-items: stretch;
+  gap: 20px;
   width: max-content;
-  padding: 0 16px;
-  animation: scrollWishesMarquee 40s linear infinite;
+  padding: 4px 20px;
+  animation: scrollWishesMarquee var(--wishes-duration, 36s) linear infinite;
+  will-change: transform;
 }
 
-.wishes-marquee-track.is-paused {
+.wishes-rail-track.is-paused,
+.wishes-rail-viewport:hover .wishes-rail-track,
+.wishes-rail-viewport:active .wishes-rail-track {
   animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wishes-marquee-track {
+  .wishes-rail-track {
     animation: none !important;
   }
 }
@@ -3185,36 +3224,441 @@ footer:before {
   100% { transform: translateX(-50%); }
 }
 
-.wish-postcard-card {
-  flex: 0 0 auto;
-  width: 280px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(58, 18, 24, 0.1), 0 2px 6px rgba(0,0,0,0.04);
-  border: 1px solid rgba(193, 154, 61, 0.3);
+/* Centered Grid for 1–2 wishes or loading skeletons */
+.wishes-static-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 280px));
+  justify-content: center;
+  align-items: stretch;
+  gap: 20px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 6px 20px 14px;
+}
+
+/* Standardised Printed Keepsake Postcard Card */
+.postcard-card {
+  flex: 0 0 280px;
+  width: 100%;
+  max-width: 280px;
+  min-height: 298px;
+  height: auto;
+  padding: 12px 12px 14px;
+  border-radius: 12px;
+  background: #fffdf9;
+  border: 1px solid rgba(193, 154, 61, 0.42);
+  box-shadow:
+    0 12px 28px -16px rgba(72, 22, 31, 0.24),
+    0 2px 6px rgba(72, 22, 31, 0.05),
+    inset 0 0 0 3px #fffdf9,
+    inset 0 0 0 4px rgba(193, 154, 61, 0.16);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
   cursor: pointer;
   text-align: left;
-  transition: transform .3s ease, box-shadow .3s ease;
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s ease, border-color 0.28s ease;
 }
 
-.wish-postcard-card:hover {
+.postcard-card:hover,
+.postcard-card:focus-visible {
   transform: translateY(-4px);
-  box-shadow: 0 14px 32px rgba(58, 18, 24, 0.18);
+  border-color: var(--gold);
+  box-shadow:
+    0 18px 36px -14px rgba(72, 22, 31, 0.3),
+    0 4px 10px rgba(72, 22, 31, 0.07),
+    inset 0 0 0 3px #fffdf9,
+    inset 0 0 0 4px rgba(193, 154, 61, 0.28);
+  outline: none;
 }
 
-.empty-wishes-state-compact {
-  padding: 30px;
+@media (max-width: 480px) {
+  .postcard-card {
+    flex: 0 0 100%;
+    max-width: 100%;
+    min-height: 275px;
+  }
+}
+
+/* Consistent Top Photo / Monogram Frame with strict 4:3 aspect ratio */
+.postcard-photo-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #f7efe0 0%, #ede0ca 100%);
+  border: 1px solid rgba(193, 154, 61, 0.28);
+}
+
+.postcard-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+.postcard-card:hover .postcard-photo {
+  transform: scale(1.04);
+}
+
+.postcard-monogram {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 252, 245, 0.9) 0%, rgba(242, 228, 206, 0.85) 68%, rgba(232, 212, 185, 0.9) 100%);
+}
+
+.postcard-monogram-ring {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  border: 1px solid rgba(193, 154, 61, 0.62);
+  background: rgba(255, 253, 249, 0.86);
+  box-shadow: 0 0 0 4px rgba(255, 253, 249, 0.45), 0 6px 16px -8px rgba(90, 26, 38, 0.25);
+  display: grid;
+  place-items: center;
   color: var(--maroon);
-  font: 400 14px var(--fb);
+  font: 500 26px / 1 var(--fh);
+  letter-spacing: 0.04em;
 }
 
-.wishes-loading-row {
-  padding: 20px;
+.postcard-photo-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* Vintage Postcard Stamp Badge */
+.postcard-stamp {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 252, 246, 0.92);
+  border: 1px dashed rgba(154, 112, 34, 0.65);
+  color: #6b1a24;
+  font: 500 9.5px / 1 var(--fb);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(42, 10, 15, 0.12);
+  backdrop-filter: blur(4px);
+}
+
+.stamp-seal {
+  color: #a12538;
+  font-size: 10px;
+}
+
+/* Postcard Message & Footer */
+.postcard-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 4px 0;
+}
+
+.postcard-message {
+  margin: 0;
+  color: #3c161d;
+  font: italic 400 16px / 1.4 var(--fh);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.postcard-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 9px;
+  border-top: 1px solid rgba(193, 154, 61, 0.22);
+}
+
+.postcard-author {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--maroon);
+  font: 500 13px / 1.25 var(--fb);
+  letter-spacing: 0.02em;
+}
+
+/* Clean Editorial Heart Like Button (no browser default gray button chrome) */
+.postcard-like-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 34px;
+  min-height: 30px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(193, 154, 61, 0.35);
+  background: rgba(251, 245, 234, 0.85);
+  color: #8b2233;
+  font: 500 12.5px / 1 var(--fb);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, color 0.2s ease;
+}
+
+.postcard-like-btn:hover {
+  background: #fae8ec;
+  border-color: rgba(139, 34, 51, 0.45);
+  transform: scale(1.05);
+}
+
+.postcard-like-btn.liked {
+  background: #f9dfe5;
+  border-color: rgba(161, 37, 56, 0.55);
+  color: #a81c33;
+}
+
+.postcard-like-btn.large {
+  min-height: 38px;
+  padding: 7px 14px;
+  font-size: 14px;
+}
+
+.like-heart {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.postcard-like-btn.large .like-heart {
+  font-size: 16px;
+}
+
+.like-count {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: #5c1926;
+}
+
+/* Empty State Card */
+.empty-wishes-state {
+  max-width: 440px;
+  margin: 6px auto 0;
+  padding: 34px 28px;
+  border-radius: 14px;
+  background: #fffdf9;
+  border: 1px solid rgba(193, 154, 61, 0.42);
+  box-shadow:
+    0 14px 32px -20px rgba(72, 22, 31, 0.2),
+    inset 0 0 0 4px #fffdf9,
+    inset 0 0 0 5px rgba(193, 154, 61, 0.16);
   text-align: center;
+}
+
+.empty-envelope-icon {
+  display: inline-flex;
+  margin-bottom: 12px;
+}
+
+.empty-wishes-state h3 {
+  color: var(--maroon);
+  font: 500 26px / 1.15 var(--fh);
+  margin: 0 0 6px;
+}
+
+.empty-wishes-state p {
+  margin: 0;
+  color: #6b4338;
+  font: 400 14px / 1.5 var(--fb);
+}
+
+/* Loading Skeletons */
+.skeleton-postcard {
+  flex: 0 0 auto;
+  width: 288px;
+  height: 312px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fffdf9;
+  border: 1px solid rgba(193, 154, 61, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton-photo {
+  width: 100%;
+  height: 152px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #f3eadb 25%, #faf5ec 50%, #f3eadb 75%);
+  background-size: 200% 100%;
+  animation: wishSkeletonShimmer 1.6s ease-in-out infinite;
+}
+
+.skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f3eadb 25%, #faf5ec 50%, #f3eadb 75%);
+  background-size: 200% 100%;
+  animation: wishSkeletonShimmer 1.6s ease-in-out infinite;
+}
+
+.skeleton-line.w-80 { width: 82%; }
+.skeleton-line.w-60 { width: 58%; }
+
+@keyframes wishSkeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Enlarged Postcard Modal */
+.postcard-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 260;
+  padding: 20px;
+  background: rgba(24, 7, 11, 0.78);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInPanel 0.22s ease-out;
+}
+
+.postcard-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  max-height: calc(100svh - 40px);
+  overflow-y: auto;
+  padding: 16px 16px 20px;
+  border-radius: 16px;
+  background: #fffdf9;
+  border: 1px solid var(--gold);
+  box-shadow:
+    0 28px 60px -16px rgba(0, 0, 0, 0.65),
+    inset 0 0 0 4px #fffdf9,
+    inset 0 0 0 5px rgba(193, 154, 61, 0.22);
+  text-align: left;
+  color: var(--ink);
+}
+
+.modal-close-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 3;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(193, 154, 61, 0.6);
+  background: rgba(255, 253, 249, 0.92);
+  color: var(--maroon);
+  font: 500 15px / 1 var(--fb);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(24, 7, 11, 0.18);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: var(--maroon);
+  color: #fff8ea;
+}
+
+.modal-photo-container {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 280px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #f7efe0 0%, #ede0ca 100%);
+  border: 1px solid rgba(193, 154, 61, 0.3);
+}
+
+.modal-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-monogram {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 252, 245, 0.92) 0%, rgba(242, 228, 206, 0.88) 70%, rgba(232, 212, 185, 0.92) 100%);
+}
+
+.modal-monogram-ring {
+  width: 84px;
+  height: 84px;
+  font-size: 32px;
+}
+
+.modal-body-content {
+  padding: 18px 6px 2px;
+}
+
+.modal-wish-text {
+  margin: 0 0 18px;
+  color: #4a1520;
+  font: italic 400 clamp(19px, 3vw, 22px) / 1.48 var(--fh);
+  overflow-wrap: anywhere;
+}
+
+.modal-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(193, 154, 61, 0.28);
+}
+
+.modal-author-meta {
+  min-width: 0;
+}
+
+.modal-author-name {
+  margin: 0;
+  color: var(--maroon);
+  font: 600 15px / 1.25 var(--fb);
+}
+
+.modal-date-tag {
+  display: block;
+  margin-top: 3px;
+  color: #82624a;
+  font: 400 12px / 1.3 var(--fb);
 }
 
 /* Modern Add Photo Button & Rich Emoji Picker */
