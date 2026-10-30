@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface WishItem {
   id: string;
@@ -37,9 +37,28 @@ const DEFAULT_WISHES: WishItem[] = [
 
 export const WishesWall: React.FC = () => {
   const [wishes, setWishes] = useState<WishItem[]>(DEFAULT_WISHES);
+  const railRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check if new wishes are submitted in local storage or api
+    // 1. Fetch approved wishes from Netlify function (Supabase)
+    fetch('/.netlify/functions/wishes')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.ok && Array.isArray(data.wishes) && data.wishes.length > 0) {
+          const apiWishes: WishItem[] = data.wishes.map((w: any, idx: number) => ({
+            id: `api_wish_${idx}`,
+            displayName: w.displayName,
+            wish: w.wish,
+            photoUrl: w.photoUrl
+          }));
+          setWishes([...apiWishes, ...DEFAULT_WISHES]);
+        }
+      })
+      .catch(() => {
+        // ignore network error, fallback to local storage
+      });
+
+    // 2. Check local storage for recent guest submissions & uploaded photos
     try {
       const stored = localStorage.getItem('wedding_rsvps_v2');
       if (stored) {
@@ -50,10 +69,11 @@ export const WishesWall: React.FC = () => {
             .map((r, idx) => ({
               id: `user_wish_${idx}`,
               displayName: r.name,
-              wish: r.wishes
+              wish: r.wishes,
+              photoUrl: r.photoPreview || r.photoUrl
             }));
           if (userWishes.length > 0) {
-            setWishes([...userWishes, ...DEFAULT_WISHES]);
+            setWishes((prev) => [...userWishes, ...prev]);
           }
         }
       }
@@ -61,6 +81,13 @@ export const WishesWall: React.FC = () => {
       // ignore
     }
   }, []);
+
+  const scrollRail = (direction: 'left' | 'right') => {
+    if (railRef.current) {
+      const scrollAmount = direction === 'left' ? -320 : 320;
+      railRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   const getInitials = (name: string) => {
     return name
@@ -85,7 +112,30 @@ export const WishesWall: React.FC = () => {
         </svg>
       </div>
 
-      <div className="wishes-rail" tabIndex={0} aria-label="Approved wedding wishes">
+      {/* Manual Scroll Controls */}
+      <div className="wishes-nav-bar">
+        <span className="wishes-nav-hint">Scroll or swipe to explore wishes</span>
+        <div className="wishes-nav-buttons">
+          <button
+            type="button"
+            className="wishes-nav-btn"
+            onClick={() => scrollRail('left')}
+            aria-label="Scroll wishes left"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            className="wishes-nav-btn"
+            onClick={() => scrollRail('right')}
+            aria-label="Scroll wishes right"
+          >
+            ›
+          </button>
+        </div>
+      </div>
+
+      <div className="wishes-rail" ref={railRef} tabIndex={0} aria-label="Wedding wishes cards">
         <div className="wishes-track-run">
           <div className="wishes-track">
             {wishes.map((item) => (

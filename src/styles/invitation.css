@@ -945,7 +945,7 @@ body.opened #main {
   border-radius: 14px;
   box-shadow: 0 16px 40px -24px rgba(74, 26, 26, 0.25);
   position: relative;
-  text-align: left;
+  text-align: center;
 }
 
 .our-story-editorial:before {
@@ -959,7 +959,7 @@ body.opened #main {
 
 .story-header {
   margin-bottom: 20px;
-  text-align: left;
+  text-align: center;
 }
 
 .story-prompt {
@@ -978,16 +978,8 @@ body.opened #main {
 }
 
 .story-div {
-  margin: 8px 0 18px;
-  justify-content: flex-start;
-}
-
-.story-div:before {
-  display: none;
-}
-
-.story-div:after {
-  width: 90px;
+  margin: 10px auto 18px;
+  justify-content: center;
 }
 
 .story-body {
@@ -2577,4 +2569,52 @@ footer:before {
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }
+
+/* Wishes Navigation Bar & Scroll Buttons */
+.wishes-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1040px;
+  margin: 0 auto 10px;
+  padding: 0 10px;
+}
+
+.wishes-nav-hint {
+  font: 400 12px var(--fb);
+  color: #8c681d;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.wishes-nav-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.wishes-nav-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  background: #fbf6ec;
+  color: var(--maroon);
+  font: 500 20px/1 var(--fh);
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.wishes-nav-btn:hover {
+  background: var(--gold);
+  color: #2a0a0f;
+}
+
+.wishes-rail {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
 

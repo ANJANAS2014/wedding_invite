@@ -16,10 +16,13 @@ export interface RsvpRecord {
   receptionGuestCount: number;
   wishes: string;
   inviteToken?: string;
+  photoPath?: string;
+  photoPreview?: string;
   submittedAt: string;
 }
 
 const LOCAL_STORAGE_KEY = 'wedding_rsvps_v2';
+const MAX_PHOTO_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export const RsvpSection: React.FC<RsvpSectionProps> = ({
   guestName: initialGuestName,
@@ -33,6 +36,8 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
   const [receptionAttending, setReceptionAttending] = useState<boolean>(false);
   const [receptionGuestCount, setReceptionGuestCount] = useState<number>(1);
   const [wishes, setWishes] = useState<string>('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string>('');
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -71,6 +76,30 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
     setReceptionGuestCount((prev) => Math.max(1, Math.min(maxGuests, prev + step)));
   };
 
+  // Handle Photo selection
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setErrorMessage('');
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setErrorMessage('Please choose a valid JPG, PNG or WebP photo.');
+      return;
+    }
+
+    if (file.size > MAX_PHOTO_SIZE) {
+      setErrorMessage('Please choose a photo smaller than 5 MB.');
+      return;
+    }
+
+    setPhotoFile(file);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPhotoPreview(event.target?.result as string || '');
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -91,21 +120,60 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
 
     setIsSubmitting(true);
 
-    const submissionPayload: RsvpRecord = {
-      id: crypto.randomUUID ? crypto.randomUUID() : `rsvp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-      name: trimmedName,
-      weddingAttending,
-      weddingGuestCount: weddingAttending ? weddingGuestCount : 0,
-      receptionAttending,
-      receptionGuestCount: receptionAttending ? receptionGuestCount : 0,
-      wishes: wishes.trim(),
-      inviteToken: inviteToken || undefined,
-      submittedAt: new Date().toISOString()
-    };
+    const submissionId = crypto.randomUUID ? crypto.randomUUID() : `rsvp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+    let photoPath = '';
+    let photoSize = 0;
 
     try {
-      // First attempt to post to backend API endpoint if available
-      let backendSuccess = false;
+      // 1. If a photo is attached, request signed upload URL and upload to Supabase storage bucket
+      if (photoFile) {
+        try {
+          const presignRes = await fetch('/.netlify/functions/rsvp-photo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({
+              submissionId,
+              contentType: photoFile.type,
+              size: photoFile.size
+            })
+          });
+
+          if (presignRes.ok) {
+            const presignData = await presignRes.json();
+            if (presignData && presignData.ok && presignData.uploadUrl && presignData.path) {
+              const uploadRes = await fetch(presignData.uploadUrl, {
+                method: 'PUT',
+                headers: { 'Content-Type': photoFile.type },
+                body: photoFile
+              });
+
+              if (uploadRes.ok) {
+                photoPath = presignData.path;
+                photoSize = photoFile.size;
+              }
+            }
+          }
+        } catch {
+          // Photo upload fallback if storage offline
+        }
+      }
+
+      const submissionPayload: RsvpRecord = {
+        id: submissionId,
+        name: trimmedName,
+        weddingAttending,
+        weddingGuestCount: weddingAttending ? weddingGuestCount : 0,
+        receptionAttending,
+        receptionGuestCount: receptionAttending ? receptionGuestCount : 0,
+        wishes: wishes.trim(),
+        inviteToken: inviteToken || undefined,
+        photoPath: photoPath || undefined,
+        photoPreview: photoPreview || undefined,
+        submittedAt: new Date().toISOString()
+      };
+
+      // 2. Post to backend API endpoint if available
       try {
         const res = await fetch('/.netlify/functions/rsvp', {
           method: 'POST',
@@ -118,21 +186,20 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             receptionGuestCount: submissionPayload.receptionGuestCount,
             wishes: submissionPayload.wishes,
             invite: inviteToken || undefined,
-            submissionId: submissionPayload.id
+            submissionId: submissionPayload.id,
+            photoPath: photoPath || undefined,
+            photoSize: photoSize || undefined
           })
         });
 
         if (res.ok) {
-          const data = await res.json().catch(() => null);
-          if (data && data.ok) {
-            backendSuccess = true;
-          }
+          await res.json().catch(() => null);
         }
       } catch {
         // Backend not deployed or offline, proceed to persistent browser storage
       }
 
-      // Always save to browser persistent storage for guaranteed reliability and demo tracking
+      // 3. Always save to browser persistent storage for guaranteed reliability and demo tracking
       try {
         const stored = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
         const updated = Array.isArray(stored) ? stored.filter((item: RsvpRecord) => item.name !== trimmedName) : [];
@@ -203,6 +270,16 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                   <b style={{ fontStyle: 'italic', maxWidth: '200px', textAlign: 'right' }}>
                     “{submittedData.wishes}”
                   </b>
+                </li>
+              )}
+              {submittedData.photoPreview && (
+                <li>
+                  <span>Shared Photo</span>
+                  <img
+                    src={submittedData.photoPreview}
+                    alt="Shared RSVP photo"
+                    style={{ width: '42px', height: '42px', objectFit: 'cover', borderRadius: '4px', border: '1px solid var(--gold)' }}
+                  />
                 </li>
               )}
             </ul>
@@ -336,11 +413,41 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
               </div>
             </div>
 
-            {/* Wishes and personal message */}
+            {/* Wishes and personal message with camera icon upload */}
             <div className="rsvp-wishes-section">
-              <label htmlFor="rsvp-wishes" className="rsvp-wishes-heading">
-                A little wish for us ❤️
-              </label>
+              <div className="rsvp-wishes-header-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <label htmlFor="rsvp-wishes" className="rsvp-wishes-heading" style={{ margin: 0 }}>
+                  A little wish for us ❤️
+                </label>
+                
+                <div className="rsvp-camera-upload-container">
+                  <input
+                    id="rsvp-photo-input"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handlePhotoSelect}
+                    style={{ display: 'none' }}
+                  />
+                  {photoPreview ? (
+                    <div className="rsvp-inline-preview" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <img src={photoPreview} alt="Attached photo" style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px', border: '1px solid var(--gold)' }} />
+                      <button
+                        type="button"
+                        onClick={() => { setPhotoFile(null); setPhotoPreview(''); }}
+                        style={{ background: 'none', border: 'none', color: '#f3dc8e', cursor: 'pointer', fontSize: '12px', textDecoration: 'underline' }}
+                      >
+                        Remove photo
+                      </button>
+                    </div>
+                  ) : (
+                    <label htmlFor="rsvp-photo-input" className="rsvp-camera-btn" title="Attach a photo with your wish" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(193, 154, 61, 0.15)', border: '1px solid var(--gold)', borderRadius: '999px', padding: '5px 12px', color: '#f6df96', cursor: 'pointer', font: '500 11px var(--fb)', letterSpacing: '.1em', transition: 'background .2s' }}>
+                      <span>📸</span>
+                      <span>Add Photo</span>
+                    </label>
+                  )}
+                </div>
+              </div>
+
               <textarea
                 id="rsvp-wishes"
                 name="wishes"

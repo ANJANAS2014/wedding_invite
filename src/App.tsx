@@ -12,6 +12,7 @@ import { WishesWall } from './components/WishesWall';
 import { LightboxModal } from './components/LightboxModal';
 import { EventDayNotice } from './components/EventDayNotice';
 import { GuestTrackerModal } from './components/GuestTrackerModal';
+import { FallingPetals } from './components/FallingPetals';
 
 export const App: React.FC = () => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -128,6 +129,7 @@ export const App: React.FC = () => {
   return (
     <>
       <EventDayNotice />
+      <FallingPetals />
 
       {!isOpened && (
         <CoverHero
