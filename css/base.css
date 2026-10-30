@@ -397,7 +397,6 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid #e8
 #couple{position:relative;isolation:isolate;overflow:hidden;background:var(--paper)}
 #couple>*{position:relative}
 #s2{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(900px 420px at 50% 0,color-mix(in srgb,var(--maroon) 86%,#fff),var(--maroon))}
-#s2:after{content:"";position:absolute;z-index:-1;pointer-events:none;left:50%;top:25%;transform:translateX(-50%);width:min(94vw,1000px);height:min(58vw,620px);background:url("../assets/images/kerala-wedding-procession.webp") center/contain no-repeat;opacity:.13;mix-blend-mode:screen;mask-image:radial-gradient(ellipse at center,#000 38%,transparent 76%)}
 #s2 .sec{position:relative;z-index:1}
 .journey-art,#date .procession-art{display:none}
 @media(max-width:560px){.cover-portrait{height:min(44svh,360px)}#s2:after{top:32%;width:100%;height:45vw;opacity:.1}}

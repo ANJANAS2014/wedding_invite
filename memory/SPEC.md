@@ -13,7 +13,7 @@ Falling petals: restored original `.pt` body-wide fixed petals (11 mobile / 18 d
 - Lamp flicker: `.cover-lamps--desktop/--mobile` inside `.cover-garland`, glows positioned via `LAMP_FLAMES` (% of garland art) in js/main.js; `lamp-flicker` keyframes; static under reduced motion.
 - Lotus-petal curtain: `openWithCurtain()` (js/main.js) bound to `#op`. Panels close ~0.46s, `pg(1)` at 560ms, part over 1s, removed at 1.7s; music starts synchronously on tap. Reduced motion → opens instantly.
 - After opening: 1/3 of petals remain (`.pt:nth-child(3n+1)`), at 70% opacity and 72% size.
-- Share preview: `assets/images/share-preview.jpg` 1200x630 + OG/Twitter meta in index.html; og:image uses placeholder `https://YOUR-SITE.netlify.app/...` (one-line change).
+- Share preview: `assets/images/wedding-hero-couple-trees.jpg` is used for OG/Twitter metadata in index.html.
 
 ## Additions (iteration 3)
 - Personal greeting: `?to=Name` → `GUEST_NAME` (sanitised, max 60 chars, escaped) → `.cover-greeting` "Dear <b>Name</b>, with love we invite you" between couple and names. Link maker: `/links.html` (standalone, noindex; name, optional "& Family", optional WhatsApp number, editable message, Send on WhatsApp / Copy / Preview).

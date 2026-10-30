@@ -14,8 +14,6 @@
   --b2: url('/assets/images/couple-floral-background.jpg');
   --b3: url('/assets/images/events-elephant-floral-background.jpg');
   --wT: url('/assets/images/hero-decoration-desktop-wide.jpg');
-  --cover-scene-desktop: url('/assets/images/hero-scene-desktop.webp');
-  --cover-scene-mobile: url('/assets/images/hero-scene-mobile.webp');
   --cover-garland-mobile: url('/assets/images/hero-decoration-mobile.jpg');
   --cover-altar: url('/assets/images/hero-decoration-bottom-right.jpg');
   --cover-cutout: url('/assets/images/wedding-couple-cutout-refined.webp');
@@ -1399,7 +1397,6 @@ body.opened #main {
   transform: translateX(-50%);
   width: min(94vw, 1000px);
   height: min(58vw, 620px);
-  background: url("/assets/images/kerala-wedding-procession.webp") center/contain no-repeat;
   opacity: .1;
   mix-blend-mode: screen;
   mask-image: radial-gradient(ellipse at center, #000 38%, transparent 76%);
@@ -2842,7 +2839,6 @@ footer:before {
   border-color: var(--gold);
   transform: scale(1.15);
 }
-
 
 
 
