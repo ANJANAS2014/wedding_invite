@@ -8,41 +8,27 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Lalith &amp; Anjana · Wedding Invitation</title>
-  <!-- Share preview (WhatsApp, Instagram DMs, Facebook, X). Link previews need a full web address:
-       replace YOUR-SITE.netlify.app on the og:image line below with your live site address. -->
-  <meta property="og:image" content="https://YOUR-SITE.netlify.app/assets/images/share-preview.jpg">
+  <!-- Share preview -->
+  <meta property="og:image" content="/assets/images/share-preview.jpg">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Lalith &amp; Anjana · Wedding Invitation">
   <meta property="og:description" content="With joy, we invite you to celebrate our wedding on November 29, 2026.">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Lalith and Anjana beneath a traditional floral garland with brass lamps and lotus flowers">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
   <meta name="description" content="Lalith and Anjana warmly invite you to celebrate their wedding on November 29, 2026.">
-  <link rel="preload" as="image" href="assets/images/wedding-couple-cutout-refined.webp" fetchpriority="high">
-  <link rel="preload" as="image" href="assets/images/hero-decoration-desktop-wide.jpg" media="(min-width: 721px)" fetchpriority="high">
-  <link rel="preload" as="image" href="assets/images/hero-decoration-mobile.jpg" media="(max-width: 720px)" fetchpriority="high">
-  <link rel="preload" as="image" href="assets/images/hero-decoration-bottom-right.jpg">
-  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-  <link rel="preconnect" href="https://images.pexels.com" crossorigin>
+  <link rel="preload" as="image" href="/assets/images/wedding-couple-cutout-refined.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="/assets/images/hero-decoration-desktop-wide.jpg" media="(min-width: 721px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/assets/images/hero-decoration-mobile.jpg" media="(max-width: 720px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/assets/images/hero-decoration-bottom-right.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&amp;family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Great+Vibes&amp;family=Jost:wght@300;400;500&amp;family=Lora:ital@0;1&amp;family=Marcellus&amp;family=Playfair+Display:ital@0;1&amp;display=swap">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&amp;family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;family=Great+Vibes&amp;family=Jost:wght@300;400;500;600&amp;family=Lora:ital@0;1&amp;family=Marcellus&amp;family=Playfair+Display:ital@0;1&amp;display=swap">
 </head>
 <body>
-  <div id="app"></div>
-  <div id="lb" role="dialog" aria-modal="true" aria-label="Wedding memories photo viewer" aria-hidden="true" tabindex="-1"><button class="lb-close" type="button" aria-label="Close photo viewer">×</button><button class="lb-prev" type="button" aria-label="Previous photo">‹</button><img alt="Wedding memory" decoding="async"><button class="lb-next" type="button" aria-label="Next photo">›</button></div>
-  <button id="mu" aria-label="Mute or unmute music"><i></i><i></i><i></i><i></i></button>
-  <script src="data/theme.js"></script>
-  <script src="data/images.js"></script>
-  <script src="data/content.js"></script>
-  <script src="js/main.js" defer></script>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
