@@ -52,11 +52,26 @@ create table if not exists public.invitations (
   sent_at         timestamptz,
   last_opened_at  timestamptz,
   revoked_at      timestamptz,
+  max_guests      smallint not null default 1 check (max_guests between 1 and 10),
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now(),
   constraint invitations_token_unique unique (token),
   constraint invitations_guest_unique unique (guest_id)   -- one personal link per guest
 );
+
+alter table public.invitations add column if not exists max_guests smallint not null default 1;
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'invitations_max_guests_valid'
+      and conrelid = 'public.invitations'::regclass
+  ) then
+    alter table public.invitations
+      add constraint invitations_max_guests_valid check (max_guests between 1 and 10);
+  end if;
+end $$;
 
 -- ---------------------------------------------------------------------
 -- RSVP responses — one per invitation (updated on resubmission);

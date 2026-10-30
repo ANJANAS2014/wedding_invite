@@ -33,7 +33,7 @@ Tables:
 
 - `events` (wedding, reception): date, time, venue and map link, in IST.
 - `guests`: name, language (`en` / `ta` / `ml`) and optional WhatsApp number. The normalised name is unique, which blocks duplicate entries.
-- `invitations`: one per guest. Holds the unique random token, the `created` / `sent` status, `sent_at` and `last_opened_at`.
+- `invitations`: one per guest. Holds the unique random token, the `created` / `sent` status, `sent_at`, `last_opened_at`, and the per-event guest limit (default 1, configurable from 1–10).
 - `rsvp_responses`: one per invitation (a NULL invitation means a general-link reply). Holds the name, wishes, wish approval, revision count and a unique `client_submission_id`.
 - `rsvp_event_responses`: one row per event, so the wedding and reception are recorded independently. The guest count must be 1–10 when attending and 0 when declining.
 - `rsvp_photos`: the optional photo's storage path, type and size.
