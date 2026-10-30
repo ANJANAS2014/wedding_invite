@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { WEDDING_CONTENT, WEDDING_GALLERY } from './data/weddingData';
+import { WEDDING_CONTENT, UNIFIED_MEMORIES } from './data/weddingData';
 import { CoverHero } from './components/CoverHero';
 import { LotusCurtain } from './components/LotusCurtain';
 import { MusicPlayer } from './components/MusicPlayer';
 import { InvitationIntroSection } from './components/InvitationIntroSection';
 import { CoupleSection } from './components/CoupleSection';
-import { OurStorySection } from './components/OurStorySection';
-import { OurReelsSection } from './components/OurReelsSection';
-import { OurGallerySection } from './components/OurGallerySection';
+import { OurStoryAndFilmstripSection } from './components/OurStoryAndFilmstripSection';
 import { EventsSection } from './components/EventsSection';
 import { RsvpSection } from './components/RsvpSection';
 import { WishesWall } from './components/WishesWall';
@@ -151,20 +149,8 @@ export const App: React.FC = () => {
         {/* Section 3: Couple Profiles (Bride & Groom) */}
         <CoupleSection />
 
-        {/* Section 4: Our Story & Our Reels – Side by side on Desktop (>=1024px), Stacked on Mobile */}
-        <section className="story-reels-section" id="story-reels-section">
-          <div className="story-reels-container">
-            <div className="story-col">
-              <OurStorySection />
-            </div>
-            <div className="reels-col">
-              <OurReelsSection />
-            </div>
-          </div>
-        </section>
-
-        {/* Section 5: Our Gallery – Separate upgraded photo collection */}
-        <OurGallerySection onOpenLightbox={(index) => setLightboxIndex(index)} />
+        {/* Section 4 & 5 Combined: Expandable Our Story & Moving 35mm Photographic Filmstrip */}
+        <OurStoryAndFilmstripSection onOpenLightbox={(index) => setLightboxIndex(index)} />
 
         {/* Section 6: Upgraded RSVP */}
         <RsvpSection
@@ -217,12 +203,12 @@ export const App: React.FC = () => {
         onClose={() => setLightboxIndex(null)}
         onNext={() => {
           if (lightboxIndex !== null) {
-            setLightboxIndex((lightboxIndex + 1) % WEDDING_GALLERY.length);
+            setLightboxIndex((lightboxIndex + 1) % UNIFIED_MEMORIES.length);
           }
         }}
         onPrev={() => {
           if (lightboxIndex !== null) {
-            setLightboxIndex((lightboxIndex - 1 + WEDDING_GALLERY.length) % WEDDING_GALLERY.length);
+            setLightboxIndex((lightboxIndex - 1 + UNIFIED_MEMORIES.length) % UNIFIED_MEMORIES.length);
           }
         }}
       />

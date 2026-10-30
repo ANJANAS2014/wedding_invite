@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { WEDDING_GALLERY, WEDDING_IMAGES } from '../data/weddingData';
+import { UNIFIED_MEMORIES } from '../data/weddingData';
 
 interface LightboxModalProps {
   currentIndex: number | null;
@@ -44,10 +44,10 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
   if (currentIndex === null) return null;
 
-  const currentPhoto = WEDDING_GALLERY[currentIndex];
+  const currentPhoto = UNIFIED_MEMORIES[currentIndex];
   if (!currentPhoto) return null;
 
-  const photoSrc = WEDDING_IMAGES[currentPhoto.src] || currentPhoto.src;
+  const photoSrc = currentPhoto.src;
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartXRef.current = e.changedTouches[0].clientX;

@@ -2337,3 +2337,244 @@ footer:before {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: none; }
 }
+
+/* ==========================================================================
+   OUR STORY & 35MM FILMSTRIP SECTION
+   ========================================================================== */
+.our-story-filmstrip-section {
+  padding: clamp(40px, 6vw, 72px) 20px;
+  background: var(--paper);
+  position: relative;
+}
+
+.story-filmstrip-container {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: stretch;
+}
+
+.story-body-container {
+  position: relative;
+  overflow: hidden;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+}
+
+.story-body-container.is-collapsed {
+  max-height: 250px;
+}
+
+.story-body-container.is-collapsed::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: linear-gradient(180deg, transparent, #fbf6ec);
+  pointer-events: none;
+}
+
+.story-body-container.is-expanded {
+  max-height: 2500px;
+}
+
+.story-toggle-wrapper {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.story-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--maroon);
+  padding: 10px 28px;
+  border-radius: 999px;
+  font: 500 12px/1 var(--fb);
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .25s ease;
+  box-shadow: 0 4px 14px rgba(193, 154, 61, 0.15);
+}
+
+.story-toggle-btn:hover {
+  background: var(--gold);
+  color: #2b0d12;
+  transform: translateY(-2px);
+}
+
+/* 35mm Filmstrip Styling */
+.filmstrip-wrapper {
+  background: #141414;
+  border: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
+  border-radius: 12px;
+  padding: 24px 0 28px;
+  box-shadow: 0 20px 50px -20px rgba(20, 5, 8, 0.5), inset 0 0 30px rgba(0,0,0,0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.filmstrip-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px 16px;
+  border-bottom: 1px solid rgba(193, 154, 61, 0.2);
+  margin-bottom: 20px;
+}
+
+.filmstrip-header-bar .eyebrow {
+  margin: 0;
+  color: #d6b25a;
+}
+
+.filmstrip-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(193, 154, 61, 0.4);
+  color: #f7dfa4;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font: 500 11px/1 var(--fb);
+  letter-spacing: .15em;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.filmstrip-toggle-btn:hover {
+  background: var(--gold);
+  color: #141414;
+  border-color: var(--gold);
+}
+
+.filmstrip-viewport {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  position: relative;
+  padding: 10px 0;
+}
+
+.filmstrip-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.filmstrip-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  padding: 0 16px;
+  animation: scrollFilmstrip 45s linear infinite;
+}
+
+.filmstrip-track.is-paused {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filmstrip-track {
+    animation: none !important;
+  }
+}
+
+@keyframes scrollFilmstrip {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.film-frame {
+  flex: 0 0 auto;
+  width: 240px;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 6px 6px 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+  cursor: pointer;
+  position: relative;
+  transition: transform .3s ease, border-color .3s ease;
+}
+
+.film-frame:hover {
+  transform: scale(1.03);
+  border-color: var(--gold);
+}
+
+/* Sprocket Holes */
+.film-sprockets {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: #050505;
+  border-radius: 2px;
+}
+
+.bottom-sprockets {
+  margin-top: 6px;
+  padding: 4px 8px;
+  position: relative;
+}
+
+.sprocket-hole {
+  width: 10px;
+  height: 12px;
+  background: #141414;
+  border: 1px solid #444;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.9);
+}
+
+.film-picture-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: #000;
+  overflow: hidden;
+  margin: 6px 0;
+  border: 1px solid #222;
+}
+
+.film-picture-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: contrast(1.04) saturate(1.02);
+  transition: transform .5s ease;
+}
+
+.film-frame:hover .film-picture-img {
+  transform: scale(1.05);
+}
+
+.film-frame-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.film-edge-code {
+  font-family: monospace;
+  font-size: 9px;
+  color: #c5a882;
+  letter-spacing: 0.1em;
+}
+
+.film-edge-brand {
+  font-family: monospace;
+  font-size: 8.5px;
+  color: #888;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+

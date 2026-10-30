@@ -102,6 +102,30 @@ export const REELS_PHOTOS: ReelPhoto[] = [
   }
 ];
 
+export interface UnifiedMemoryPhoto {
+  src: string;
+  alt: string;
+  caption?: string;
+  subcaption?: string;
+  ratio?: string;
+}
+
+export const UNIFIED_MEMORIES: UnifiedMemoryPhoto[] = [
+  ...WEDDING_GALLERY.map(g => ({
+    src: WEDDING_IMAGES[g.src] || g.src,
+    alt: g.alt,
+    caption: g.alt,
+    ratio: g.ratio || '3/2'
+  })),
+  ...REELS_PHOTOS.map(r => ({
+    src: r.src,
+    alt: r.caption,
+    caption: r.caption,
+    subcaption: r.subcaption,
+    ratio: '4/5'
+  }))
+];
+
 export const GALLERY_DIMENSIONS: Record<string, [number, number]> = {
   p1: [1125, 1500],
   p2: [1125, 1500],
