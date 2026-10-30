@@ -40,6 +40,7 @@ export const WEDDING_IMAGES: Record<string, string> = {
   p18: "/assets/images/hero-decoration-mobile.jpg",
   p18w: "/assets/images/hero-decoration-desktop-wide.jpg",
   p19: "/assets/images/hero-decoration-bottom-right.jpg",
+  wedding_procession: "/assets/images/wedding-procession.png",
   w1: "/assets/images/wedding-venue-central-auditorium.jpg",
   r1: "/assets/images/reception-venue-annalakshmi.jpg",
   hero_cover: "/assets/images/wedding-couple-cutout-refined.webp",

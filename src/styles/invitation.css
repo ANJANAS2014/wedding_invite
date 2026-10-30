@@ -16,6 +16,7 @@
   --wT: url('/assets/images/hero-decoration-desktop-wide.jpg');
   --cover-garland-mobile: url('/assets/images/hero-decoration-mobile.jpg');
   --cover-altar: url('/assets/images/hero-decoration-bottom-right.jpg');
+  --cover-procession: url('/assets/images/wedding-procession.png');
   --cover-cutout: url('/assets/images/wedding-couple-cutout-refined.webp');
 }
 
@@ -29,10 +30,13 @@
 
 html {
   scroll-behavior: smooth;
-  background: #ebe2db;
+  background: #eae1d8;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+}
+
+html:has(body.opened) {
   scrollbar-gutter: stable;
 }
 
@@ -189,8 +193,20 @@ h2 {
 }
 
 /* ==========================================================================
-   COVER / HERO SECTION
+   COVER / HERO SECTION — Art-Directed South Indian Wedding Invitation Cover
    ========================================================================== */
+.sr-and {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 #hero {
   position: fixed;
   inset: 0;
@@ -199,11 +215,12 @@ h2 {
   display: grid;
   place-items: center;
   text-align: center;
-  color: var(--maroon);
-  background: #ebe2db;
+  color: #5c1926;
+  background-color: #eae1d8;
   overflow: hidden;
   z-index: 10;
   padding: 0;
+  isolation: isolate;
 }
 
 body.opened #hero {
@@ -215,195 +232,316 @@ body.opened #hero {
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-}
-
-.cover-landscape {
-  position: absolute;
-  inset: 0;
-  background: var(--cover-scene-desktop) center/cover no-repeat;
-  opacity: .32;
-  filter: saturate(.8);
-}
-
-@media(max-width: 720px) {
-  .cover-landscape {
-    background-image: var(--cover-scene-mobile);
-  }
+  z-index: 1;
+  background-color: #eae1d8;
+  background-image: radial-gradient(ellipse 52% 46% at 50% 42%, #f6efe6 0%, #eee6dd 46%, #eae1d8 76%);
 }
 
 .cover-light {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 45%, #fffdf855 0%, #3a0d1544 85%);
-  mix-blend-mode: soft-light;
+  background: radial-gradient(ellipse 62% 52% at 50% 38%, rgba(255, 251, 242, 0.5) 0%, rgba(193, 154, 61, 0.05) 55%, rgba(90, 26, 38, 0.03) 100%);
+}
+
+/* Upper floral & jasmine garland stage + brass lamps (media-gated so only 1 garland loads) */
+.cover-garland-stage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 3;
 }
 
 .cover-garland {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  aspect-ratio: 2160/760;
-  background: var(--wT) center top/100% auto no-repeat;
-  animation: sway 9s ease-in-out infinite;
-  transform-origin: 50% 0;
+  inset: 0;
+  background-position: center top;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%);
 }
 
-@media(max-width: 720px) {
+@media (min-width: 721px) {
+  .cover-garland-stage {
+    top: calc(-100vw * 0.011);
+    aspect-ratio: 2160 / 760;
+  }
+
   .cover-garland {
-    background-image: var(--cover-garland-mobile);
-    aspect-ratio: 1080/760;
+    background-image: var(--wT);
   }
 }
 
-@keyframes sway {
-  0%, 100% { transform: rotate(0); }
-  50% { transform: rotate(0.6deg); }
+@media (max-width: 720px) {
+  .cover-garland-stage {
+    top: calc(-100vw * 0.022);
+    aspect-ratio: 1080 / 760;
+  }
+
+  .cover-garland {
+    background-image: var(--cover-garland-mobile);
+  }
 }
 
-.cover-altar {
-  position: absolute;
-  bottom: 0;
-  width: min(44vw, 360px);
-  height: min(38vh, 320px);
-  background: var(--cover-altar) center bottom/contain no-repeat;
-  opacity: .95;
-}
-
-.cover-altar--left {
-  left: 0;
-  transform: scaleX(-1);
-}
-
-.cover-altar--right {
-  right: 0;
-}
-
-.cover-floor {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 18%;
-  background: linear-gradient(0deg, #d8c9b5a8, transparent);
-}
-
-.cover-tint {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, transparent 40%, #2a0b1222 100%);
-}
-
-.cover-paper-grain {
-  position: absolute;
-  inset: 0;
-  opacity: .04;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-.cover-thali-frame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.cover-thali-frame--mobile {
-  display: none;
-}
-
-@media(max-width: 720px) {
-  .cover-thali-frame--desktop { display: none; }
-  .cover-thali-frame--mobile { display: block; }
-}
-
-.thali-string {
-  fill: none;
-  stroke: #c89c3b;
-  stroke-width: 0.8;
-  opacity: .75;
-}
-
-.thali-locket-heart {
-  fill: #c89c3b;
-}
-
-.thali-locket-inlay {
-  fill: #851c27;
-}
-
-.thali-locket-pin {
-  fill: #ffe8a3;
-}
-
-.cover-sparkle {
-  position: absolute;
-  bottom: -20px;
-  width: var(--s, 4px);
-  height: var(--s, 4px);
-  border-radius: 50%;
-  background: #f7e6ab;
-  box-shadow: 0 0 8px #f5d47a;
-  animation: float-sparkle var(--d, 10s) linear var(--dl, 0s) infinite;
-  opacity: 0;
-}
-
-@keyframes float-sparkle {
-  0% { transform: translateY(0) scale(.8); opacity: 0; }
-  20% { opacity: .75; }
-  80% { opacity: .65; }
-  100% { transform: translateY(-105vh) scale(1.2); opacity: 0; }
-}
-
+/* Brass lamp wick overlay — animates ONLY the flame & warm glow layers */
 .cover-lamps {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  aspect-ratio: 2160/760;
+  inset: 0;
   pointer-events: none;
 }
 
 .cover-lamps--mobile {
   display: none;
-  aspect-ratio: 1080/760;
 }
 
-@media(max-width: 720px) {
-  .cover-lamps--desktop { display: none; }
-  .cover-lamps--mobile { display: block; }
+@media (max-width: 720px) {
+  .cover-lamps--desktop {
+    display: none;
+  }
+
+  .cover-lamps--mobile {
+    display: block;
+  }
 }
 
 .cover-lamp {
   position: absolute;
-  width: clamp(20px, 2.5vw, 42px);
-  aspect-ratio: 1;
-  translate: -50% -58%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.cover-lamp-glow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: clamp(24px, 2.5vw, 40px);
+  height: clamp(24px, 2.5vw, 40px);
   border-radius: 50%;
-  background: radial-gradient(circle, #fff4cdf2 0%, #ffd88a99 26%, #ffb45a33 50%, #ffb45a00 70%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 246, 206, 0.88) 0%,
+    rgba(255, 208, 115, 0.52) 30%,
+    rgba(232, 146, 45, 0.18) 58%,
+    rgba(232, 146, 45, 0) 76%
+  );
   mix-blend-mode: screen;
-  opacity: .85;
-  animation: lamp-flicker var(--fd, 3s) ease-in-out var(--fdl, 0s) infinite;
+  transform: translate(-50%, -56%);
+  animation: lamp-glow-breathe var(--fgd, 3.8s) ease-in-out var(--fdl, 0s) infinite;
+  will-change: transform, opacity;
 }
 
-@keyframes lamp-flicker {
-  0%, 100% { opacity: .78; transform: scale(1); }
-  25% { opacity: .95; transform: scale(1.08, 1.12); }
-  50% { opacity: .7; transform: scale(0.96); }
-  75% { opacity: 1; transform: scale(1.1, 1.14); }
+.cover-lamp-flame {
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: clamp(6px, 0.62vw, 9.5px);
+  height: clamp(13px, 1.38vw, 21px);
+  border-radius: 50% 50% 44% 44% / 74% 74% 26% 26%;
+  background: radial-gradient(
+    ellipse 58% 68% at 50% 66%,
+    #fffff6 0%,
+    #fff3b8 34%,
+    #ffbe55 68%,
+    rgba(226, 114, 24, 0.82) 90%,
+    rgba(226, 114, 24, 0) 100%
+  );
+  filter: blur(0.45px);
+  mix-blend-mode: screen;
+  transform-origin: 50% 88%;
+  translate: -50% 0;
+  animation: lamp-flame-flicker var(--fd, 2.7s) ease-in-out var(--fdl, 0s) infinite;
+  will-change: transform, opacity;
 }
 
-/* Cover Content */
+@media (max-width: 720px) {
+  .cover-lamp-glow {
+    width: clamp(22px, 6.2vw, 32px);
+    height: clamp(22px, 6.2vw, 32px);
+  }
+
+  .cover-lamp-flame {
+    width: clamp(5.5px, 1.6vw, 8.5px);
+    height: clamp(12px, 3.5vw, 18px);
+  }
+}
+
+@keyframes lamp-glow-breathe {
+  0%, 100% {
+    opacity: 0.72;
+    transform: translate(-50%, -56%) scale3d(0.96, 0.96, 1);
+  }
+  35% {
+    opacity: 0.92;
+    transform: translate(-50%, -56%) scale3d(1.08, 1.12, 1);
+  }
+  68% {
+    opacity: 0.66;
+    transform: translate(-50%, -56%) scale3d(0.93, 0.95, 1);
+  }
+  86% {
+    opacity: 0.96;
+    transform: translate(-50%, -56%) scale3d(1.11, 1.14, 1);
+  }
+}
+
+@keyframes lamp-flame-flicker {
+  0%, 100% {
+    opacity: 0.88;
+    transform: rotate(-0.8deg) scale3d(1, 1, 1);
+  }
+  19% {
+    opacity: 0.98;
+    transform: rotate(1.6deg) scale3d(0.94, 1.11, 1);
+  }
+  38% {
+    opacity: 0.82;
+    transform: rotate(-1.9deg) scale3d(1.04, 0.93, 1);
+  }
+  57% {
+    opacity: 1;
+    transform: rotate(1.1deg) scale3d(0.95, 1.14, 1);
+  }
+  78% {
+    opacity: 0.85;
+    transform: rotate(-1.3deg) scale3d(1.03, 0.96, 1);
+  }
+}
+
+/* Lower-right outer corner: blooming pink lotuses, scattered petals & floral sprays */
+.cover-decor-right {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: clamp(136px, 13.4vw, 208px);
+  aspect-ratio: 432 / 680;
+  background-image: var(--cover-altar);
+  background-size: 250% 100%;
+  background-position: 100% 100%;
+  background-repeat: no-repeat;
+  z-index: 1;
+  -webkit-mask-image:
+    radial-gradient(108% 96% at 100% 100%, #000 46%, rgba(0, 0, 0, 0.65) 70%, transparent 94%),
+    linear-gradient(90deg, transparent 0%, #000 28%, #000 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(108% 96% at 100% 100%, #000 46%, rgba(0, 0, 0, 0.65) 70%, transparent 94%),
+    linear-gradient(90deg, transparent 0%, #000 28%, #000 100%);
+  mask-composite: intersect;
+}
+
+/* Lower-left flanking group: ceremonial muthukkuda umbrellas & panchavadyam musicians */
+.cover-procession-left {
+  position: absolute;
+  left: clamp(58px, 4.4vw, 88px);
+  bottom: clamp(18px, 2.8svh, 34px);
+  height: clamp(180px, 29svh, 272px);
+  max-width: calc(50vw - 165px);
+  aspect-ratio: 550 / 392;
+  background-image: var(--cover-procession);
+  background-size: 181.818% 100%;
+  background-position: 3.333% 100%;
+  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
+  filter: brightness(1.3) contrast(1.18) sepia(0.14) saturate(1.08);
+  z-index: 2;
+  -webkit-mask-image:
+    linear-gradient(180deg, transparent 0%, #000 12%, #000 93%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 5%, #000 97%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(180deg, transparent 0%, #000 12%, #000 93%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 5%, #000 97%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* Lower-right flanking group: caparisoned ceremonial elephant facing inward */
+.cover-procession-elephant {
+  position: absolute;
+  right: clamp(78px, 7.6vw, 136px);
+  bottom: clamp(20px, 3svh, 36px);
+  height: clamp(174px, 28svh, 262px);
+  max-width: calc(50vw - 195px);
+  aspect-ratio: 420 / 392;
+  background-image: var(--cover-procession);
+  background-size: 238.095% 100%;
+  background-position: 97.414% 100%;
+  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
+  filter: brightness(1.3) contrast(1.18) sepia(0.14) saturate(1.08);
+  z-index: 2;
+  -webkit-mask-image:
+    linear-gradient(180deg, transparent 0%, #000 14%, #000 94%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 4%, #000 94%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(180deg, transparent 0%, #000 14%, #000 94%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 4%, #000 94%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* Subtle warm sandy-parchment ground wash across the lower ceremonial stage */
+.cover-floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 13%;
+  background:
+    radial-gradient(ellipse 85% 65% at 50% 100%, rgba(210, 189, 162, 0.34) 0%, rgba(234, 225, 216, 0) 76%),
+    linear-gradient(0deg, rgba(214, 195, 174, 0.28) 0%, rgba(234, 225, 216, 0) 100%);
+  z-index: 3;
+}
+
+.cover-tint {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 76% at 50% 48%, transparent 56%, rgba(88, 34, 24, 0.08) 100%);
+  z-index: 4;
+}
+
+.cover-paper-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  z-index: 4;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.cover-sparkle {
+  position: absolute;
+  bottom: -20px;
+  width: var(--s, 3.5px);
+  height: var(--s, 3.5px);
+  border-radius: 50%;
+  background: #f9eab8;
+  box-shadow: 0 0 7px #efd079;
+  animation: float-sparkle var(--d, 11s) linear var(--dl, 0s) infinite;
+  opacity: 0;
+  z-index: 4;
+}
+
+@keyframes float-sparkle {
+  0% { transform: translateY(0) scale(0.8); opacity: 0; }
+  20% { opacity: 0.65; }
+  80% { opacity: 0.55; }
+  100% { transform: translateY(-105vh) scale(1.15); opacity: 0; }
+}
+
+/* Central Cover Focal Stack */
 .cv {
   position: relative;
-  z-index: 2;
+  z-index: 5;
+  width: 100%;
+  max-width: 720px;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(34px, 7svh, 60px) 20px 48px;
+  padding: clamp(32px, 5svh, 58px) 24px clamp(38px, 6svh, 68px);
 }
 
 .cover-couple {
@@ -416,83 +554,160 @@ body.opened #hero {
 .cover-halo {
   position: absolute;
   left: 50%;
-  top: 46%;
+  top: 47%;
   transform: translate(-50%, -50%);
-  width: 155%;
+  width: 142%;
   aspect-ratio: 1;
   pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 72%, transparent 90%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 72%, transparent 90%);
 }
 
-.cover-halo .man {
+.cover-halo .cover-lotus-mandala {
   width: 100%;
   height: 100%;
-  animation: spin 90s linear infinite;
-  opacity: .28;
+  animation: spin 110s linear infinite;
+  opacity: 0.38;
+}
+
+.cover-halo .cover-lotus-mandala * {
+  fill: none;
+  stroke: #b5882c;
+  stroke-width: 0.55;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
+.cover-couple::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  width: 74%;
+  height: 24%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(72, 23, 29, 0.16) 0%, rgba(72, 23, 29, 0) 72%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .cover-couple img {
+  position: relative;
+  z-index: 1;
   display: block;
   width: auto;
-  height: min(44svh, 440px);
-  max-width: min(84vw, 460px);
+  height: clamp(210px, 38svh, 375px);
+  max-width: min(78vw, 395px);
   object-fit: contain;
   object-position: center top;
-  filter: drop-shadow(0 14px 20px #48171d38);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 92%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 92%, transparent 100%);
-  animation: cover-couple-float 7s ease-in-out infinite;
+  -webkit-mask-image:
+    linear-gradient(to bottom, #000 0%, #000 90%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, #000 0%, #000 90%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  mask-composite: intersect;
+  animation: cover-couple-float 7.5s ease-in-out infinite;
 }
 
 @keyframes cover-couple-float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-7px); }
+  50% { transform: translateY(-5px); }
 }
 
 .cover-greeting {
   position: relative;
   z-index: 2;
-  margin: clamp(8px, 1.6svh, 16px) 0 0;
-  color: #6e5234;
-  font: italic 400 clamp(16px, 1.7vw, 22px)/1.3 var(--fh);
-  letter-spacing: .02em;
-  text-shadow: 0 1px 0 #fff9, 0 0 18px #fff7ea;
+  margin: clamp(6px, 1.1svh, 12px) 0 0;
+  max-width: 34ch;
+  color: #6b4e31;
+  font: italic 400 clamp(15px, 1.6vw, 20px) / 1.32 var(--fh);
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 16px #f6efe6;
 }
 
 .cover-greeting b {
   font-weight: 600;
   font-style: italic;
-  color: #5a1a26;
+  color: #5c1926;
 }
 
 #hero .names {
   position: relative;
   z-index: 2;
-  margin: clamp(4px, 1.2vh, 12px) 0 0;
-  color: #681c29;
-  font: 500 clamp(54px, 7.5vw, 88px)/.98 var(--fh);
-  letter-spacing: .025em;
-  text-shadow: 0 1px #fff8;
+  margin: clamp(4px, 0.9svh, 10px) 0 0;
+  color: #5e1623;
+  font: 500 clamp(44px, 6.4vw, 80px) / 0.98 var(--fh);
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65), 0 6px 22px rgba(246, 239, 230, 0.85);
 }
 
 #hero .names i {
   display: inline-block;
-  margin: 0 .15em;
-  color: #b98b31;
-  font-size: .45em;
+  margin: 0 0.14em;
+  font-family: 'Playfair Display', var(--fh);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.68em;
   line-height: 1;
+  vertical-align: -0.02em;
+  text-shadow: none;
+  color: #b8892b;
+  background: linear-gradient(180deg, #d7ab4e 0%, #996b17 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.55));
+}
+
+/* Ornamental antique-gold floret divider beneath names */
+.cover-ornament {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: clamp(6px, 1svh, 11px) 0 0;
+}
+
+.cover-ornament-line {
+  width: clamp(44px, 5vw, 72px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(183, 137, 46, 0.8));
+}
+
+.cover-ornament-line:last-child {
+  background: linear-gradient(270deg, transparent, rgba(183, 137, 46, 0.8));
+}
+
+.cover-ornament-floret {
+  width: 16px;
+  height: 16px;
+  overflow: visible;
+}
+
+.cover-ornament-floret path {
+  fill: none;
+  stroke: #b7892e;
+  stroke-width: 1.05;
+}
+
+.cover-ornament-floret circle {
+  fill: #b7892e;
 }
 
 .cover-date {
   position: relative;
   z-index: 2;
-  margin: 10px 0 0;
-  color: #664626;
-  font: 500 12px/1.6 var(--fb);
-  letter-spacing: .28em;
+  margin: clamp(6px, 0.9svh, 10px) 0 0;
+  color: #4f2a1f;
+  font: 500 clamp(11px, 1.08vw, 13px) / 1.45 var(--fb);
+  letter-spacing: 0.3em;
   text-transform: uppercase;
 }
 
@@ -502,21 +717,21 @@ body.opened #hero {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin: clamp(8px, 1.2svh, 12px) 0 0;
+  gap: clamp(14px, 1.9vw, 24px);
+  margin: clamp(10px, 1.4svh, 15px) 0 0;
 }
 
 .ccd-unit {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 44px;
+  min-width: 52px;
 }
 
 .ccd-unit b {
-  font: 500 clamp(20px, 2.1vw, 26px)/1 var(--fh);
-  color: #a57c2f;
-  background: linear-gradient(180deg, #c9a14c, #8f6a22);
+  font: 500 clamp(22px, 2.3vw, 30px) / 1 var(--fh);
+  color: #9b7124;
+  background: linear-gradient(180deg, #c59b43 0%, #865f1a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -524,25 +739,293 @@ body.opened #hero {
 }
 
 .ccd-unit small {
-  margin-top: 3px;
-  font: 500 8.5px/1 var(--fb);
-  letter-spacing: .22em;
+  margin-top: 4px;
+  font: 500 8.5px / 1 var(--fb);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #7a5f3c;
+  color: #6d5030;
 }
 
-.cover-countdown > i {
-  color: #c2a05a;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 1;
-  transform: translateY(-6px);
+.ccd-sep {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(183, 137, 46, 0.08), rgba(183, 137, 46, 0.65), rgba(183, 137, 46, 0.08));
 }
 
 .ob {
   position: relative;
   z-index: 2;
-  margin: 18px 0 0;
+  margin: clamp(14px, 2.1svh, 22px) 0 0;
+}
+
+#hero .ob .btn {
+  min-width: clamp(205px, 19vw, 268px);
+  padding: 14px 36px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 10px 24px -10px rgba(154, 112, 34, 0.68),
+    0 0 0 4px rgba(246, 239, 230, 0.6);
+}
+
+body:not(.opened) #mh {
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Tablet layout (721px – 1023px): balanced portrait stage with lower flanking procession & elephant */
+@media (min-width: 721px) and (max-width: 1023px) {
+  .cv {
+    padding-top: clamp(46px, 6.5svh, 74px);
+    padding-bottom: clamp(170px, 20svh, 215px);
+  }
+
+  .cover-couple img {
+    height: clamp(200px, 33svh, 315px);
+  }
+
+  .cover-procession-left {
+    left: 62px;
+    bottom: 14px;
+    height: clamp(128px, 15.5svh, 162px);
+    max-width: 34vw;
+  }
+
+  .cover-procession-elephant {
+    right: 64px;
+    bottom: 16px;
+    height: clamp(122px, 14.8svh, 154px);
+    max-width: 26vw;
+  }
+
+  .cover-decor-right {
+    width: clamp(108px, 15vw, 138px);
+  }
+
+  body:not(.opened) #mh {
+    bottom: calc(182px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Mobile composition (<= 720px): deliberate portrait hierarchy with symmetric lower ceremonial aisle */
+@media (max-width: 720px) {
+  .cv {
+    justify-content: center;
+    padding: clamp(38px, 6svh, 62px) 18px clamp(132px, 18svh, 168px);
+  }
+
+  .cover-couple img {
+    height: clamp(168px, 28.5svh, 255px);
+    max-width: min(72vw, 270px);
+  }
+
+  .cover-halo {
+    width: 136%;
+  }
+
+  #hero .names {
+    font-size: clamp(38px, 10.6vw, 52px);
+    margin-top: clamp(4px, 0.8svh, 8px);
+  }
+
+  .cover-ornament {
+    margin-top: 5px;
+    gap: 8px;
+  }
+
+  .cover-ornament-line {
+    width: 38px;
+  }
+
+  .cover-ornament-floret {
+    width: 13px;
+    height: 13px;
+  }
+
+  .cover-date {
+    margin-top: 5px;
+    font-size: 10.5px;
+    letter-spacing: 0.25em;
+  }
+
+  .cover-countdown {
+    margin-top: 8px;
+    gap: 12px;
+  }
+
+  .ccd-unit {
+    min-width: 42px;
+  }
+
+  .ccd-unit b {
+    font-size: 21px;
+  }
+
+  .ccd-unit small {
+    font-size: 7.5px;
+    letter-spacing: 0.18em;
+  }
+
+  .ccd-sep {
+    height: 22px;
+  }
+
+  .ob {
+    margin-top: clamp(10px, 1.8svh, 16px);
+  }
+
+  #hero .ob .btn {
+    min-width: 196px;
+    padding: 12px 28px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+  }
+
+  .cover-procession-left {
+    left: 56px;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    height: clamp(82px, 11.4svh, 104px);
+    max-width: 38vw;
+  }
+
+  .cover-procession-elephant {
+    right: 34px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    height: clamp(78px, 10.8svh, 98px);
+    max-width: 28vw;
+  }
+
+  .cover-decor-right {
+    right: 0;
+    bottom: 0;
+    width: clamp(68px, 19vw, 88px);
+  }
+
+  body:not(.opened) #mh {
+    bottom: calc(114px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Compact small-mobile refinement (<= 360px, e.g. 320px width) */
+@media (max-width: 360px) {
+  .cv {
+    padding: 30px 14px 108px;
+  }
+
+  .cover-couple img {
+    height: clamp(142px, 25svh, 188px);
+    max-width: 66vw;
+  }
+
+  #hero .names {
+    font-size: clamp(32px, 10.2vw, 37px);
+  }
+
+  .cover-ornament {
+    margin-top: 4px;
+  }
+
+  .cover-ornament-line {
+    width: 30px;
+  }
+
+  .cover-date {
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+  }
+
+  .cover-countdown {
+    margin-top: 6px;
+    gap: 9px;
+  }
+
+  .ccd-unit {
+    min-width: 36px;
+  }
+
+  .ccd-unit b {
+    font-size: 18px;
+  }
+
+  .ccd-sep {
+    height: 19px;
+  }
+
+  #hero .ob .btn {
+    min-width: 170px;
+    padding: 11px 22px;
+    font-size: 10.5px;
+    letter-spacing: 0.19em;
+  }
+
+  body:not(.opened) #mu {
+    left: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    width: 36px;
+    height: 36px;
+  }
+
+  body:not(.opened) #mh {
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    font-size: 9.5px;
+    padding: 7px 14px;
+  }
+
+  .cover-procession-left {
+    left: 42px;
+    bottom: 6px;
+    height: 74px;
+    max-width: 108px;
+  }
+
+  .cover-procession-elephant {
+    right: 24px;
+    bottom: 7px;
+    height: 70px;
+    max-width: 78px;
+  }
+
+  .cover-decor-right {
+    right: 0;
+    width: 58px;
+  }
+}
+
+/* Short-landscape desktop safeguard */
+@media (min-width: 721px) and (max-height: 740px) {
+  .cv {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+
+  .cover-couple img {
+    height: min(33svh, 240px);
+  }
+
+  #hero .names {
+    font-size: clamp(38px, 5.2vw, 58px);
+  }
+
+  .ob {
+    margin-top: 10px;
+  }
+}
+
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .cover-lamp-glow,
+  .cover-lamp-flame,
+  .cover-sparkle,
+  .cover-halo .cover-lotus-mandala,
+  .cover-couple img {
+    animation: none !important;
+  }
+
+  .cover-lamp-glow {
+    opacity: 0.8;
+  }
+
+  .cover-lamp-flame {
+    opacity: 0.92;
+  }
 }
 
 /* ==========================================================================
