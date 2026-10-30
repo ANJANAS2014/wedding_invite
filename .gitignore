@@ -12,3 +12,8 @@ Thumbs.db
 # Local logs and generated inspection output
 *.log
 assets/images/_asset-contact-sheet.jpg
+
+# Local secrets
+.env
+.env.*
+!.env.example

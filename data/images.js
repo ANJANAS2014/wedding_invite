@@ -25,7 +25,7 @@ window.WEDDING_IMAGES = {
   "bride_portrait":"assets/images/bride-office-portrait.jpg",
   "hero_scene_desktop":"assets/images/hero-scene-desktop.webp",
   "hero_scene_mobile":"assets/images/hero-scene-mobile.webp",
-  "hero_cover":"assets/images/wedding-couple-cutout.webp",
+  "hero_cover":"assets/images/wedding-couple-cutout-refined.webp",
   "wedding_event_photo":"assets/images/wedding-venue-central-auditorium.jpg",
   "reception_event_photo":"assets/images/reception-venue-annalakshmi.jpg",
   "gallery_01":"assets/images/gallery-couple-water-lotus-landscape.jpg", "gallery_02":"assets/images/gallery-couple-lotus-boat-landscape.jpg",

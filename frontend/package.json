@@ -1,0 +1,8 @@
+{
+  "name": "wedding-invite-preview",
+  "private": true,
+  "description": "Preview shim only: serves the static site in /app on port 3000 for the Emergent preview. Not part of the deployed site.",
+  "scripts": {
+    "dev": "cd .. && exec python3 -m http.server ${PORT:-3000} --bind 0.0.0.0"
+  }
+}

@@ -1,3 +1,4 @@
+import json
 import re
 from pathlib import Path
 
@@ -66,7 +67,7 @@ window.WEDDING_FONTS = {
 };
 """, encoding="utf-8")
 
-(root / "data" / "images.js").write_text("window.WEDDING_IMAGES = " + __import__('json').dumps(image_manifest, indent=2) + ";\n", encoding="utf-8")
+(root / "data" / "images.js").write_text("window.WEDDING_IMAGES = " + json.dumps(image_manifest, indent=2) + ";\n", encoding="utf-8")
 (root / "data" / "content.js").write_text("window.WEDDING_CONTENT = " + def_object + ";\n", encoding="utf-8")
 
 # Preserve behavior modules as explicitly organized entry points; main.js owns the existing renderer.

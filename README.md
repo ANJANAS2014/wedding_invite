@@ -54,7 +54,9 @@ The current hero is controlled by `cover`, which defaults to `p2`. `cover`, `gIm
 Place replacement images in `assets/images/`, then change the matching path in `data/images.js`. Existing section mappings are also documented in that file:
 
 - Hero cover/first screen: `cover`, default key `p2`; also `hero_cover` in the image manifest
-- Hero decorative background: `p18`, `p18w`, and `p19`
+- Hero decorative background (restored layered cover): `p18w` top garland on desktop, `p18` top garland on mobile, `p19` brass altar/lotus arrangement (mirrored on both lower sides); `hero_scene_desktop` / `hero_scene_mobile` are shown only as a soft Kerala/Tamil Nadu watercolour wash at the sides
+- Hero couple cutout: `hero_cover` points to `wedding-couple-cutout-refined.webp` (edge-cleaned version of `wedding-couple-cutout.webp`)
+- Falling petals: created in `js/main.js` (`.petals` / `.pt`, styled at the end of `css/base.css`); disabled automatically for `prefers-reduced-motion`
 - Couple portraits: `gImg` (`p12`) and `bImg` (`p10`)
 - Story photos: `sp` (`story_photo_one` through `story_photo_four`), mapped to the four files in `resized_couple_photos/`
 - Couple/story background: `p15`, `p16`, `p17`
@@ -64,6 +66,18 @@ Place replacement images in `assets/images/`, then change the matching path in `
 Replace a file in place, preserving its filename, to update the page without editing JavaScript. Do not upscale small originals unnecessarily. Prefer JPEG/WebP output with dimensions appropriate to its rendered size.
 
 The reel's photo list is in `data/content.js`. Reorder entries in `gal`, remove an entry to remove that photo, or add one with an object such as `{src:'p7',alt:'Together among the lotus blooms',ratio:'3/2',position:'center',caption:'A quiet afternoon'}`. `ratio` is optional when using an existing image key with known dimensions; `position` is an optional CSS object position for the full-size contained image.
+
+## Guest Tracker, personal links and Supabase
+
+See **SUPABASE_SETUP.md** for the complete database package (SQL in `supabase/`), Netlify variables and the activation checklist. Netlify Functions: `rsvp`, `rsvp-photo`, `invite`, `wishes`, `admin-guests` (shared helpers in `netlify/functions/_shared/`). Until Supabase variables are set, RSVPs keep using the Google Sheets flow.
+
+## Personal guest links
+
+Open `links.html` on your live site (for example `https://YOUR-SITE.netlify.app/links.html`), type a guest's name, then tap **Send on WhatsApp** or **Copy link**. The link adds `?to=Name`, and the cover then shows "Dear Name, with love we invite you". The page is not linked from the invitation.
+
+## Share preview image
+
+`assets/images/share-preview.jpg` (1200x630) is the link preview shown in WhatsApp, Instagram DMs and other apps. Link previews require a full address, so after publishing, replace `YOUR-SITE.netlify.app` on the `og:image` line in `index.html` with your live site address.
 
 ## Edit colors and fonts
 
