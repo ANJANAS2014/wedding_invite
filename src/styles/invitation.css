@@ -14,6 +14,8 @@
   --b2: url('/assets/images/couple-floral-background.jpg');
   --b3: url('/assets/images/events-elephant-floral-background.jpg');
   --wT: url('/assets/images/hero-decoration-desktop-wide.jpg');
+  --cover-scene-desktop: url('/assets/images/hero-scene-desktop.webp');
+  --cover-scene-mobile: url('/assets/images/hero-scene-mobile.webp');
   --cover-garland-mobile: url('/assets/images/hero-decoration-mobile.jpg');
   --cover-altar: url('/assets/images/hero-decoration-bottom-right.jpg');
   --cover-cutout: url('/assets/images/wedding-couple-cutout-refined.webp');
@@ -1397,6 +1399,7 @@ body.opened #main {
   transform: translateX(-50%);
   width: min(94vw, 1000px);
   height: min(58vw, 620px);
+  background: url("/assets/images/kerala-wedding-procession.webp") center/contain no-repeat;
   opacity: .1;
   mix-blend-mode: screen;
   mask-image: radial-gradient(ellipse at center, #000 38%, transparent 76%);
@@ -2613,4 +2616,233 @@ footer:before {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ==========================================================================
+   WISHES MARQUEE RAIL (Matching Archival Memories Filmstrip style)
+   ========================================================================== */
+.wishes-marquee-section {
+  background: color-mix(in srgb, var(--paper) 90%, var(--gold));
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  border-radius: 12px;
+  padding: 24px 0 28px;
+  max-width: 1040px;
+  margin: 40px auto;
+  box-shadow: 0 16px 40px -15px rgba(20, 5, 8, 0.15);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.wishes-marquee-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px 16px;
+  border-bottom: 1px solid rgba(193, 154, 61, 0.2);
+  margin-bottom: 20px;
+}
+
+.wishes-marquee-header-bar .eyebrow {
+  margin: 0;
+  color: var(--maroon);
+  font-size: 13px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+}
+
+.wishes-toggle-btn {
+  background: rgba(107, 26, 36, 0.08);
+  border: 1px solid rgba(193, 154, 61, 0.4);
+  color: var(--maroon);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font: 500 11px/1 var(--fb);
+  letter-spacing: .15em;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.wishes-toggle-btn:hover {
+  background: var(--maroon);
+  color: var(--cream);
+  border-color: var(--maroon);
+}
+
+.wishes-marquee-viewport {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  position: relative;
+  padding: 10px 0;
+}
+
+.wishes-marquee-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.wishes-marquee-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  padding: 0 16px;
+  animation: scrollWishesMarquee 40s linear infinite;
+}
+
+.wishes-marquee-track.is-paused {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wishes-marquee-track {
+    animation: none !important;
+  }
+}
+
+@keyframes scrollWishesMarquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.wish-postcard-card {
+  flex: 0 0 auto;
+  width: 280px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(58, 18, 24, 0.1), 0 2px 6px rgba(0,0,0,0.04);
+  border: 1px solid rgba(193, 154, 61, 0.3);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.wish-postcard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(58, 18, 24, 0.18);
+}
+
+.empty-wishes-state-compact {
+  padding: 30px;
+  color: var(--maroon);
+  font: 400 14px var(--fb);
+}
+
+.wishes-loading-row {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Modern Add Photo Button & Rich Emoji Picker */
+.modern-photo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(193, 154, 61, 0.22), rgba(193, 154, 61, 0.12));
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 7px 16px;
+  color: #f7dfa4;
+  cursor: pointer;
+  font: 500 12px/1 var(--fb);
+  letter-spacing: .08em;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all .2s ease;
+}
+
+.modern-photo-btn:hover {
+  background: linear-gradient(135deg, rgba(193, 154, 61, 0.35), rgba(193, 154, 61, 0.2));
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  border-color: #fcebc5;
+}
+
+.photo-btn-icon {
+  font-size: 14px;
+}
+
+.emoji-picker-wrapper {
+  position: relative;
+}
+
+.emoji-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(193, 154, 61, 0.4);
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: #f6df96;
+  font: 500 12px var(--fb);
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.emoji-trigger-btn:hover {
+  background: rgba(193, 154, 61, 0.2);
+  border-color: var(--gold);
+}
+
+.emoji-dropdown-panel {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  width: 260px;
+  background: #340c13;
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  z-index: 100;
+  animation: fadeInPanel .2s ease;
+}
+
+@keyframes fadeInPanel {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.emoji-grid-header {
+  font: 500 11px var(--fb);
+  color: #c5a882;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin-bottom: 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(193, 154, 61, 0.2);
+  padding-bottom: 6px;
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.emoji-grid-item {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform .15s, background .15s, border-color .15s;
+}
+
+.emoji-grid-item:hover {
+  background: rgba(193, 154, 61, 0.3);
+  border-color: var(--gold);
+  transform: scale(1.15);
+}
+
+
+
 

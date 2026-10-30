@@ -23,6 +23,8 @@ window.WEDDING_IMAGES = {
   "story_photo_four":"resized_couple_photos/couple_photo_4.png",
   "groom_portrait":"assets/images/groom-park-portrait.jpg",
   "bride_portrait":"assets/images/bride-office-portrait.jpg",
+  "hero_scene_desktop":"assets/images/hero-scene-desktop.webp",
+  "hero_scene_mobile":"assets/images/hero-scene-mobile.webp",
   "hero_cover":"assets/images/wedding-couple-cutout-refined.webp",
   "wedding_event_photo":"assets/images/wedding-venue-central-auditorium.jpg",
   "reception_event_photo":"assets/images/reception-venue-annalakshmi.jpg",

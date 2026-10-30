@@ -43,6 +43,8 @@ export const WEDDING_IMAGES: Record<string, string> = {
   w1: "/assets/images/wedding-venue-central-auditorium.jpg",
   r1: "/assets/images/reception-venue-annalakshmi.jpg",
   hero_cover: "/assets/images/wedding-couple-cutout-refined.webp",
+  hero_scene_desktop: "/assets/images/hero-scene-desktop.webp",
+  hero_scene_mobile: "/assets/images/hero-scene-mobile.webp",
   story_photo_one: "/resized_couple_photos/couple_photo_1.jpg",
   story_photo_two: "/resized_couple_photos/couple_photo_2.jpg",
   story_photo_three: "/resized_couple_photos/couple_photo_3.jpg",

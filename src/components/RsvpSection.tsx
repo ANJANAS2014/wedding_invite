@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 interface RsvpSectionProps {
   guestName: string;
@@ -23,6 +23,13 @@ export interface RsvpRecord {
 
 const LOCAL_STORAGE_KEY = 'wedding_rsvps_v2';
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_WISH_CHARS = 200;
+
+const WIDE_EMOJIS = [
+  '❤️', '💍', '🥂', '✨', '🌸', '🕊️', '🎉', '💖',
+  '💐', '🍾', '🥳', '🌟', '💌', '🌿', '🥰', '🙏',
+  '😍', '🤗', '🍀', '🎊', '💞', '🌷', '🤩', '🎂'
+];
 
 export const RsvpSection: React.FC<RsvpSectionProps> = ({
   guestName: initialGuestName,
@@ -42,6 +49,21 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [submittedData, setSubmittedData] = useState<RsvpRecord | null>(null);
+
+  // Emoji picker dropdown state
+  const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  // Close emoji picker on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Toggle wedding selection
   const handleToggleWedding = () => {
@@ -100,6 +122,13 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
     reader.readAsDataURL(file);
   };
 
+  const handleSelectEmoji = (emoji: string) => {
+    if ((wishes + emoji).length <= MAX_WISH_CHARS) {
+      setWishes((prev) => prev + emoji);
+    }
+    setShowEmojiPicker(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -112,9 +141,14 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
       return;
     }
 
-    // Validation: Require at least one event to be selected
     if (!weddingAttending && !receptionAttending) {
       setErrorMessage('Please select at least one celebration to attend, or let us know if you cannot make it.');
+      return;
+    }
+
+    const trimmedWishes = wishes.trim();
+    if (trimmedWishes.length > MAX_WISH_CHARS) {
+      setErrorMessage(`Wish message cannot exceed ${MAX_WISH_CHARS} characters.`);
       return;
     }
 
@@ -126,7 +160,6 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
     let photoSize = 0;
 
     try {
-      // 1. If a photo is attached, request signed upload URL and upload to Supabase storage bucket
       if (photoFile) {
         try {
           const presignRes = await fetch('/.netlify/functions/rsvp-photo', {
@@ -155,7 +188,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             }
           }
         } catch {
-          // Photo upload fallback if storage offline
+          // Photo upload fallback
         }
       }
 
@@ -166,14 +199,13 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
         weddingGuestCount: weddingAttending ? weddingGuestCount : 0,
         receptionAttending,
         receptionGuestCount: receptionAttending ? receptionGuestCount : 0,
-        wishes: wishes.trim(),
+        wishes: trimmedWishes,
         inviteToken: inviteToken || undefined,
         photoPath: photoPath || undefined,
         photoPreview: photoPreview || undefined,
         submittedAt: new Date().toISOString()
       };
 
-      // 2. Post to backend API endpoint if available
       try {
         const res = await fetch('/.netlify/functions/rsvp', {
           method: 'POST',
@@ -196,20 +228,18 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
           await res.json().catch(() => null);
         }
       } catch {
-        // Backend not deployed or offline, proceed to persistent browser storage
+        // Backend offline
       }
 
-      // 3. Always save to browser persistent storage for guaranteed reliability and demo tracking
       try {
         const stored = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
         const updated = Array.isArray(stored) ? stored.filter((item: RsvpRecord) => item.name !== trimmedName) : [];
         updated.push(submissionPayload);
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
       } catch {
-        // ignore local storage errors
+        // ignore
       }
 
-      // Success!
       setSubmittedData(submissionPayload);
       if (onSubmittedSuccess) {
         onSubmittedSuccess(submissionPayload);
@@ -413,7 +443,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
               </div>
             </div>
 
-            {/* Wishes and personal message with camera icon upload */}
+            {/* Wishes and personal message with modern Add Photo button & emoji selector */}
             <div className="rsvp-wishes-section">
               <div className="rsvp-wishes-header-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <label htmlFor="rsvp-wishes" className="rsvp-wishes-heading" style={{ margin: 0 }}>
@@ -430,34 +460,74 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                   />
                   {photoPreview ? (
                     <div className="rsvp-inline-preview" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <img src={photoPreview} alt="Attached photo" style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px', border: '1px solid var(--gold)' }} />
+                      <img src={photoPreview} alt="Attached photo" style={{ width: '36px', height: '36px', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--gold)' }} />
                       <button
                         type="button"
                         onClick={() => { setPhotoFile(null); setPhotoPreview(''); }}
-                        style={{ background: 'none', border: 'none', color: '#f3dc8e', cursor: 'pointer', fontSize: '12px', textDecoration: 'underline' }}
+                        style={{ background: 'none', border: 'none', color: '#ff9e9e', cursor: 'pointer', fontSize: '12px', textDecoration: 'underline' }}
                       >
                         Remove photo
                       </button>
                     </div>
                   ) : (
-                    <label htmlFor="rsvp-photo-input" className="rsvp-camera-btn" title="Attach a photo with your wish" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(193, 154, 61, 0.15)', border: '1px solid var(--gold)', borderRadius: '999px', padding: '5px 12px', color: '#f6df96', cursor: 'pointer', font: '500 11px var(--fb)', letterSpacing: '.1em', transition: 'background .2s' }}>
-                      <span>📸</span>
+                    <label htmlFor="rsvp-photo-input" className="modern-photo-btn" title="Attach a photo with your wish">
+                      <span className="photo-btn-icon">📷</span>
                       <span>Add Photo</span>
                     </label>
                   )}
                 </div>
               </div>
 
-              <textarea
-                id="rsvp-wishes"
-                name="wishes"
-                className="rsvp-textarea"
-                rows={3}
-                placeholder="Leave us a little message or your blessings..."
-                value={wishes}
-                onChange={(e) => setWishes(e.target.value)}
-                maxLength={1000}
-              />
+              <div style={{ position: 'relative' }}>
+                <textarea
+                  id="rsvp-wishes"
+                  name="wishes"
+                  className="rsvp-textarea"
+                  rows={3}
+                  placeholder="Leave us a little message or your blessings..."
+                  value={wishes}
+                  onChange={(e) => setWishes(e.target.value)}
+                  maxLength={MAX_WISH_CHARS}
+                />
+              </div>
+
+              <div className="rsvp-toolbar-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px', position: 'relative' }} ref={emojiPickerRef}>
+                <div className="emoji-picker-wrapper">
+                  <button
+                    type="button"
+                    className="emoji-trigger-btn"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    aria-expanded={showEmojiPicker}
+                    aria-label="Add emoji"
+                  >
+                    <span style={{ fontSize: '15px' }}>😊</span>
+                    <span>Add Emoji</span>
+                  </button>
+
+                  {showEmojiPicker && (
+                    <div className="emoji-dropdown-panel" role="region" aria-label="Emoji selection grid">
+                      <div className="emoji-grid-header">Choose an emoji</div>
+                      <div className="emoji-grid">
+                        {WIDE_EMOJIS.map((emoji) => (
+                          <button
+                            key={emoji}
+                            type="button"
+                            className="emoji-grid-item"
+                            onClick={() => handleSelectEmoji(emoji)}
+                            aria-label={`Insert emoji ${emoji}`}
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <span className={`char-counter ${wishes.length > MAX_WISH_CHARS ? 'error' : ''}`} style={{ color: wishes.length > MAX_WISH_CHARS ? '#ff8080' : '#d6b25a', fontSize: '11px', letterSpacing: '.05em' }}>
+                  {wishes.length}/{MAX_WISH_CHARS}
+                </span>
+              </div>
             </div>
 
             {/* Subtle instruction & Single submission button */}
