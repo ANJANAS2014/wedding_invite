@@ -162,7 +162,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
     try {
       if (photoFile) {
         try {
-          const presignRes = await fetch('/.netlify/functions/rsvp-photo', {
+          const presignRes = await fetch('/api/rsvp-photo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
             body: JSON.stringify({
@@ -207,7 +207,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
       };
 
       try {
-        const res = await fetch('/.netlify/functions/rsvp', {
+        const res = await fetch('/api/rsvp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({

@@ -58,7 +58,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
       let fetched: WishRecord[] = [];
 
       try {
-        const res = await fetch('/.netlify/functions/wishes');
+        const res = await fetch('/api/wishes');
         if (res.ok) {
           const data = await res.json();
           if (data && data.ok && Array.isArray(data.wishes)) {
@@ -75,7 +75,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
           }
         }
       } catch {
-        // ignore offline / local dev without Netlify Functions
+        // ignore offline / local dev without API routes
       }
 
       try {

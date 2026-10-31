@@ -1,8 +1,8 @@
-// POST /.netlify/functions/admin-guests   (header: x-admin-key: <ADMIN_PASSWORD>)
+// POST /api/admin-guests   (header: x-admin-key: <ADMIN_PASSWORD>)
 // Guest Tracker API. Every action requires the admin password and runs server-side with the Supabase service key.
 const crypto = require("node:crypto");
 const {
-  jsonResponse, isSameOrigin, supabaseConfig, supabaseRequest, SupabaseError,
+  jsonResponse: _unused, isSameOrigin, supabaseConfig, supabaseRequest, SupabaseError,
   newInvitationToken, cleanName, cleanText, signPhotoUrls, LANGUAGES, UUID_PATTERN,
 } = require("./_shared/supabase");
 
@@ -10,9 +10,27 @@ const MAX_BODY = 4000;
 const one = (value) => (Array.isArray(value) ? value[0] || null : value || null);
 const nameKey = (name) => name.normalize("NFKC").toLocaleLowerCase("en-IN").replace(/\s+/g, " ").trim();
 
-function authorised(event) {
+function jsonResponse(res, statusCode, body) {
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.status(statusCode).json(body);
+}
+
+function isSameOriginReq(req) {
+  const origin = req.headers?.origin;
+  const host = req.headers?.host;
+  if (!origin || !host) return true;
+  try {
+    return new URL(origin).host.toLowerCase() === host.toLowerCase();
+  } catch {
+    return false;
+  }
+}
+
+function authorised(req) {
   const expected = process.env.ADMIN_PASSWORD || "";
-  const given = event.headers?.["x-admin-key"] || event.headers?.["X-Admin-Key"] || "";
+  const given = req.headers?.["x-admin-key"] || req.headers?.["X-Admin-Key"] || "";
   if (expected.length < 12 || !given) return false;
   const a = crypto.createHash("sha256").update(String(given)).digest();
   const b = crypto.createHash("sha256").update(expected).digest();
@@ -67,12 +85,12 @@ async function listGuests(cfg) {
   };
 }
 
-async function createGuest(cfg, body) {
+async function createGuest(cfg, body, res) {
   const name = cleanName(body.name).slice(0, 80);
-  if (!name) return jsonResponse(400, { ok: false, message: "Please enter the guest's name." });
+  if (!name) return jsonResponse(res, 400, { ok: false, message: "Please enter the guest's name." });
   const language = LANGUAGES.includes(body.language) ? body.language : "en";
   const phone = cleanText(body.phone, 20).replace(/[^\d+]/g, "");
-  if (phone && !/^\+?\d{6,15}$/.test(phone)) return jsonResponse(400, { ok: false, message: "Please enter the WhatsApp number with country code, digits only (e.g. 919876543210)." });
+  if (phone && !/^\+?\d{6,15}$/.test(phone)) return jsonResponse(res, 400, { ok: false, message: "Please enter the WhatsApp number with country code, digits only (e.g. 919876543210)." });
   let guest;
   try {
     [guest] = await supabaseRequest(cfg, "/rest/v1/guests", {
@@ -80,13 +98,13 @@ async function createGuest(cfg, body) {
       body: { display_name: name, name_key: nameKey(name), language, phone: phone || null },
     });
   } catch (error) {
-    if (error instanceof SupabaseError && error.status === 409) return jsonResponse(409, { ok: false, message: `${name} is already on your guest list.` });
+    if (error instanceof SupabaseError && error.status === 409) return jsonResponse(res, 409, { ok: false, message: `${name} is already on your guest list.` });
     throw error;
   }
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
       await supabaseRequest(cfg, "/rest/v1/invitations", { method: "POST", prefer: "return=minimal", body: { guest_id: guest.id, token: newInvitationToken() } });
-      return jsonResponse(201, { ok: true, guestId: guest.id });
+      return jsonResponse(res, 201, { ok: true, guestId: guest.id });
     } catch (error) {
       if (!(error instanceof SupabaseError && error.status === 409)) throw error; // retry only on a (very unlikely) token collision
     }
@@ -94,43 +112,45 @@ async function createGuest(cfg, body) {
   throw new Error("token_generation_failed");
 }
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") return jsonResponse(405, { ok: false, message: "Method not allowed." });
-  if (!isSameOrigin(event)) return jsonResponse(403, { ok: false, message: "Request origin not allowed." });
-  if (!authorised(event)) return jsonResponse(401, { ok: false, message: "Incorrect admin password." });
+export default async function handler(req, res) {
+  if (req.method !== "POST") return jsonResponse(res, 405, { ok: false, message: "Method not allowed." });
+  if (!isSameOriginReq(req)) return jsonResponse(res, 403, { ok: false, message: "Request origin not allowed." });
+  if (!authorised(req)) return jsonResponse(res, 401, { ok: false, message: "Incorrect admin password." });
   const cfg = supabaseConfig();
-  if (!cfg) return jsonResponse(503, { ok: false, message: "The guest database isn't connected yet. Add the Supabase settings in Netlify (see SUPABASE_SETUP.md)." });
-  if (typeof event.body !== "string" || event.body.length > MAX_BODY) return jsonResponse(400, { ok: false, message: "Invalid request." });
+  if (!cfg) return jsonResponse(res, 503, { ok: false, message: "The guest database isn't connected yet. Add the Supabase settings in Vercel (see SUPABASE_SETUP.md)." });
+  const rawBody = req.body;
+  const bodyStr = typeof rawBody === "string" ? rawBody : JSON.stringify(rawBody);
+  if (bodyStr.length > MAX_BODY) return jsonResponse(res, 400, { ok: false, message: "Invalid request." });
   let body;
-  try { body = JSON.parse(event.body); } catch { return jsonResponse(400, { ok: false, message: "Invalid request." }); }
+  try { body = typeof rawBody === "object" ? rawBody : JSON.parse(rawBody); } catch { return jsonResponse(res, 400, { ok: false, message: "Invalid request." }); }
   const id = String(body?.id || "");
   try {
     switch (body?.action) {
       case "list":
-        return jsonResponse(200, { ok: true, ...(await listGuests(cfg)) });
+        return jsonResponse(res, 200, { ok: true, ...(await listGuests(cfg)) });
       case "create":
-        return await createGuest(cfg, body);
+        return await createGuest(cfg, body, res);
       case "markSent":
         if (!UUID_PATTERN.test(id)) break;
         await supabaseRequest(cfg, `/rest/v1/invitations?id=eq.${id}&status=eq.created`, { method: "PATCH", prefer: "return=minimal", body: { status: "sent", sent_at: new Date().toISOString() } });
-        return jsonResponse(200, { ok: true });
+        return jsonResponse(res, 200, { ok: true });
       case "setLanguage":
         if (!UUID_PATTERN.test(id) || !LANGUAGES.includes(body.language)) break;
         await supabaseRequest(cfg, `/rest/v1/guests?id=eq.${id}`, { method: "PATCH", prefer: "return=minimal", body: { language: body.language } });
-        return jsonResponse(200, { ok: true });
+        return jsonResponse(res, 200, { ok: true });
       case "approveWish":
         if (!UUID_PATTERN.test(id)) break;
         await supabaseRequest(cfg, `/rest/v1/rsvp_responses?id=eq.${id}`, { method: "PATCH", prefer: "return=minimal", body: { wish_approved: body.approved === true } });
-        return jsonResponse(200, { ok: true });
+        return jsonResponse(res, 200, { ok: true });
       case "deleteGuest":
         if (!UUID_PATTERN.test(id)) break;
         await supabaseRequest(cfg, `/rest/v1/guests?id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" });
-        return jsonResponse(200, { ok: true });
+        return jsonResponse(res, 200, { ok: true });
       default:
         break;
     }
-    return jsonResponse(400, { ok: false, message: "Invalid request." });
+    return jsonResponse(res, 400, { ok: false, message: "Invalid request." });
   } catch {
-    return jsonResponse(502, { ok: false, message: "The guest database didn't respond. Please try again." });
+    return jsonResponse(res, 502, { ok: false, message: "The guest database didn't respond. Please try again." });
   }
-};
+}
