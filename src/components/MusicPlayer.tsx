@@ -50,18 +50,18 @@ export const MusicPlayer: React.FC = () => {
     }
   };
 
-  const startPlayback = () => {
-    if (muted) return;
+  const startPlayback = async (forceUnmuted = false) => {
+    if (muted && !forceUnmuted) return;
     if (audioRef.current) {
-      audioRef.current.play()
-        .then(() => {
-          setIsPlaying(true);
-          setShowHint(false);
-        })
-        .catch(() => {
-          // Autoplay blocked by browser policy
-          setShowHint(true);
-        });
+      try {
+        await audioRef.current.play();
+        setIsPlaying(true);
+        setShowHint(false);
+      } catch {
+        // Autoplay blocked by browser policy (common on mobile Safari)
+        setShowHint(true);
+        setIsPlaying(false);
+      }
     }
   };
 
@@ -102,7 +102,7 @@ export const MusicPlayer: React.FC = () => {
     };
   }, []);
 
-  const toggleMute = () => {
+  const toggleMute = async () => {
     const nextMuted = !muted;
     setMuted(nextMuted);
     try {
@@ -115,7 +115,11 @@ export const MusicPlayer: React.FC = () => {
       setIsPlaying(false);
       setShowHint(false);
     } else {
-      startPlayback();
+      // Resume audio context on mobile (Safari requires this after suspend)
+      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+        await audioCtxRef.current.resume();
+      }
+      await startPlayback(true);
       initSynth();
     }
   };
@@ -124,7 +128,7 @@ export const MusicPlayer: React.FC = () => {
     <>
       <button
         id="mu"
-        className={muted || !isPlaying ? 'off' : ''}
+        className={muted ? 'off' : ''}
         onClick={toggleMute}
         aria-label={muted ? 'Unmute music' : 'Mute music'}
         type="button"

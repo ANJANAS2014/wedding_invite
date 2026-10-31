@@ -35,7 +35,10 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
   const [userLikedMap, setUserLikedMap] = useState<Record<string, boolean>>({});
   const [failedPhotos, setFailedPhotos] = useState<Record<string, boolean>>({});
   const [selectedWish, setSelectedWish] = useState<WishRecord | null>(null);
-  const [viewportWidth, setViewportWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
+  // Initialize with a sane desktop default so the marquee distance isn't 0 on
+  // the first paint (SSR and the very first client render both lack window
+  // dimensions until the resize listener fires).
+  const [viewportWidth, setViewportWidth] = useState<number>(1024);
 
   const fetchWishes = useCallback(async () => {
     setIsLoading(true);
@@ -207,6 +210,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
   // Track viewport width so card sizing and marquee trigger adapt to device width
   useEffect(() => {
     const handleResize = () => setViewportWidth(window.innerWidth);
+    setViewportWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -470,6 +474,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
           aria-label="Wedding wishes carousel"
         >
           <div
+            key={`wishes-track-${viewportWidth}`}
             className={`wishes-rail-track ${isPaused ? 'is-paused' : ''}`}
             style={
               {
