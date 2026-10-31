@@ -17,3 +17,5 @@ assets/images/_asset-contact-sheet.jpg
 .env
 .env.*
 !.env.example
+
+node_modules/
