@@ -7,6 +7,8 @@ export interface WishRecord {
   photoUrl?: string;
   submittedAt?: string;
   likesCount: number;
+  weddingAttending?: boolean;
+  receptionAttending?: boolean;
 }
 
 interface WishesWallProps {
@@ -33,6 +35,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
   const [userLikedMap, setUserLikedMap] = useState<Record<string, boolean>>({});
   const [failedPhotos, setFailedPhotos] = useState<Record<string, boolean>>({});
   const [selectedWish, setSelectedWish] = useState<WishRecord | null>(null);
+  const [viewportWidth, setViewportWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
 
   const fetchWishes = useCallback(async () => {
     setIsLoading(true);
@@ -104,7 +107,9 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
                     wish: trimmedWish,
                     photoUrl: r.photoPreview || r.photoUrl || undefined,
                     submittedAt: r.submittedAt || undefined,
-                    likesCount: 0
+                    likesCount: 0,
+                    weddingAttending: Boolean(r.weddingAttending),
+                    receptionAttending: Boolean(r.receptionAttending)
                   });
                 }
               }
@@ -199,6 +204,13 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
     fetchWishes();
   }, [fetchWishes, refreshKey]);
 
+  // Track viewport width so card sizing and marquee trigger adapt to device width
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Close modal on Escape key
   useEffect(() => {
     if (!selectedWish) return;
@@ -255,8 +267,22 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
     );
   };
 
-  const shouldAutoScroll = wishes.length >= 3;
-  const displayItems = shouldAutoScroll ? [...wishes, ...wishes] : wishes;
+  // Only auto-scroll when cards actually overflow the viewport width.
+  // Desktop cards are ~304px wide (+20px gap); mobile cards go full width.
+  const cardWidth = viewportWidth > 480 ? 304 : viewportWidth;
+  const gap = 20;
+  const originalWidth = wishes.length * (cardWidth + gap) - gap;
+  const shouldAutoScroll = wishes.length > 1 && originalWidth > viewportWidth - 40;
+
+  // Clone enough leading items so that, when the track has scrolled left by
+  // `originalWidth` (all originals off-screen), the clones still cover the
+  // full viewport width. This gives a seamless infinite loop without showing
+  // duplicate cards in a single view.
+  const cloneCount = shouldAutoScroll ? Math.ceil(viewportWidth / (cardWidth + gap)) + 1 : 0;
+  const clones = wishes.slice(0, cloneCount);
+  const displayItems = shouldAutoScroll ? [...wishes, ...clones] : wishes;
+  // Positive distance; the CSS negates it to move left.
+  const marqueeDistance = shouldAutoScroll ? originalWidth : 0;
 
   const renderPostcard = (item: WishRecord, index: number) => {
     const isLiked = !!userLikedMap[item.id];
@@ -297,8 +323,18 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
           )}
           <div className="postcard-photo-sheen" aria-hidden="true" />
           <div className="postcard-stamp" aria-hidden="true">
-            <span>29 NOV</span>
-            <span className="stamp-seal">♥</span>
+            {item.weddingAttending && <span>29 NOV</span>}
+            {item.weddingAttending && item.receptionAttending && (
+              <span className="stamp-seal">♥</span>
+            )}
+            {item.receptionAttending && <span>06 DEC</span>}
+            {!item.weddingAttending && !item.receptionAttending && (
+              <>
+                <span>29 NOV</span>
+                <span className="stamp-seal">♥</span>
+                <span>06 DEC</span>
+              </>
+            )}
           </div>
         </div>
 
@@ -437,7 +473,8 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
             className={`wishes-rail-track ${isPaused ? 'is-paused' : ''}`}
             style={
               {
-                '--wishes-duration': `${Math.max(28, wishes.length * 8)}s`
+                '--wishes-duration': `${Math.max(28, wishes.length * 8)}s`,
+                '--marquee-distance': `${marqueeDistance}px`
               } as React.CSSProperties
             }
           >

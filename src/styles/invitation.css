@@ -10,14 +10,14 @@
   color-scheme: only light;
   box-sizing: border-box;
 
-  --b1: url('/assets/images/invitation-floral-background.jpg');
-  --b2: url('/assets/images/couple-floral-background.jpg');
-  --b3: url('/assets/images/events-elephant-floral-background.jpg');
-  --wT: url('/assets/images/hero-decoration-desktop-wide.jpg');
-  --cover-garland-mobile: url('/assets/images/hero-decoration-mobile.jpg');
-  --cover-altar: url('/assets/images/hero-decoration-bottom-right.jpg');
-  --cover-procession: url('/assets/images/wedding-procession.png');
-  --cover-cutout: url('/assets/images/wedding-couple-cutout-refined.webp');
+  --b1: url('/images/backgrounds/invitation-floral-background.jpg');
+  --b2: url('/images/backgrounds/couple-floral-background.jpg');
+  --b3: url('/images/backgrounds/events-elephant-floral-background.jpg');
+  --wT: url('/images/cover/hero-decoration-desktop-wide.jpg');
+  --cover-garland-mobile: url('/images/cover/hero-decoration-mobile.jpg');
+  --cover-altar: url('/images/cover/hero-decoration-bottom-right.jpg');
+  --cover-procession: url('/images/cover/wedding-procession.png');
+  --cover-cutout: url('/images/cover/wedding-couple-cutout-refined.webp');
 }
 
 html {
@@ -872,23 +872,56 @@ body:not(.opened) #mh {
   }
 
   .cover-procession-left {
-    left: 56px;
-    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-    height: clamp(82px, 11.4svh, 104px);
-    max-width: 38vw;
+    left: 42px;
+    bottom: calc(-6px + env(safe-area-inset-bottom, 0px));
+    height: clamp(88px, 12.2svh, 112px);
+    max-width: 40vw;
+    filter: brightness(1.28) contrast(1.14) sepia(0.16) saturate(1.06);
+    -webkit-mask-image:
+      radial-gradient(125% 118% at 32% 112%, #000 68%, rgba(0, 0, 0, 0.8) 84%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 8%, #000 94%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      radial-gradient(125% 118% at 32% 112%, #000 68%, rgba(0, 0, 0, 0.8) 84%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 8%, #000 94%, transparent 100%);
+    mask-composite: intersect;
   }
 
   .cover-procession-elephant {
-    right: 34px;
-    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-    height: clamp(78px, 10.8svh, 98px);
-    max-width: 28vw;
+    right: 26px;
+    bottom: calc(-4px + env(safe-area-inset-bottom, 0px));
+    height: clamp(84px, 11.6svh, 106px);
+    max-width: 30vw;
+    filter: brightness(1.28) contrast(1.14) sepia(0.16) saturate(1.06);
+    -webkit-mask-image:
+      radial-gradient(128% 118% at 58% 112%, #000 66%, rgba(0, 0, 0, 0.8) 83%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 6%, #000 96%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      radial-gradient(128% 118% at 58% 112%, #000 66%, rgba(0, 0, 0, 0.8) 83%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 6%, #000 96%, transparent 100%);
+    mask-composite: intersect;
   }
 
   .cover-decor-right {
     right: 0;
     bottom: 0;
     width: clamp(68px, 19vw, 88px);
+    -webkit-mask-image:
+      radial-gradient(115% 100% at 100% 100%, #000 62%, rgba(0, 0, 0, 0.8) 84%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 30%, #000 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      radial-gradient(115% 100% at 100% 100%, #000 62%, rgba(0, 0, 0, 0.8) 84%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 30%, #000 100%);
+    mask-composite: intersect;
+  }
+
+  .cover-floor {
+    height: 22%;
+    background:
+      radial-gradient(ellipse 92% 78% at 50% 100%, rgba(210, 189, 162, 0.42) 0%, rgba(234, 225, 216, 0) 82%),
+      linear-gradient(0deg, rgba(214, 195, 174, 0.34) 0%, rgba(234, 225, 216, 0) 100%);
   }
 
   body:not(.opened) #mh {
@@ -2885,7 +2918,7 @@ footer:before {
   background: #141414;
   border: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
   border-radius: 12px;
-  padding: 24px 0 28px;
+  padding: 8px 0 8px;
   box-shadow: 0 20px 50px -20px rgba(20, 5, 8, 0.5), inset 0 0 30px rgba(0,0,0,0.8);
   position: relative;
   overflow: hidden;
@@ -2897,7 +2930,7 @@ footer:before {
   justify-content: space-between;
   padding: 0 24px 16px;
   border-bottom: 1px solid rgba(193, 154, 61, 0.2);
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .filmstrip-header-bar .eyebrow {
@@ -3231,8 +3264,8 @@ footer:before {
 }
 
 @keyframes scrollWishesMarquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(var(--marquee-distance, 0) * -1)); }
 }
 
 /* Centered Grid for 1–2 wishes or loading skeletons */

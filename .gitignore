@@ -19,3 +19,4 @@ assets/images/_asset-contact-sheet.jpg
 !.env.example
 
 node_modules/
+.andromity/

@@ -20,34 +20,34 @@ export interface GalleryPhoto {
 }
 
 export const WEDDING_IMAGES: Record<string, string> = {
-  p1: "/assets/images/gallery-couple-doorway-portrait.jpg",
-  p2: "/assets/images/wedding-hero-couple-trees.jpg",
-  p3: "/assets/images/gallery-couple-white-wall-portrait.jpg",
-  p4: "/assets/images/gallery-couple-lotus-closeup-portrait.jpg",
-  p5: "/assets/images/gallery-couple-lotus-boat-landscape.jpg",
-  p6: "/assets/images/hero-couple-lotus-field.jpg",
-  p7: "/assets/images/gallery-couple-water-lotus-landscape.jpg",
-  p8: "/assets/images/gallery-couple-lotus-wide-landscape.jpg",
-  p9: "/assets/images/gallery-bride-lotus-landscape.jpg",
-  p10: "/assets/images/bride-office-portrait.jpg",
-  p11: "/assets/images/groom-studio-portrait.jpg",
-  p12: "/assets/images/groom-park-portrait.jpg",
-  p13: "/assets/images/story-photo-01.jpg",
-  p14: "/assets/images/story-photo-02.jpg",
-  p15: "/assets/images/invitation-floral-background.jpg",
-  p16: "/assets/images/couple-floral-background.jpg",
-  p17: "/assets/images/events-elephant-floral-background.jpg",
-  p18: "/assets/images/hero-decoration-mobile.jpg",
-  p18w: "/assets/images/hero-decoration-desktop-wide.jpg",
-  p19: "/assets/images/hero-decoration-bottom-right.jpg",
-  wedding_procession: "/assets/images/wedding-procession.png",
-  w1: "/assets/images/wedding-venue-central-auditorium.jpg",
-  r1: "/assets/images/reception-venue-annalakshmi.jpg",
-  hero_cover: "/assets/images/wedding-couple-cutout-refined.webp",
-  story_photo_one: "/resized_couple_photos/couple_photo_1.jpg",
-  story_photo_two: "/resized_couple_photos/couple_photo_2.jpg",
-  story_photo_three: "/resized_couple_photos/couple_photo_3.jpg",
-  story_photo_four: "/resized_couple_photos/couple_photo_4.png",
+  p1: "/images/gallery/gallery-couple-doorway-portrait.jpg",
+  p2: "/images/gallery/wedding-hero-couple-trees.jpg",
+  p3: "/images/gallery/gallery-couple-white-wall-portrait.jpg",
+  p4: "/images/gallery/gallery-couple-lotus-closeup-portrait.jpg",
+  p5: "/images/gallery/gallery-couple-lotus-boat-landscape.jpg",
+  p6: "/images/gallery/hero-couple-lotus-field.jpg",
+  p7: "/images/gallery/gallery-couple-water-lotus-landscape.jpg",
+  p8: "/images/gallery/gallery-couple-lotus-wide-landscape.jpg",
+  p9: "/images/gallery/gallery-bride-lotus-landscape.jpg",
+  p10: "/images/couple/bride-office-portrait.jpg",
+  p11: "/images/couple/groom-studio-portrait.jpg",
+  p12: "/images/couple/groom-park-portrait.jpg",
+  p13: "/images/gallery/story-photo-01.jpg",
+  p14: "/images/gallery/story-photo-02.jpg",
+  p15: "/images/backgrounds/invitation-floral-background.jpg",
+  p16: "/images/backgrounds/couple-floral-background.jpg",
+  p17: "/images/backgrounds/events-elephant-floral-background.jpg",
+  p18: "/images/cover/hero-decoration-mobile.jpg",
+  p18w: "/images/cover/hero-decoration-desktop-wide.jpg",
+  p19: "/images/cover/hero-decoration-bottom-right.jpg",
+  wedding_procession: "/images/cover/wedding-procession.png",
+  w1: "/images/venues/wedding-venue-central-auditorium.jpg",
+  r1: "/images/venues/reception-venue-annalakshmi.jpg",
+  hero_cover: "/images/cover/wedding-couple-cutout-refined.webp",
+  story_photo_one: "/images/couple/couple_photo_1.jpg",
+  story_photo_two: "/images/couple/couple_photo_2.jpg",
+  story_photo_three: "/images/couple/couple_photo_3.jpg",
+  story_photo_four: "/images/couple/couple_photo_4.png",
 };
 
 export const WEDDING_GALLERY: GalleryPhoto[] = [
@@ -124,6 +124,8 @@ export const UNIFIED_MEMORIES: UnifiedMemoryPhoto[] = [
     ratio: '4/5'
   }))
 ];
+
+export const UNIFIED_MEMORIES_WITH_EXTRAS: UnifiedMemoryPhoto[] = [...UNIFIED_MEMORIES];
 
 export const GALLERY_DIMENSIONS: Record<string, [number, number]> = {
   p1: [1125, 1500],

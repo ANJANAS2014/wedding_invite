@@ -1,18 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { WEDDING_CONTENT, UNIFIED_MEMORIES } from './data/weddingData';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { WEDDING_CONTENT, UNIFIED_MEMORIES_WITH_EXTRAS } from './data/weddingData';
 import { CoverHero } from './components/CoverHero';
 import { LotusCurtain } from './components/LotusCurtain';
 import { MusicPlayer } from './components/MusicPlayer';
 import { InvitationIntroSection } from './components/InvitationIntroSection';
-import { CoupleSection } from './components/CoupleSection';
-import { OurStoryAndFilmstripSection } from './components/OurStoryAndFilmstripSection';
-import { EventsSection } from './components/EventsSection';
-import { RsvpSection } from './components/RsvpSection';
-import { WishesWall } from './components/WishesWall';
-import { LightboxModal } from './components/LightboxModal';
-import { EventDayNotice } from './components/EventDayNotice';
-import { GuestTrackerModal } from './components/GuestTrackerModal';
 import { FallingPetals } from './components/FallingPetals';
+import { hapticSoft, hapticTap, hapticOpen } from './utils/haptics';
+
+// Below-the-fold sections are code-split so the cover page loads fast and the
+// curtain animation runs on a light main thread. They are imported (and their
+// chunks fetched) while the curtain is still closing, so they are ready the
+// moment it parts.
+const CoupleSection = lazy(() => import('./components/CoupleSection').then((m) => ({ default: m.CoupleSection })));
+const EventsSection = lazy(() => import('./components/EventsSection').then((m) => ({ default: m.EventsSection })));
+const OurStoryAndFilmstripSection = lazy(() => import('./components/OurStoryAndFilmstripSection').then((m) => ({ default: m.OurStoryAndFilmstripSection })));
+const RsvpSection = lazy(() => import('./components/RsvpSection').then((m) => ({ default: m.RsvpSection })));
+const WishesWall = lazy(() => import('./components/WishesWall').then((m) => ({ default: m.WishesWall })));
+const LightboxModal = lazy(() => import('./components/LightboxModal').then((m) => ({ default: m.LightboxModal })));
+const GuestTrackerModal = lazy(() => import('./components/GuestTrackerModal').then((m) => ({ default: m.GuestTrackerModal })));
+const EventDayNotice = lazy(() => import('./components/EventDayNotice').then((m) => ({ default: m.EventDayNotice })));
 
 export const App: React.FC = () => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -23,6 +29,31 @@ export const App: React.FC = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isTrackerOpen, setIsTrackerOpen] = useState<boolean>(false);
   const [wishesRefreshKey, setWishesRefreshKey] = useState<number>(0);
+
+  // Preload invitation components once the cover page has settled (requestIdleCallback
+  // falls back to a timeout). This warms the code-split chunks so "Open Invitation"
+  // feels instant even before it is tapped.
+  useEffect(() => {
+    let cancelled = false;
+    const idle = (cb: () => void) => {
+      const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback;
+      if (ric) window.requestIdleCallback(cb, { timeout: 2500 });
+      else setTimeout(cb, 1200);
+    };
+    idle(() => {
+      if (cancelled) return;
+      // Fire-and-forget: Vite prefetches each dynamic import chunk.
+      void import('./components/CoupleSection');
+      void import('./components/EventsSection');
+      void import('./components/OurStoryAndFilmstripSection');
+      void import('./components/RsvpSection');
+      void import('./components/WishesWall');
+      void import('./components/LightboxModal');
+      void import('./components/GuestTrackerModal');
+      void import('./components/EventDayNotice');
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   // Play Web Audio synthesized temple bell chime
   const playChime = (delay = 0) => {
@@ -101,35 +132,49 @@ export const App: React.FC = () => {
     }
   }, [isOpened]);
 
+  const timersRef = useRef<number[]>([]);
+  useEffect(() => () => timersRef.current.forEach((t) => window.clearTimeout(t)), []);
+
   // Handle Open Invitation with lotus curtain animation & chime
   const handleOpenInvitation = () => {
     if (isOpened || curtainStatus !== 'idle') return;
 
+    hapticTap();
+
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
+      hapticOpen();
       playChime(0);
       setIsOpened(true);
       window.scrollTo(0, 0);
       return;
     }
 
+    hapticSoft();
     setCurtainStatus('closing');
     playChime(0.56);
 
-    setTimeout(() => {
+    timersRef.current.push(window.setTimeout(() => {
       setIsOpened(true);
       setCurtainStatus('parting');
       window.scrollTo(0, 0);
-    }, 560);
+    }, 560));
 
-    setTimeout(() => {
+    timersRef.current.push(window.setTimeout(() => {
       setCurtainStatus('idle');
-    }, 1700);
+    }, 1700));
+
+    // Gentle arrival pulse as the invitation lands under the parting curtain.
+    timersRef.current.push(window.setTimeout(() => {
+      hapticOpen();
+    }, 720));
   };
 
   return (
     <>
-      <EventDayNotice />
+      <Suspense fallback={null}>
+        <EventDayNotice />
+      </Suspense>
       <FallingPetals />
 
       {!isOpened && (
@@ -147,23 +192,33 @@ export const App: React.FC = () => {
         <InvitationIntroSection language={language} />
 
         {/* Section 2: Events (Muhurtham & Reception) */}
-        <EventsSection />
+        <Suspense fallback={null}>
+          <EventsSection />
+        </Suspense>
 
         {/* Section 3: Couple Profiles (Bride & Groom) */}
-        <CoupleSection />
+        <Suspense fallback={null}>
+          <CoupleSection />
+        </Suspense>
 
         {/* Section 4 & 5 Combined: Expandable Our Story & Moving 35mm Photographic Filmstrip */}
-        <OurStoryAndFilmstripSection onOpenLightbox={(index) => setLightboxIndex(index)} />
+        <Suspense fallback={null}>
+          <OurStoryAndFilmstripSection onOpenLightbox={(index) => setLightboxIndex(index)} />
+        </Suspense>
 
         {/* Section 6: Upgraded RSVP */}
-        <RsvpSection
-          guestName={guestName}
-          inviteToken={inviteToken}
-          onSubmittedSuccess={() => setWishesRefreshKey((prev) => prev + 1)}
-        />
+        <Suspense fallback={null}>
+          <RsvpSection
+            guestName={guestName}
+            inviteToken={inviteToken}
+            onSubmittedSuccess={() => setWishesRefreshKey((prev) => prev + 1)}
+          />
+        </Suspense>
 
         {/* Section 7: Wishes Wall */}
-        <WishesWall refreshKey={wishesRefreshKey} />
+        <Suspense fallback={null}>
+          <WishesWall refreshKey={wishesRefreshKey} />
+        </Suspense>
 
         {/* Footer */}
         <footer>
@@ -184,25 +239,31 @@ export const App: React.FC = () => {
 
       <MusicPlayer />
 
-      <LightboxModal
-        currentIndex={lightboxIndex}
-        onClose={() => setLightboxIndex(null)}
-        onNext={() => {
-          if (lightboxIndex !== null) {
-            setLightboxIndex((lightboxIndex + 1) % UNIFIED_MEMORIES.length);
-          }
-        }}
-        onPrev={() => {
-          if (lightboxIndex !== null) {
-            setLightboxIndex((lightboxIndex - 1 + UNIFIED_MEMORIES.length) % UNIFIED_MEMORIES.length);
-          }
-        }}
-      />
+      <Suspense fallback={null}>
+        {lightboxIndex !== null && (
+          <LightboxModal
+            currentIndex={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+            onNext={() => {
+              if (lightboxIndex !== null) {
+                setLightboxIndex((lightboxIndex + 1) % UNIFIED_MEMORIES_WITH_EXTRAS.length);
+              }
+            }}
+            onPrev={() => {
+              if (lightboxIndex !== null) {
+                setLightboxIndex((lightboxIndex - 1 + UNIFIED_MEMORIES_WITH_EXTRAS.length) % UNIFIED_MEMORIES_WITH_EXTRAS.length);
+              }
+            }}
+          />
+        )}
+      </Suspense>
 
-      <GuestTrackerModal
-        isOpen={isTrackerOpen}
-        onClose={() => setIsTrackerOpen(false)}
-      />
+      <Suspense fallback={null}>
+        <GuestTrackerModal
+          isOpen={isTrackerOpen}
+          onClose={() => setIsTrackerOpen(false)}
+        />
+      </Suspense>
     </>
   );
 };

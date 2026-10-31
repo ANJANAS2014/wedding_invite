@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { WEDDING_CONTENT, WEDDING_IMAGES } from '../data/weddingData';
+import { hapticTap } from '../utils/haptics';
 
 interface CoverHeroProps {
   onOpen: () => void;
@@ -228,7 +229,7 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, languag
         )}
 
         <div className="ob">
-          <button type="button" className="btn" id="op" onClick={onOpen} lang={language}>
+          <button type="button" className="btn" id="op" onClick={onOpen} onPointerDown={() => hapticTap()} lang={language}>
             {getOpenBtnText()}
           </button>
         </div>

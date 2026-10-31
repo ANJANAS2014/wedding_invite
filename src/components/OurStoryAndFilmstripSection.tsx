@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { WEDDING_CONTENT, UNIFIED_MEMORIES } from '../data/weddingData';
+import { WEDDING_CONTENT, UNIFIED_MEMORIES_WITH_EXTRAS } from '../data/weddingData';
 
 interface OurStoryAndFilmstripSectionProps {
   onOpenLightbox: (index: number) => void;
@@ -71,11 +71,11 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
           <div className="filmstrip-viewport">
             <div
               className={`filmstrip-track ${isPaused ? 'is-paused' : ''}`}
-              style={{ '--total-items': UNIFIED_MEMORIES.length } as React.CSSProperties}
+              style={{ '--total-items': UNIFIED_MEMORIES_WITH_EXTRAS.length } as React.CSSProperties}
             >
               {/* Render track twice for seamless infinite looping */}
-              {[...UNIFIED_MEMORIES, ...UNIFIED_MEMORIES].map((photo, index) => {
-                const actualIndex = index % UNIFIED_MEMORIES.length;
+              {[...UNIFIED_MEMORIES_WITH_EXTRAS, ...UNIFIED_MEMORIES_WITH_EXTRAS].map((photo, index) => {
+                const actualIndex = index % UNIFIED_MEMORIES_WITH_EXTRAS.length;
                 const frameNum = (actualIndex + 20).toString();
                 return (
                   <div

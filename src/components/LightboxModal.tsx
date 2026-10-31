@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { UNIFIED_MEMORIES } from '../data/weddingData';
+import { UNIFIED_MEMORIES_WITH_EXTRAS } from '../data/weddingData';
 
 interface LightboxModalProps {
   currentIndex: number | null;
@@ -44,7 +44,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
   if (currentIndex === null) return null;
 
-  const currentPhoto = UNIFIED_MEMORIES[currentIndex];
+  const currentPhoto = UNIFIED_MEMORIES_WITH_EXTRAS[currentIndex];
   if (!currentPhoto) return null;
 
   const photoSrc = currentPhoto.src;

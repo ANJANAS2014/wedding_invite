@@ -22,7 +22,7 @@ const PETAL_SHAPES = [
 export const FallingPetals: React.FC = () => {
   // 24 petals distributed across the viewport width with varied sizes, timings, and shapes
   const petals = Array.from({ length: 24 }, (_, i) => {
-    const tones = ['blush', 'rose', 'gold', 'pink'];
+    const tones = ['blush', 'rose', 'pink'];
     const tone = tones[i % tones.length];
     const shape = PETAL_SHAPES[i % PETAL_SHAPES.length];
     // Distribute across 2vw to 95vw
