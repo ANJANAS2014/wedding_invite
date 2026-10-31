@@ -1033,9 +1033,9 @@ body:not(.opened) #mh {
 
 .pt {
   position: absolute;
-  top: -30px;
-  width: 11px;
-  height: 15px;
+  top: -45px;
+  width: 20px;
+  height: 26px;
   pointer-events: none;
   animation: petal-fall linear infinite, petal-drift ease-in-out infinite alternate;
   will-change: transform;
@@ -1046,32 +1046,43 @@ body:not(.opened) #mh {
   width: 100%;
   height: 100%;
   transform: rotate(var(--r, 45deg)) scale(var(--s, 1));
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.03));
+  filter: drop-shadow(0 2px 4px rgba(78, 20, 30, 0.16));
+  animation: petal-flutter 4.5s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes petal-flutter {
+  0% {
+    transform: rotate(var(--r, 45deg)) scale(var(--s, 1)) rotateY(0deg);
+  }
+  100% {
+    transform: rotate(calc(var(--r, 45deg) + 14deg)) scale(calc(var(--s, 1) * 0.94)) rotateY(24deg);
+  }
 }
 
 .pt--blush {
-  color: #f7d4de;
-  opacity: 0.55;
+  color: #f7cbd6;
+  opacity: 0.72;
 }
 
 .pt--rose {
-  color: #f1b3c6;
-  opacity: 0.6;
+  color: #e58ca2;
+  opacity: 0.76;
 }
 
 .pt--pink {
-  color: #f9c2d1;
-  opacity: 0.5;
+  color: #f2a7bc;
+  opacity: 0.74;
 }
 
 .pt--gold {
-  color: #ebd79e;
-  opacity: 0.45;
+  color: #deb868;
+  opacity: 0.70;
 }
 
 @keyframes petal-fall {
-  0% { transform: translateY(-40px); }
-  100% { transform: translateY(105vh); }
+  0% { transform: translateY(-50px); }
+  100% { transform: translateY(106vh); }
 }
 
 @keyframes petal-drift {
@@ -1079,12 +1090,10 @@ body:not(.opened) #mh {
   100% { margin-left: var(--sw, 20px); }
 }
 
-body.opened .pt {
-  opacity: .65;
-}
-
-body.opened .pt:nth-child(3n+2), body.opened .pt:nth-child(3n) {
-  opacity: 0;
+@media (prefers-reduced-motion: reduce) {
+  .petals {
+    display: none !important;
+  }
 }
 
 /* ==========================================================================
@@ -1858,7 +1867,7 @@ body.opened #main {
   isolation: isolate;
   background: radial-gradient(900px 420px at 50% 0, color-mix(in srgb, var(--maroon) 86%, #fff), var(--maroon));
   color: var(--cream);
-  padding: 56px 20px;
+  padding: 56px 20px 48px;
 }
 
 #s2:after {
@@ -2101,12 +2110,13 @@ body.opened #main {
 #s5 {
   background: linear-gradient(color-mix(in srgb, var(--maroon) 64%, transparent), color-mix(in srgb, var(--maroon) 78%, transparent)), var(--b3) center/cover;
   color: var(--cream);
-  padding: 56px 20px;
+  padding: 0;
 }
 
 #rsvp {
   max-width: 860px;
   margin: auto;
+  padding: clamp(38px, 5.5vw, 56px) 20px clamp(24px, 3.2vw, 34px);
 }
 
 #rsvp h2 {
@@ -2371,8 +2381,9 @@ body.opened #main {
 }
 
 .rsvp-submit-btn {
-  min-width: 260px;
-  padding: 16px 40px;
+  min-width: min(260px, 100%);
+  max-width: 100%;
+  padding: 15px 36px;
   font-size: 13px;
   letter-spacing: .22em;
 }
@@ -3094,7 +3105,7 @@ footer:before {
 .wishes-wall-section {
   max-width: none;
   width: 100%;
-  padding: clamp(52px, 7vw, 76px) 0 clamp(60px, 8vw, 84px);
+  padding: clamp(16px, 2.2vw, 24px) 0 clamp(54px, 7vw, 76px);
   background:
     radial-gradient(ellipse 80% 55% at 50% 0%, #fcf7ee 0%, #f6ecda 68%, #f1e4cd 100%);
   color: var(--ink);
@@ -3104,7 +3115,7 @@ footer:before {
 
 .wishes-section-header {
   max-width: 780px;
-  margin: 0 auto 24px;
+  margin: 0 auto 20px;
   padding: 0 20px;
   text-align: center;
 }
@@ -3114,7 +3125,7 @@ footer:before {
   place-items: center;
   width: 32px;
   height: 32px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   border-radius: 50%;
   border: 1px solid rgba(193, 154, 61, 0.55);
   background: rgba(255, 252, 245, 0.85);
@@ -3138,7 +3149,7 @@ footer:before {
 }
 
 .wishes-divider {
-  margin: 12px auto 16px;
+  margin: 10px auto 14px;
 }
 
 .wishes-controls-row {
@@ -3766,6 +3777,4 @@ footer:before {
   border-color: var(--gold);
   transform: scale(1.15);
 }
-
-
 
