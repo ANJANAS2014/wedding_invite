@@ -1,6 +1,6 @@
 // GET /api/invite?token=...  ->  { ok, name, language }
 // Returns only the invited guest's display name and language; nothing else about the guest or other guests.
-const { jsonResponse: _unused, isSameOrigin, supabaseConfig, supabaseRequest, findInvitation, TOKEN_PATTERN } = require("./_shared/supabase");
+import { isSameOrigin, supabaseConfig, supabaseRequest, findInvitation, TOKEN_PATTERN } from "./_shared/supabase.js";
 
 function jsonResponse(res, statusCode, body) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");

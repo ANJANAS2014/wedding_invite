@@ -1,7 +1,7 @@
-const {
-  jsonResponse: sharedJson, supabaseConfig, rpc, findInvitation, cleanText, cleanName,
+import {
+  supabaseConfig, rpc, findInvitation, cleanText, cleanName,
   UUID_PATTERN, MAX_GUESTS_PER_EVENT, TOKEN_PATTERN,
-} = require("./_shared/supabase");
+} from "./_shared/supabase.js";
 
 const MAX_BODY_LENGTH = 12000;
 

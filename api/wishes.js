@@ -1,4 +1,5 @@
-const { supabaseConfig, supabaseRequest, signPhotoUrls } = require("./_shared/supabase");
+import { supabaseConfig, supabaseRequest, signPhotoUrls } from "./_shared/supabase.js";
+
 const MAX_BODY_LENGTH = 1000;
 const PHOTO_HOST = "res.cloudinary.com";
 
@@ -9,7 +10,7 @@ function safePhotoUrl(value) {
   } catch { return ""; }
 }
 
-export default async function handler(req, res) {
+export async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ ok: false, wishes: [] });
   }

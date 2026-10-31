@@ -1,8 +1,10 @@
 // POST /api/rsvp-photo  { submissionId, contentType, size }
 // Validates the photo on the server and returns a one-time signed upload URL for the private Supabase bucket.
 // The browser never receives a storage key; the bucket also enforces type and 5 MB size limits.
-const crypto = require("node:crypto");
-const { jsonResponse: _unused, isSameOrigin, supabaseConfig, supabaseRequest, PHOTO_TYPES, PHOTO_MAX_BYTES, UUID_PATTERN } = require("./_shared/supabase");
+import crypto from "node:crypto";
+import {
+  isSameOrigin, supabaseConfig, supabaseRequest, PHOTO_TYPES, PHOTO_MAX_BYTES, UUID_PATTERN
+} from "./_shared/supabase.js";
 
 function jsonResponse(res, statusCode, body) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");

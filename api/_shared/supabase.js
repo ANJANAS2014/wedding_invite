@@ -1,6 +1,6 @@
 // Shared helpers for the Supabase-backed Netlify Functions.
 // The service-role/secret key is read from Netlify environment variables only and never sent to the browser.
-const crypto = require("node:crypto");
+import crypto from "node:crypto";
 
 const PHOTO_TYPES = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
 const PHOTO_MAX_BYTES = 5 * 1024 * 1024;
@@ -110,7 +110,7 @@ async function signPhotoUrls(cfg, paths, expiresIn = 3600) {
   return map;
 }
 
-module.exports = {
+export {
   PHOTO_TYPES, PHOTO_MAX_BYTES, MAX_GUESTS_PER_EVENT, LANGUAGES, TOKEN_PATTERN, UUID_PATTERN,
   jsonResponse, isSameOrigin, supabaseConfig, supabaseRequest, rpc, SupabaseError,
   newInvitationToken, cleanText, cleanName, findInvitation, signPhotoUrls,

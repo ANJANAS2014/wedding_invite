@@ -1,10 +1,10 @@
 // POST /api/admin-guests   (header: x-admin-key: <ADMIN_PASSWORD>)
 // Guest Tracker API. Every action requires the admin password and runs server-side with the Supabase service key.
-const crypto = require("node:crypto");
-const {
-  jsonResponse: _unused, isSameOrigin, supabaseConfig, supabaseRequest, SupabaseError,
+import crypto from "node:crypto";
+import {
+  isSameOrigin, supabaseConfig, supabaseRequest, SupabaseError,
   newInvitationToken, cleanName, cleanText, signPhotoUrls, LANGUAGES, UUID_PATTERN,
-} = require("./_shared/supabase");
+} from "./_shared/supabase.js";
 
 const MAX_BODY = 4000;
 const one = (value) => (Array.isArray(value) ? value[0] || null : value || null);
