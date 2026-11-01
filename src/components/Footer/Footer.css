@@ -1,0 +1,20 @@
+
+/* Footer */
+footer {
+  padding: 50px 20px 70px;
+  text-align: center;
+  font-size: 14px;
+  background: #190509;
+  color: var(--cream);
+  position: relative;
+}
+
+footer:before {
+  content: "";
+  display: block;
+  height: 18px;
+  background: linear-gradient(var(--gold), var(--gold)) 0 0/100% 2px no-repeat, linear-gradient(var(--gold), var(--gold)) 0 6px/100% 6px no-repeat;
+  opacity: .85;
+  margin: -50px -20px 40px;
+}
+
