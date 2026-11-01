@@ -6,6 +6,10 @@ test.describe('Wishes Wall on mobile', () => {
   test.beforeEach(async ({ page }) => {
     // Serve the built app locally
     await page.goto('http://localhost:3001');
+    // Open the invitation to reveal the wishes wall
+    await page.locator('#op').click();
+    // Wait for the curtain to part and main content to appear
+    await page.waitForTimeout(1800);
   });
 
   test('wishes marquee scrolls on mobile', async ({ page }) => {

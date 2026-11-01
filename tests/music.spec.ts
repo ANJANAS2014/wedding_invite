@@ -22,8 +22,14 @@ test.describe('Music mute/unmute', () => {
 test.describe('Wishes Wall on desktop', () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
-  test('marquee scrolls when enough cards', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:3001');
+    // Open the invitation to reveal the wishes wall
+    await page.locator('#op').click();
+    await page.waitForTimeout(1800);
+  });
+
+  test('marquee scrolls when enough cards', async ({ page }) => {
 
     const rail = page.locator('.wishes-rail-viewport');
     const track = page.locator('.wishes-rail-track');

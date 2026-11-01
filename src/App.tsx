@@ -151,18 +151,18 @@ export const App: React.FC = () => {
     }
 
     hapticSoft();
+    // Mount in closed state first
     setCurtainStatus('closing');
     playChime(0.56);
 
-    timersRef.current.push(window.setTimeout(() => {
-      setIsOpened(true);
-      setCurtainStatus('parting');
-      window.scrollTo(0, 0);
-    }, 560));
-
-    timersRef.current.push(window.setTimeout(() => {
-      setCurtainStatus('idle');
-    }, 1700));
+    // Allow browser to render closed state, then trigger parting on next frame
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsOpened(true);
+        setCurtainStatus('parting');
+        window.scrollTo(0, 0);
+      });
+    });
 
     // Gentle arrival pulse as the invitation lands under the parting curtain.
     timersRef.current.push(window.setTimeout(() => {
@@ -170,7 +170,12 @@ export const App: React.FC = () => {
     }, 720));
   };
 
-  return (
+  const handleCurtainParted = () => {
+    if (curtainStatus === 'parting') {
+      setCurtainStatus('idle');
+    }
+  };
+return (
     <>
       <Suspense fallback={null}>
         <EventDayNotice />
@@ -185,7 +190,7 @@ export const App: React.FC = () => {
         />
       )}
 
-      <LotusCurtain status={curtainStatus} />
+      <LotusCurtain status={curtainStatus} onParted={handleCurtainParted} />
 
       <main id="main">
         {/* Section 1: Introduction & Blessing */}
@@ -267,3 +272,4 @@ export const App: React.FC = () => {
     </>
   );
 };
+
