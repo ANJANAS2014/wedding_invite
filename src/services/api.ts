@@ -8,6 +8,10 @@ export const API_ROUTES = {
   wishes: '/api/wishes',
 } as const;
 
+/** True on the Vite dev/preview servers, where the /api routes don't exist. */
+export const isLocalDev = (): boolean =>
+  Boolean(import.meta.env?.DEV) || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
 const JSON_HEADERS = { 'Content-Type': 'application/json', Accept: 'application/json' };
 
 /** POST JSON and return the raw Response (callers decide how to treat failures). */

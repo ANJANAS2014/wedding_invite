@@ -1,5 +1,5 @@
 import type { RsvpRecord } from '../types';
-import { API_ROUTES, postJson } from './api';
+import { API_ROUTES, isLocalDev, postJson } from './api';
 import { uploadRsvpPhoto } from './photoUploadService';
 import { STORAGE_KEYS, readJson, writeJson } from './storage';
 
@@ -27,8 +27,24 @@ export function validateRsvp(values: RsvpFormValues): string | null {
   return null;
 }
 
-const newSubmissionId = (): string =>
-  crypto.randomUUID ? crypto.randomUUID() : `rsvp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+/**
+ * A v4 UUID (the API rejects anything else). `crypto.randomUUID` is missing on
+ * older iPhones (iOS < 15.4), so build one from `getRandomValues` there.
+ */
+function newSubmissionId(): string {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+/** Thrown when the RSVP could not be saved; `message` is safe to show to guests. */
+export class RsvpSubmitError extends Error {}
+
+const SEND_FAILED_MESSAGE = "We couldn't send your response just yet. Please check your connection and try again.";
 
 export interface SubmitRsvpOptions {
   inviteToken?: string;
@@ -39,8 +55,9 @@ export interface SubmitRsvpOptions {
 /**
  * Submits an RSVP:
  *  1. uploads the optional photo (best effort),
- *  2. POSTs to /api/rsvp (best effort — the guest is never blocked by an
- *     offline/unconfigured backend; existing behaviour),
+ *  2. POSTs to /api/rsvp and requires the server to confirm the save; on
+ *     failure throws RsvpSubmitError so the guest can retry (on localhost,
+ *     where /api doesn't exist, it falls back to the local copy only),
  *  3. keeps a local copy in localStorage (one entry per guest name).
  * Resolves to the record shown in the confirmation panel.
  */
@@ -65,8 +82,9 @@ export async function submitRsvp(values: RsvpFormValues, options: SubmitRsvpOpti
     submittedAt: new Date().toISOString(),
   };
 
+  let res: Response | null = null;
   try {
-    const res = await postJson(API_ROUTES.rsvp, {
+    res = await postJson(API_ROUTES.rsvp, {
       name: record.name,
       weddingAttendance: record.weddingAttending ? 'attending' : 'declined',
       weddingGuestCount: record.weddingGuestCount,
@@ -78,9 +96,13 @@ export async function submitRsvp(values: RsvpFormValues, options: SubmitRsvpOpti
       photoPath: photo?.path || undefined,
       photoSize: photo?.size || undefined,
     });
-    if (res.ok) await res.json().catch(() => null);
   } catch {
-    // Backend offline — the local copy below still records the response.
+    res = null; // network error
+  }
+  const data = res ? ((await res.json().catch(() => null)) as { ok?: boolean; message?: string } | null) : null;
+  const saved = Boolean(res && res.ok && data && data.ok === true);
+  if (!saved && !isLocalDev()) {
+    throw new RsvpSubmitError(typeof data?.message === 'string' && data.message ? data.message : SEND_FAILED_MESSAGE);
   }
 
   saveLocalRsvp(record);

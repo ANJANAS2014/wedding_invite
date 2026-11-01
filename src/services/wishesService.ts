@@ -1,11 +1,11 @@
 import type { WishRecord } from '../types';
 import { SAMPLE_WISHES } from '../data/sampleWishes';
 import { buildStableWishId } from '../utils/text';
-import { API_ROUTES, getJson } from './api';
+import { API_ROUTES, getJson, isLocalDev } from './api';
 import { loadLocalRsvps } from './rsvpService';
 import { STORAGE_KEYS, readJson, writeJson } from './storage';
 
-/** Raw wish as returned by /api/wishes (only approved wishes, first names). */
+/** Raw wish as returned by /api/wishes (submitted wishes from Supabase, first names). */
 interface ApiWish {
   id?: string;
   displayName?: unknown;
@@ -13,6 +13,8 @@ interface ApiWish {
   photoUrl?: string;
   submittedAt?: string;
   likesCount?: unknown;
+  weddingAttending?: unknown;
+  receptionAttending?: unknown;
 }
 
 export interface StoredLikes {
@@ -29,9 +31,10 @@ export function loadStoredLikes(): StoredLikes {
 
 export const saveStoredLikes = (likes: StoredLikes): void => writeJson(STORAGE_KEYS.wishLikes, likes);
 
-async function fetchApprovedWishes(): Promise<WishRecord[]> {
+/** Wishes from the server, or `null` when the API is unreachable (local dev, outage). */
+async function fetchServerWishes(): Promise<WishRecord[] | null> {
   const data = await getJson<{ ok?: boolean; wishes?: ApiWish[] }>(API_ROUTES.wishes);
-  if (!data || !data.ok || !Array.isArray(data.wishes)) return [];
+  if (!data || !data.ok || !Array.isArray(data.wishes)) return null;
   return data.wishes
     .filter((w) => w && w.displayName && w.wish)
     .map((w, idx) => ({
@@ -41,6 +44,8 @@ async function fetchApprovedWishes(): Promise<WishRecord[]> {
       photoUrl: w.photoUrl || undefined,
       submittedAt: w.submittedAt || undefined,
       likesCount: Number(w.likesCount) || 0,
+      weddingAttending: w.weddingAttending === true,
+      receptionAttending: w.receptionAttending === true,
     }));
 }
 
@@ -83,9 +88,6 @@ function mergeLegacyUserWishes(list: WishRecord[]): void {
   });
 }
 
-const isLocalDev = (): boolean =>
-  Boolean(import.meta.env?.DEV) || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
 /** Newest first for wishes with timestamps; undated ones keep API order at the end. */
 function compareBySubmittedAt(a: WishRecord, b: WishRecord): number {
   const timeA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
@@ -97,22 +99,28 @@ function compareBySubmittedAt(a: WishRecord, b: WishRecord): number {
 }
 
 /**
- * Builds the Wishes Wall list: approved API wishes + this browser's RSVP wishes
- * + legacy local wishes, sample postcards when local/empty, sorted, with this
- * browser's like adjustments applied.
+ * Builds the Wishes Wall list.
+ *  - API reachable: the server list is the single source of truth, so every
+ *    device (desktop, mobile) shows exactly the same wishes from Supabase.
+ *  - API unreachable: falls back to this browser's own RSVP copies, plus the
+ *    sample postcards on localhost only (never in production).
+ * Sorted newest first, with this browser's like adjustments applied.
  */
 export async function loadWishes(): Promise<WishRecord[]> {
   const likes = loadStoredLikes();
-  const list = await fetchApprovedWishes();
-  mergeLocalRsvpWishes(list);
-  mergeLegacyUserWishes(list);
+  const server = await fetchServerWishes();
+  const list: WishRecord[] = server ?? [];
 
-  if (isLocalDev() || list.length === 0) {
-    SAMPLE_WISHES.forEach((sample) => {
-      if (!list.some((item) => item.id === sample.id || item.displayName.toLowerCase() === sample.displayName.toLowerCase())) {
-        list.push({ ...sample });
-      }
-    });
+  if (!server) {
+    mergeLocalRsvpWishes(list);
+    mergeLegacyUserWishes(list);
+    if (isLocalDev()) {
+      SAMPLE_WISHES.forEach((sample) => {
+        if (!list.some((item) => item.id === sample.id || item.displayName.toLowerCase() === sample.displayName.toLowerCase())) {
+          list.push({ ...sample });
+        }
+      });
+    }
   }
 
   list.sort(compareBySubmittedAt);

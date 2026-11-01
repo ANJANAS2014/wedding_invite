@@ -93,8 +93,10 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
       const record = await submitRsvp(values, { inviteToken, photoFile, photoPreview });
       setSubmittedData(record);
       onSubmittedSuccess?.(record);
-    } catch {
-      setErrorMessage("We couldn't send your response just yet. Please try again.");
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error && error.message ? error.message : "We couldn't send your response just yet. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }

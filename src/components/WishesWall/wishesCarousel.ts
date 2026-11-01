@@ -1,36 +1,45 @@
 // Layout maths for the Wishes Wall marquee (pure functions, no React).
+//
+// Card widths themselves come from CSS (`--card-width` in WishesWall.css).
+// `wishCardWidth` mirrors that CSS so the marquee maths stays in sync:
+//   phones (≤480px): clamp(240px, 78vw, 300px)
+//   larger screens:  304px
 
-const GAP = 20;
-const H_PADDING = 40; // 20px left + 20px right on .wishes-rail-viewport
+const GAP = 20; // .wishes-rail-track gap
 const DESKTOP_CARD_WIDTH = 304;
 const MOBILE_BREAKPOINT = 480;
-const MOBILE_CARD_COUNT = 3;
-const MOBILE_MIN_CARD_WIDTH = 90;
-const MIN_WISHES_FOR_MARQUEE = 4;
+const MOBILE_MIN_CARD_WIDTH = 240;
+const MOBILE_MAX_CARD_WIDTH = 300;
+const MOBILE_CARD_VW = 0.78;
+const MIN_WISHES_FOR_MARQUEE = 3;
 
 export interface CarouselLayout<T> {
   cardWidth: number;
   shouldAutoScroll: boolean;
-  /** Originals followed by enough leading clones for a seamless loop. */
+  /** Originals followed by enough trailing clones for a seamless loop. */
   displayItems: T[];
-  /** Positive px distance; the CSS negates it to move left. */
+  /** Number of original (non-clone) items at the start of displayItems. */
+  originalCount: number;
+  /** Estimated px distance of one loop; the component re-measures it from the DOM. */
   marqueeDistance: number;
   /** Animation duration in seconds. */
   durationSeconds: number;
 }
 
+/** Same formula as the CSS `--card-width`. */
+export function wishCardWidth(viewportWidth: number): number {
+  return viewportWidth > MOBILE_BREAKPOINT
+    ? DESKTOP_CARD_WIDTH
+    : Math.min(MOBILE_MAX_CARD_WIDTH, Math.max(MOBILE_MIN_CARD_WIDTH, viewportWidth * MOBILE_CARD_VW));
+}
+
 /**
- * Desktop keeps ~304px cards; mobile fits three cards across the viewport.
- * Auto-scroll only when there are 4+ wishes that overflow the viewport. Clones
- * cover a full viewport after the originals scroll off, so the loop never
- * shows a duplicate card in the same view.
+ * 1–2 wishes (or 3+ that fit on screen) render as a static row.
+ * 3+ wishes that overflow the viewport auto-scroll as a marquee. Clones cover
+ * a full viewport after the originals scroll off, so the loop is seamless.
  */
 export function computeCarouselLayout<T>(items: T[], viewportWidth: number): CarouselLayout<T> {
-  const cardWidth =
-    viewportWidth > MOBILE_BREAKPOINT
-      ? DESKTOP_CARD_WIDTH
-      : Math.max(MOBILE_MIN_CARD_WIDTH, (viewportWidth - H_PADDING - (MOBILE_CARD_COUNT - 1) * GAP) / MOBILE_CARD_COUNT);
-
+  const cardWidth = wishCardWidth(viewportWidth);
   const originalWidth = items.length * (cardWidth + GAP) - GAP;
   const shouldAutoScroll = items.length >= MIN_WISHES_FOR_MARQUEE && originalWidth > viewportWidth - 40;
   const cloneCount = shouldAutoScroll ? Math.ceil(viewportWidth / (cardWidth + GAP)) + 1 : 0;
@@ -39,7 +48,8 @@ export function computeCarouselLayout<T>(items: T[], viewportWidth: number): Car
     cardWidth,
     shouldAutoScroll,
     displayItems: shouldAutoScroll ? [...items, ...items.slice(0, cloneCount)] : items,
-    marqueeDistance: shouldAutoScroll ? originalWidth : 0,
+    originalCount: items.length,
+    marqueeDistance: shouldAutoScroll ? originalWidth + GAP : 0,
     durationSeconds: Math.max(28, items.length * 8),
   };
 }
