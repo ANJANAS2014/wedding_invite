@@ -50,8 +50,8 @@ export const MusicPlayer: React.FC = () => {
     }
   };
 
-  const startPlayback = async () => {
-    if (muted) return;
+  const startPlayback = async (forceUnmuted = false) => {
+    if (muted && !forceUnmuted) return;
     if (audioRef.current) {
       try {
         await audioRef.current.play();
@@ -119,7 +119,7 @@ export const MusicPlayer: React.FC = () => {
       if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
         await audioCtxRef.current.resume();
       }
-      await startPlayback();
+      await startPlayback(true);
       initSynth();
     }
   };
