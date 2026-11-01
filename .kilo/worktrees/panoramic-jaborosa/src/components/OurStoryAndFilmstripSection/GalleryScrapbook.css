@@ -1,0 +1,175 @@
+/* --------------------------------------------------------------------------
+   EXPERIENCE 3: OUR GALLERY (UPGRADED SCRAPBOOK COLLECTION)
+   -------------------------------------------------------------------------- */
+.our-gallery-section {
+  padding: clamp(48px, 7vw, 84px) 20px;
+  background: radial-gradient(ellipse at 50% 20%, #fdf7ec 0%, var(--paper) 70%);
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.gallery-header {
+  margin-bottom: 32px;
+}
+
+.gallery-prompt {
+  display: block;
+  font-size: 11.5px;
+  letter-spacing: .35em;
+  color: #8c681d;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.gallery-title {
+  color: var(--maroon);
+  font: 500 clamp(36px, 5.5vw, 54px)/1.05 var(--fh);
+  margin: 0;
+}
+
+.gallery-div {
+  margin: 10px auto 26px;
+}
+
+/* Scrapbook Masonry Grid */
+.scrapbook-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: clamp(20px, 3vw, 32px);
+  justify-content: center;
+  align-items: start;
+}
+
+@media(min-width: 992px) {
+  .scrapbook-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.scrapbook-item {
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  transition: transform .35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow .35s;
+}
+
+.scrapbook-item:hover, .scrapbook-item:focus-visible {
+  transform: translateY(-5px);
+}
+
+.scrapbook-frame {
+  position: relative;
+  padding: 10px 10px 14px;
+  background: #fffefb;
+  border: 1px solid color-mix(in srgb, var(--gold) 58%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 14px 34px -18px rgba(60, 20, 25, 0.28), 0 0 0 3px #fffefb;
+  overflow: hidden;
+  transition: border-color .3s, box-shadow .3s;
+}
+
+.scrapbook-item:hover .scrapbook-frame {
+  border-color: var(--gold);
+  box-shadow: 0 20px 44px -16px rgba(60, 20, 25, 0.38), 0 0 0 3px #fffefb, 0 0 20px rgba(193, 154, 61, 0.3);
+}
+
+.scrapbook-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 4px;
+  background: #f4ecdf;
+  transition: transform .6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.item-landscape .scrapbook-image {
+  aspect-ratio: 3/2;
+}
+
+.scrapbook-item:hover .scrapbook-image {
+  transform: scale(1.025);
+}
+
+/* Subtle Archival Gold Corners */
+.scrapbook-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  opacity: .75;
+}
+
+.corner-tl {
+  top: 6px;
+  left: 6px;
+  border-top: 2px solid var(--gold);
+  border-left: 2px solid var(--gold);
+}
+
+.corner-tr {
+  top: 6px;
+  right: 6px;
+  border-top: 2px solid var(--gold);
+  border-right: 2px solid var(--gold);
+}
+
+.corner-bl {
+  bottom: 8px;
+  left: 6px;
+  border-bottom: 2px solid var(--gold);
+  border-left: 2px solid var(--gold);
+}
+
+.corner-br {
+  bottom: 8px;
+  right: 6px;
+  border-bottom: 2px solid var(--gold);
+  border-right: 2px solid var(--gold);
+}
+
+.scrapbook-hover-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .35s;
+}
+
+.scrapbook-item:hover .scrapbook-hover-sheen {
+  opacity: 1;
+}
+
+.scrapbook-caption {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.scrapbook-caption span {
+  font: italic 400 14px/1.35 var(--fh);
+  color: #6e4c27;
+  letter-spacing: .02em;
+}
+
+@media(max-width: 760px) {
+  #couple .story-reel {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    margin-top: 40px;
+    padding: 28px 0 0;
+  }
+  #couple .story-copy {
+    max-width: 620px;
+    margin: auto;
+    padding: 0 4px;
+  }
+  #couple .memory-reel {
+    height: clamp(300px, 92vw, 420px);
+  }
+}
+

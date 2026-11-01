@@ -1,0 +1,25 @@
+/* ==========================================================================
+   SHARED DESIGN TOKENS (variables.css)
+   Colour, typography and image-asset variables used across the site.
+   Loaded first so every component stylesheet can rely on them.
+   ========================================================================== */
+:root {
+  --maroon: #6b1a24;
+  --cream: #f8efdc;
+  --gold: #c19a3d;
+  --paper: var(--cream);
+  --ink: #3a1218;
+  --fh: 'Cormorant Garamond', Georgia, serif;
+  --fb: 'Jost', system-ui, sans-serif;
+  color-scheme: only light;
+  box-sizing: border-box;
+
+  --b1: url('/images/backgrounds/invitation-floral-background.jpg');
+  --b2: url('/images/backgrounds/couple-floral-background.jpg');
+  --b3: url('/images/backgrounds/events-elephant-floral-background.jpg');
+  --wT: url('/images/cover/hero-decoration-desktop-wide.jpg');
+  --cover-garland-mobile: url('/images/cover/hero-decoration-mobile.jpg');
+  --cover-altar: url('/images/cover/hero-decoration-bottom-right.jpg');
+  --cover-procession: url('/images/cover/wedding-procession.png');
+  --cover-cutout: url('/images/cover/wedding-couple-cutout-refined.webp');
+}

@@ -1,0 +1,23 @@
+/* ==========================================================================
+   SHARED ANIMATIONS (animations.css)
+   Keyframes referenced by more than one component stylesheet.
+   Component-specific keyframes live next to their component.
+   ========================================================================== */
+
+/* Arrival fade-up used by #main (App) and the RSVP confirmation panel */
+@keyframes invitation-arrive {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Notice/drop-in arrival used by the Event-day notice */
+@keyframes cover-arrive {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Panel fade used by the enlarged postcard modal and the emoji dropdown */
+@keyframes fadeInPanel {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

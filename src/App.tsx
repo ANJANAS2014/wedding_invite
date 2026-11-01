@@ -1,24 +1,25 @@
 import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import './components/Footer/Footer.css';
 import { WEDDING_CONTENT, UNIFIED_MEMORIES_WITH_EXTRAS } from './data/weddingData';
-import { CoverHero } from './components/CoverHero';
-import { LotusCurtain } from './components/LotusCurtain';
-import { MusicPlayer } from './components/MusicPlayer';
-import { InvitationIntroSection } from './components/InvitationIntroSection';
-import { FallingPetals } from './components/FallingPetals';
+import { CoverHero } from './components/CoverHero/CoverHero';
+import { LotusCurtain } from './components/LotusCurtain/LotusCurtain';
+import { MusicPlayer } from './components/MusicPlayer/MusicPlayer';
+import { InvitationIntroSection } from './components/InvitationIntroSection/InvitationIntroSection';
+import { FallingPetals } from './components/FallingPetals/FallingPetals';
 import { hapticSoft, hapticTap, hapticOpen } from './utils/haptics';
 
 // Below-the-fold sections are code-split so the cover page loads fast and the
 // curtain animation runs on a light main thread. They are imported (and their
 // chunks fetched) while the curtain is still closing, so they are ready the
 // moment it parts.
-const CoupleSection = lazy(() => import('./components/CoupleSection').then((m) => ({ default: m.CoupleSection })));
-const EventsSection = lazy(() => import('./components/EventsSection').then((m) => ({ default: m.EventsSection })));
-const OurStoryAndFilmstripSection = lazy(() => import('./components/OurStoryAndFilmstripSection').then((m) => ({ default: m.OurStoryAndFilmstripSection })));
-const RsvpSection = lazy(() => import('./components/RsvpSection').then((m) => ({ default: m.RsvpSection })));
-const WishesWall = lazy(() => import('./components/WishesWall').then((m) => ({ default: m.WishesWall })));
-const LightboxModal = lazy(() => import('./components/LightboxModal').then((m) => ({ default: m.LightboxModal })));
-const GuestTrackerModal = lazy(() => import('./components/GuestTrackerModal').then((m) => ({ default: m.GuestTrackerModal })));
-const EventDayNotice = lazy(() => import('./components/EventDayNotice').then((m) => ({ default: m.EventDayNotice })));
+const CoupleSection = lazy(() => import('./components/CoupleSection/CoupleSection').then((m) => ({ default: m.CoupleSection })));
+const EventsSection = lazy(() => import('./components/EventsSection/EventsSection').then((m) => ({ default: m.EventsSection })));
+const OurStoryAndFilmstripSection = lazy(() => import('./components/OurStoryAndFilmstripSection/OurStoryAndFilmstripSection').then((m) => ({ default: m.OurStoryAndFilmstripSection })));
+const RsvpSection = lazy(() => import('./components/RsvpSection/RsvpSection').then((m) => ({ default: m.RsvpSection })));
+const WishesWall = lazy(() => import('./components/WishesWall/WishesWall').then((m) => ({ default: m.WishesWall })));
+const LightboxModal = lazy(() => import('./components/LightboxModal/LightboxModal').then((m) => ({ default: m.LightboxModal })));
+const GuestTrackerModal = lazy(() => import('./components/GuestTrackerModal/GuestTrackerModal').then((m) => ({ default: m.GuestTrackerModal })));
+const EventDayNotice = lazy(() => import('./components/EventDayNotice/EventDayNotice').then((m) => ({ default: m.EventDayNotice })));
 
 export const App: React.FC = () => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -43,14 +44,14 @@ export const App: React.FC = () => {
     idle(() => {
       if (cancelled) return;
       // Fire-and-forget: Vite prefetches each dynamic import chunk.
-      void import('./components/CoupleSection');
-      void import('./components/EventsSection');
-      void import('./components/OurStoryAndFilmstripSection');
-      void import('./components/RsvpSection');
-      void import('./components/WishesWall');
-      void import('./components/LightboxModal');
-      void import('./components/GuestTrackerModal');
-      void import('./components/EventDayNotice');
+      void import('./components/CoupleSection/CoupleSection');
+      void import('./components/EventsSection/EventsSection');
+      void import('./components/OurStoryAndFilmstripSection/OurStoryAndFilmstripSection');
+      void import('./components/RsvpSection/RsvpSection');
+      void import('./components/WishesWall/WishesWall');
+      void import('./components/LightboxModal/LightboxModal');
+      void import('./components/GuestTrackerModal/GuestTrackerModal');
+      void import('./components/EventDayNotice/EventDayNotice');
     });
     return () => { cancelled = true; };
   }, []);
