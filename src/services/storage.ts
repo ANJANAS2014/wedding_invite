@@ -13,6 +13,8 @@ export const STORAGE_KEYS = {
   guestTracker: 'wedding_guest_tracker_v2',
   /** '1' when background music (and the chime) is muted. */
   musicMuted: 'inv-mute',
+  /** `{ name, token, lang }` from the last personal invite link opened on this device. */
+  invitedGuest: 'inv-guest-v1',
 } as const;
 
 export const SESSION_KEYS = {

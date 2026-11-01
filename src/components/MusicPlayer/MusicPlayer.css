@@ -1,9 +1,11 @@
 
 /* Audio control toggle button */
+/* Top-right on every page: clear of the cover's procession artwork, the
+   page-2 invitation text and the RSVP/wishes content lower down. */
 #mu {
   position: fixed;
-  left: 16px;
-  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  top: calc(14px + env(safe-area-inset-top, 0px));
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -16,7 +18,7 @@
   justify-content: center;
   padding: 0;
   cursor: pointer;
-  z-index: 50;
+  z-index: 210; /* above the temple doors (200), below the lightbox (250) */
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
   transition: transform .2s;
 }
@@ -57,69 +59,16 @@
   50% { transform: scaleY(1); }
 }
 
-#mh {
-  position: fixed;
-  left: 50%;
-  bottom: calc(74px + env(safe-area-inset-bottom, 0px));
-  transform: translate(-50%, 8px);
-  z-index: 49;
-  padding: 9px 18px;
-  border: 1px solid var(--gold);
-  border-radius: 999px;
-  background: #2a0a0fdd;
-  color: #f3dc8e;
-  font: 400 11px var(--fb);
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .5s, transform .5s;
-  backdrop-filter: blur(8px);
-}
-
-#mh.on {
-  opacity: 1;
-  transform: translate(-50%, 0);
-  animation: mhp 2.4s ease-in-out infinite;
-}
-
-@keyframes mhp {
-  50% { box-shadow: 0 0 18px color-mix(in srgb, var(--gold) 55%, transparent); }
-}
-
-/* --------------------------------------------------------------------------
-   Cover-page placement: while the cover is showing (body:not(.opened)) the
-   hint and button sit clear of the cover's lower procession artwork.
-   Breakpoints mirror CoverHero.css.
-   -------------------------------------------------------------------------- */
-body:not(.opened) #mh {
-  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-}
-
-@media (min-width: 721px) and (max-width: 1023px) {
-  body:not(.opened) #mh {
-    bottom: calc(182px + env(safe-area-inset-bottom, 0px));
-  }
-}
-
-@media (max-width: 720px) {
-  body:not(.opened) #mh {
-    bottom: calc(114px + env(safe-area-inset-bottom, 0px));
-  }
+/* On event days the fixed notice banner occupies the top of the screen */
+body:has(.event-notice) #mu {
+  top: calc(84px + env(safe-area-inset-top, 0px));
 }
 
 @media (max-width: 360px) {
-  body:not(.opened) #mu {
-    left: 8px;
-    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-    width: 36px;
-    height: 36px;
-  }
-
-  body:not(.opened) #mh {
-    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
-    font-size: 9.5px;
-    padding: 7px 14px;
+  #mu {
+    right: 10px;
+    top: calc(10px + env(safe-area-inset-top, 0px));
+    width: 40px;
+    height: 40px;
   }
 }

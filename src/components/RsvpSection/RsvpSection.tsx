@@ -7,6 +7,7 @@ import { MandalaDivider } from '../shared/MandalaDivider/MandalaDivider';
 import { RsvpEventCard } from './RsvpEventCard';
 import { EmojiPicker } from './EmojiPicker';
 import { RsvpConfirmation } from './RsvpConfirmation';
+import { burstPetals } from '../FallingPetals/FallingPetals';
 
 interface RsvpSectionProps {
   guestName: string;
@@ -88,11 +89,13 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
       return;
     }
 
+    const submitBtn = document.activeElement;
     setIsSubmitting(true);
     try {
       const record = await submitRsvp(values, { inviteToken, photoFile, photoPreview });
       setSubmittedData(record);
       onSubmittedSuccess?.(record);
+      burstPetals(submitBtn);
     } catch (error) {
       setErrorMessage(
         error instanceof Error && error.message ? error.message : "We couldn't send your response just yet. Please try again."

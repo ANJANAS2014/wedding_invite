@@ -18,9 +18,9 @@ export function buildStableWishId(name: string, wish: string, fallbackIndex: num
   return `wish_${Math.abs(hash).toString(36)}_${fallbackIndex}`;
 }
 
-/** Sanitises the `?to=` guest name: safe characters only, max 60 chars. */
+/** Sanitises the `?to=` guest name: letters in any script (incl. Tamil/Malayalam) plus & . , ' -, max 60 chars. */
 export const sanitizeGuestName = (value: string): string =>
-  value.replace(/[^\w\s&.,'-]/gi, '').trim().slice(0, 60);
+  value.replace(/[^\p{L}\p{M}\s&.,'-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 60);
 
 /** `?i=` personal invitation token format accepted by the frontend. */
 export const INVITE_TOKEN_PATTERN = /^[A-Za-z0-9_-]{16,64}$/;

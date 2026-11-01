@@ -57,21 +57,20 @@ Then open the printed URL from your phone. This tests exactly what guests receiv
 
 ## 3. How to operate the app (feature walkthrough)
 
-### 3.1 Cover page (CoverHero)
+### 3.1 Landing page — temple doors (TempleDoors)
 
-The first thing every guest sees — full-screen cover with garland, brass lamps, the couple's portrait, live countdown and **Open Invitation**.
+The first thing every guest sees: closed sandalwood temple doors with the **L & A** monogram medallion (lotus crest and wedding date), framed by the cover's garland, brass lamps, procession and elephant, plus the **Open Invitation** button. The music toggle sits top-right; there is no "tap anywhere for music" prompt.
 
-- Tap **Open Invitation** → temple bell chime plays, the lotus curtain closes over the cover, then parts to reveal the invitation.
-- Guest name from the `?to=` URL param is shown as a personalised greeting.
-- The countdown ticks down to the wedding date automatically.
+- Tap **Open Invitation** → background music starts (unless muted), the temple chime plays, the ring knockers swing and the monogram glows, then the doors swing inward to reveal the cover (page 2). Takes ~2.7s; tapping during the animation skips to the end.
+- States: `closed → unlocking → parting → fading → done` (see `useInvitationOpening`). Users with `prefers-reduced-motion` skip straight to the cover.
 
-### 3.2 Lotus curtain (LotusCurtain)
+### 3.2 Cover page (CoverHero) — page 2
 
-States: `idle → closing → parting`. Purely animated; nothing to operate manually. Users with `prefers-reduced-motion` enabled skip straight to the invitation.
+The first scrolling section: couple portrait, personalised greeting from `?to=` ("Dear Ravi & Family,"), names, the invitation words, date, live countdown and a **Scroll** cue down to the Wedding Events. The text fades up in sequence as the doors open.
 
 ### 3.3 Sections (in scroll order)
 
-1. **InvitationIntroSection** — family blessing and headings.
+1. **CoverHero** — see 3.2 (the invitation words now live here).
 2. **EventsSection** — Muhurtham (29 Nov 2026) and Reception (6 Dec 2026) cards with **Map** / **Calendar** actions and countdown chips. The next upcoming event is highlighted with a "Next celebration" badge.
 3. **CoupleSection** — bride & groom cards with portraits and vows.
 4. **OurStoryAndFilmstripSection** — expandable "Our Story" story block (Read more/less) + auto-scrolling 35mm filmstrip. Tap any frame to open the **LightboxModal** (‹ › arrows, ✕ close).

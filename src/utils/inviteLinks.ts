@@ -1,13 +1,14 @@
 import { LANG_MAPPINGS } from '../data/weddingData';
 import type { Language } from '../types';
 
-/** Personal invitation URL (`?i=token&to=name&lang=xx`, token optional). */
+/**
+ * Personal invitation URL: `/i?to=name&lang=xx[&i=token]`.
+ * `/i` is served by api/share.js, which gives each link a personalised
+ * WhatsApp preview ("Dear <name>, you're invited") before loading the site.
+ */
 export function buildInviteLink(name: string, language: Language, token?: string): string {
-  const origin = window.location.origin;
-  if (token) {
-    return `${origin}/?i=${token}&to=${encodeURIComponent(name)}&lang=${language}`;
-  }
-  return `${origin}/?to=${encodeURIComponent(name)}&lang=${language}`;
+  const base = `${window.location.origin}/i?to=${encodeURIComponent(name)}&lang=${language}`;
+  return token ? `${base}&i=${token}` : base;
 }
 
 /** Localised WhatsApp share message for an invitation link. */

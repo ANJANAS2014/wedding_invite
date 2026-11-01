@@ -12,6 +12,13 @@ export const isLanguage = (value: unknown): value is Language =>
 /** Lotus curtain animation state driven by the invitation-opening flow. */
 export type CurtainStatus = 'idle' | 'closing' | 'parting';
 
+/**
+ * Temple-door opening state (page 1 → page 2).
+ * closed → unlocking (button fades, knockers swing) → parting (doors swing
+ * inward, invitation behind) → fading (overlay dissolves) → done (unmounted).
+ */
+export type DoorStatus = 'closed' | 'unlocking' | 'parting' | 'fading' | 'done';
+
 /** Event identifiers shared by the events section, RSVP and day-of notice. */
 export type EventId = 'wedding' | 'reception';
 

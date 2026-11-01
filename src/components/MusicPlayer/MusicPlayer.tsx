@@ -1,25 +1,28 @@
 import './MusicPlayer.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { isMusicMuted, setMusicMuted } from '../../services/storage';
+import { INVITE_OPEN_EVENT } from '../../utils/inviteEvents';
 
 const MUSIC_SRC = '/audio/background-music.mp3';
 type WebkitWindow = Window & { webkitAudioContext?: typeof AudioContext };
 
 /**
- * Background music toggle (#mu) and "tap for music" hint (#mh).
- * Plays the MP3 when allowed by autoplay policy (otherwise on first tap);
- * falls back to a synthesised tanpura drone if the MP3 fails to load.
- * Mute preference persists in localStorage (also honoured by the chime).
+ * Background music toggle (#mu).
+ * Music starts when the guest taps "Open Invitation" on the temple doors
+ * (INVITE_OPEN_EVENT) — that tap is the user gesture mobile browsers require,
+ * so no "tap anywhere for music" prompt is needed. Falls back to a
+ * synthesised tanpura drone if the MP3 fails to load. The mute preference
+ * persists in localStorage (also honoured by the temple chime).
  */
 export const MusicPlayer: React.FC = () => {
   const [muted, setMuted] = useState<boolean>(isMusicMuted);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [showHint, setShowHint] = useState<boolean>(false);
+  const mutedRef = useRef<boolean>(muted);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const useSynthRef = useRef<boolean>(false);
 
-  // Initialize synth fallback if mp3 fails or audio context needed
-  const initSynth = () => {
+  // Synth fallback (only used when the MP3 cannot be loaded)
+  const startSynth = () => {
     try {
       const AC = window.AudioContext || (window as WebkitWindow).webkitAudioContext;
       if (!AC) return;
@@ -48,26 +51,22 @@ export const MusicPlayer: React.FC = () => {
         });
       }
       if (audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume();
+        void audioCtxRef.current.resume();
       }
     } catch {
       // AudioContext unavailable
     }
   };
 
-  const startPlayback = async (forceUnmuted = false) => {
-    if (muted && !forceUnmuted) return;
-    if (audioRef.current) {
-      try {
-        await audioRef.current.play();
-        setIsPlaying(true);
-        setShowHint(false);
-      } catch {
-        // Autoplay blocked by browser policy (common on mobile Safari)
-        setShowHint(true);
-        setIsPlaying(false);
-      }
+  const startPlayback = () => {
+    if (mutedRef.current) return;
+    if (useSynthRef.current) {
+      startSynth();
+      return;
     }
+    audioRef.current?.play().catch(() => {
+      // Blocked by autoplay policy — the guest can still use the toggle.
+    });
   };
 
   useEffect(() => {
@@ -75,31 +74,14 @@ export const MusicPlayer: React.FC = () => {
     audio.loop = true;
     audio.preload = 'auto';
     audioRef.current = audio;
-
     audio.onerror = () => {
-      initSynth();
-      setIsPlaying(true);
+      useSynthRef.current = true;
     };
 
-    if (!muted) {
-      startPlayback();
-    }
-
-    const handleFirstUserInteraction = () => {
-      if (!muted) {
-        startPlayback();
-        if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
-          audioCtxRef.current.resume();
-        }
-      }
-      window.removeEventListener('click', handleFirstUserInteraction);
-      window.removeEventListener('touchstart', handleFirstUserInteraction);
-    };
-
-    window.addEventListener('click', handleFirstUserInteraction, { once: true });
-    window.addEventListener('touchstart', handleFirstUserInteraction, { once: true });
+    window.addEventListener(INVITE_OPEN_EVENT, startPlayback);
 
     return () => {
+      window.removeEventListener(INVITE_OPEN_EVENT, startPlayback);
       audio.pause();
       if (audioCtxRef.current) {
         audioCtxRef.current.close().catch(() => {});
@@ -107,44 +89,34 @@ export const MusicPlayer: React.FC = () => {
     };
   }, []);
 
-  const toggleMute = async () => {
+  const toggleMute = () => {
     const nextMuted = !muted;
+    mutedRef.current = nextMuted;
     setMuted(nextMuted);
     setMusicMuted(nextMuted);
 
     if (nextMuted) {
       audioRef.current?.pause();
-      if (audioCtxRef.current) audioCtxRef.current.suspend();
-      setIsPlaying(false);
-      setShowHint(false);
+      if (audioCtxRef.current) void audioCtxRef.current.suspend();
     } else {
-      // Resume audio context on mobile (Safari requires this after suspend)
-      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
-        await audioCtxRef.current.resume();
-      }
-      await startPlayback(true);
-      initSynth();
+      // Unmuting is itself a tap, so playback is allowed to start here.
+      startPlayback();
     }
   };
 
   return (
-    <>
-      <button
-        id="mu"
-        className={muted ? 'off' : ''}
-        onClick={toggleMute}
-        aria-label={muted ? 'Unmute music' : 'Mute music'}
-        type="button"
-      >
-        <i />
-        <i />
-        <i />
-        <i />
-      </button>
-
-      <div id="mh" className={showHint && !muted ? 'on' : ''} role="status">
-        ♪ Tap anywhere for music
-      </div>
-    </>
+    <button
+      id="mu"
+      className={muted ? 'off' : ''}
+      onClick={toggleMute}
+      aria-label={muted ? 'Unmute music' : 'Mute music'}
+      aria-pressed={!muted}
+      type="button"
+    >
+      <i />
+      <i />
+      <i />
+      <i />
+    </button>
   );
 };

@@ -70,7 +70,7 @@ public/                      Static assets served as-is (images/, audio/, icons/
 tests/                       Playwright specs (playwright.config.ts at the root)
 ```
 
-The feature folders are CoverHero, LotusCurtain, FallingPetals, MusicPlayer, EventDayNotice, InvitationIntroSection, EventsSection, CoupleSection, OurStoryAndFilmstripSection, RsvpSection, WishesWall, LightboxModal, GuestTrackerModal and Footer.
+The feature folders are TempleDoors (landing page), CoverHero, FallingPetals, MusicPlayer, EventDayNotice, EventsSection, CoupleSection, OurStoryAndFilmstripSection, RsvpSection, WishesWall, LightboxModal, GuestTrackerModal and Footer.
 
 ## Where things belong
 

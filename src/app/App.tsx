@@ -2,9 +2,8 @@ import './App.css';
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { UNIFIED_MEMORIES } from '../data/weddingData';
 import { CoverHero } from '../components/CoverHero/CoverHero';
-import { LotusCurtain } from '../components/LotusCurtain/LotusCurtain';
+import { TempleDoors } from '../components/TempleDoors/TempleDoors';
 import { MusicPlayer } from '../components/MusicPlayer/MusicPlayer';
-import { InvitationIntroSection } from '../components/InvitationIntroSection/InvitationIntroSection';
 import { FallingPetals } from '../components/FallingPetals/FallingPetals';
 import { Footer } from '../components/Footer/Footer';
 import { useInvitationParams } from '../hooks/useInvitationParams';
@@ -22,13 +21,14 @@ import {
 } from './lazySections';
 
 /**
- * Application composition: cover → curtain → invitation sections, plus the
+ * Application composition: temple doors (page 1) → cover (page 2) →
+ * invitation sections (page 3+), plus the
  * global overlays (music control, lightbox, guest tracker).
  * Feature logic lives in the components, hooks and services it composes.
  */
 export const App: React.FC = () => {
   const { guestName, inviteToken, language, openTracker } = useInvitationParams();
-  const { isOpened, curtainStatus, openInvitation, handleCurtainParted } = useInvitationOpening();
+  const { doorStatus, openInvitation, skipOpening } = useInvitationOpening();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isTrackerOpen, setIsTrackerOpen] = useState<boolean>(false);
   const [wishesRefreshKey, setWishesRefreshKey] = useState<number>(0);
@@ -57,13 +57,12 @@ export const App: React.FC = () => {
       </Suspense>
       <FallingPetals />
 
-      {!isOpened && <CoverHero onOpen={openInvitation} guestName={guestName} language={language} />}
-
-      <LotusCurtain status={curtainStatus} onParted={handleCurtainParted} />
+      {/* Page 1: closed temple doors with the monogram and "Open Invitation" */}
+      <TempleDoors status={doorStatus} language={language} onOpen={openInvitation} onSkip={skipOpening} />
 
       <main id="main">
-        {/* Introduction & blessing */}
-        <InvitationIntroSection language={language} />
+        {/* Page 2: cover — greeting, names and the invitation words */}
+        <CoverHero guestName={guestName} language={language} />
 
         <Suspense fallback={null}>
           <EventsSection />

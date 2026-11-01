@@ -13,9 +13,10 @@
   border: 0;
 }
 
+/* Page 2: the cover is now the first in-flow section of #main (revealed
+   behind the temple doors), so it scrolls away to the Wedding Events. */
 #hero {
-  position: fixed;
-  inset: 0;
+  position: relative;
   width: 100%;
   min-height: 100svh;
   display: grid;
@@ -24,13 +25,8 @@
   color: #5c1926;
   background-color: #eae1d8;
   overflow: hidden;
-  z-index: 10;
   padding: 0;
   isolation: isolate;
-}
-
-body.opened #hero {
-  display: none;
 }
 
 .cover-scene {
@@ -558,20 +554,7 @@ body.opened #hero {
   background: linear-gradient(180deg, rgba(183, 137, 46, 0.08), rgba(183, 137, 46, 0.65), rgba(183, 137, 46, 0.08));
 }
 
-.ob {
-  position: relative;
-  z-index: 2;
-  margin: clamp(14px, 2.1svh, 22px) 0 0;
-}
 
-#hero .ob .btn {
-  min-width: clamp(205px, 19vw, 268px);
-  padding: 14px 36px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 10px 24px -10px rgba(154, 112, 34, 0.68),
-    0 0 0 4px rgba(246, 239, 230, 0.6);
-}
 
 /* Tablet layout (721px – 1023px): balanced portrait stage with lower flanking procession & elephant */
 @media (min-width: 721px) and (max-width: 1023px) {
@@ -666,16 +649,7 @@ body.opened #hero {
     height: 22px;
   }
 
-  .ob {
-    margin-top: clamp(10px, 1.8svh, 16px);
-  }
 
-  #hero .ob .btn {
-    min-width: 196px;
-    padding: 12px 28px;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-  }
 
   .cover-procession-left {
     left: 42px;
@@ -776,12 +750,6 @@ body.opened #hero {
     height: 19px;
   }
 
-  #hero .ob .btn {
-    min-width: 170px;
-    padding: 11px 22px;
-    font-size: 10.5px;
-    letter-spacing: 0.19em;
-  }
 
   .cover-procession-left {
     left: 42px;
@@ -818,9 +786,6 @@ body.opened #hero {
     font-size: clamp(38px, 5.2vw, 58px);
   }
 
-  .ob {
-    margin-top: 10px;
-  }
 }
 
 /* Accessibility: respect reduced motion */
@@ -842,3 +807,274 @@ body.opened #hero {
   }
 }
 
+
+/* ==========================================================================
+   PAGE 2 ADDITIONS — invitation words, scroll cue, staged reveal
+   ========================================================================== */
+.cover-greeting {
+  margin-top: clamp(10px, 1.6svh, 16px);
+}
+
+.cover-invite {
+  position: relative;
+  z-index: 2;
+  max-width: 32ch;
+  margin: clamp(8px, 1.4svh, 14px) auto 0;
+  color: #5c1926;
+  font: italic 400 clamp(17px, 1.9vw, 21px) / 1.45 var(--fh);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 16px #f6efe6;
+}
+
+.cover-invite-note {
+  position: relative;
+  z-index: 2;
+  max-width: 36ch;
+  margin: 6px auto 0;
+  color: #6b4e31;
+  font: 400 clamp(13px, 1.2vw, 15px) / 1.55 var(--fb);
+  letter-spacing: 0.01em;
+  text-shadow: 0 0 12px #f6efe6;
+}
+
+.cover-scroll {
+  position: relative;
+  z-index: 2;
+  margin-top: clamp(12px, 2svh, 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+  justify-content: center;
+  padding: 0 16px;
+  color: #8a6219;
+  font: 500 9px / 1 var(--fb);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.cover-scroll svg {
+  width: 16px;
+  height: 16px;
+  animation: cover-scroll-cue 1.8s ease-in-out infinite;
+}
+
+@keyframes cover-scroll-cue {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(4px); opacity: 1; }
+}
+
+/* Desktop / tablet: keep the couple clear of the hanging centre garland and
+   the text column clear of the procession & elephant on either side. */
+@media (min-width: 721px) {
+  .cover-couple {
+    margin-top: clamp(40px, 7svh, 70px);
+  }
+
+  .cover-couple img {
+    height: clamp(190px, 30svh, 320px);
+  }
+}
+
+/* Mobile: smaller portrait so the full invitation fits, and enough bottom
+   padding that no line of text can sit over the procession, elephant or
+   lotus corner (tallest of those is the lotus corner, ~140px). */
+@media (max-width: 720px) {
+  .cv {
+    padding-bottom: clamp(150px, 19svh, 172px);
+  }
+
+  .cover-couple img {
+    height: clamp(150px, 24svh, 220px);
+  }
+}
+
+@media (max-width: 360px) {
+  .cv {
+    padding-bottom: 128px;
+  }
+
+  .cover-couple img {
+    height: clamp(128px, 21svh, 170px);
+  }
+
+  .cover-invite {
+    font-size: 15.5px;
+  }
+
+  .cover-invite-note {
+    font-size: 12.5px;
+  }
+}
+
+/* Staged reveal: text rises in as the temple doors swing open */
+.cv > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+body.revealed .cv > * {
+  opacity: 1;
+  transform: none;
+}
+
+body.revealed .cv > :nth-child(2) { transition-delay: 0.25s; }
+body.revealed .cv > :nth-child(3) { transition-delay: 0.4s; }
+body.revealed .cv > :nth-child(4) { transition-delay: 0.5s; }
+body.revealed .cv > :nth-child(5) { transition-delay: 0.65s; }
+body.revealed .cv > :nth-child(6) { transition-delay: 0.75s; }
+body.revealed .cv > :nth-child(7) { transition-delay: 0.9s; }
+body.revealed .cv > :nth-child(8) { transition-delay: 1s; }
+body.revealed .cv > :nth-child(9) { transition-delay: 1.15s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cv > * {
+    transform: none;
+    transition: opacity 0.4s ease;
+  }
+
+  body.revealed .cv > * {
+    transition-delay: 0s !important;
+  }
+
+  .cover-scroll svg {
+    animation: none;
+  }
+}
+
+/* Wide-but-short screens (e.g. 1024×768 tablets in landscape, small laptops):
+   keep the procession and elephant inside the side margins so they never
+   reach the centred invitation text. */
+@media (min-width: 1024px) {
+  .cover-procession-left {
+    max-width: calc(50vw - 230px);
+  }
+
+  .cover-procession-elephant {
+    max-width: calc(50vw - 250px);
+  }
+}
+
+/* Desktop/tablet garland: the centre strand and its two low brass lamps hang
+   to the very bottom of the artwork, which put them behind the greeting and
+   names. Fade out just that lower-centre column (the upper leaves, flowers
+   and lit lamps stay). Applies to the page-1 doors copy as well. */
+@media (min-width: 721px) {
+  .cover-garland {
+    -webkit-mask-image:
+      linear-gradient(180deg, #000 0%, #000 80%, transparent 100%),
+      radial-gradient(ellipse 11% 52% at 50% 100%, transparent 0 70%, #000 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(180deg, #000 0%, #000 80%, transparent 100%),
+      radial-gradient(ellipse 11% 52% at 50% 100%, transparent 0 70%, #000 100%);
+    mask-composite: intersect;
+  }
+}
+
+/* Phones held sideways: the tall portrait garland would fill the whole screen,
+   so use the wide desktop garland (same centre fade as desktop). */
+@media (max-width: 720px) and (min-aspect-ratio: 3/2) {
+  .cover-garland-stage {
+    top: calc(-100vw * 0.011);
+    aspect-ratio: 2160 / 760;
+  }
+
+  .cover-garland {
+    background-image: var(--wT);
+    -webkit-mask-image:
+      linear-gradient(180deg, #000 0%, #000 80%, transparent 100%),
+      radial-gradient(ellipse 11% 52% at 50% 100%, transparent 0 70%, #000 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(180deg, #000 0%, #000 80%, transparent 100%),
+      radial-gradient(ellipse 11% 52% at 50% 100%, transparent 0 70%, #000 100%);
+    mask-composite: intersect;
+  }
+
+  .cover-lamps--desktop {
+    display: block;
+  }
+
+  .cover-lamps--mobile {
+    display: none;
+  }
+}
+
+/* Mobile: sit the invitation lower with a larger portrait, so there is no
+   empty band between the text and the procession. */
+@media (max-width: 720px) {
+  .cv {
+    justify-content: flex-end;
+    padding-top: clamp(70px, 10svh, 96px);
+    padding-bottom: clamp(120px, 15svh, 140px);
+  }
+
+  .cover-couple img {
+    height: clamp(170px, 30svh, 270px);
+  }
+}
+
+@media (max-width: 360px) {
+  .cv {
+    padding-bottom: 118px;
+  }
+
+  .cover-couple img {
+    height: clamp(130px, 24svh, 190px);
+  }
+}
+
+/* Lotus portrait band after the cover */
+.cover-band {
+  position: relative;
+  margin: 0;
+  height: clamp(380px, 72svh, 760px);
+  overflow: hidden;
+  background: #2a0a10;
+}
+
+.cover-band img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+.cover-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #eae1d8 0%, rgba(234, 225, 216, 0) 14%, rgba(42, 10, 16, 0) 55%, rgba(42, 10, 16, 0.82) 100%);
+}
+
+.cover-band figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(28px, 6svh, 60px);
+  z-index: 2;
+  padding: 0 24px;
+  text-align: center;
+  color: #f8efdc;
+}
+
+.cover-band-quote {
+  display: block;
+  max-width: 30ch;
+  margin: 0 auto;
+  font: italic 400 clamp(22px, 5.4vw, 34px) / 1.3 var(--fh);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.cover-band small {
+  display: block;
+  margin-top: 10px;
+  color: #f3dc8e;
+  font: 500 10px / 1.4 var(--fb);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}

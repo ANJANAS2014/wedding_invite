@@ -4,89 +4,31 @@ import { LANG_MAPPINGS, WEDDING_CONTENT, WEDDING_IMAGES } from '../../data/weddi
 import { WEDDING_START_MS } from '../../data/events';
 import { useNow } from '../../hooks/useNow';
 import { getCountdown, pad2 } from '../../utils/countdown';
-import { hapticTap } from '../../utils/haptics';
 import type { Language } from '../../types';
+import { CoverGarland, CoverProcession, INVITE_PORTRAIT } from './CoverArt';
 
 interface CoverHeroProps {
-  onOpen: () => void;
   guestName: string;
   language: Language;
 }
 
-// Exact wick coordinates (% of 2160x760 desktop garland and 1080x760 mobile garland)
-const LAMP_FLAMES = {
-  desktop: [
-    [10.6, 30.6],
-    [35.3, 21.8],
-    [2.1, 76.6],
-    [7.0, 76.4],
-    [89.3, 30.9],
-    [64.6, 22.1],
-    [97.9, 75.9],
-    [92.9, 77.0]
-  ],
-  mobile: [
-    [21.2, 30.0],
-    [70.6, 21.4],
-    [4.3, 75.7],
-    [14.1, 76.3],
-    [88.7, 74.7],
-    [98.3, 75.1]
-  ]
-};
-
-export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, language }) => {
+/**
+ * Page 2 — the first scrolling section, revealed when the temple doors open.
+ * Couple portrait, personal greeting, names, the invitation words, date and
+ * countdown. Text fades up in sequence once `body.revealed` is set.
+ */
+export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => {
   // Live IST countdown to the wedding Muhurtham; hidden once it starts.
   const countdown = getCountdown(WEDDING_START_MS, useNow(10000));
   const text = LANG_MAPPINGS[language] || LANG_MAPPINGS.en;
 
-  const renderLampFlames = (coords: number[][], keyPrefix: string) =>
-    coords.map(([x, y], i) => {
-      const duration = (2.4 + ((i * 0.43) % 1.5)).toFixed(2);
-      const glowDuration = (3.4 + ((i * 0.57) % 1.8)).toFixed(2);
-      const delay = (-((i * 0.73) % 2.6)).toFixed(2);
-      return (
-        <span
-          key={`${keyPrefix}_${i}`}
-          className="cover-lamp"
-          style={{
-            left: `${x}%`,
-            top: `${y}%`,
-            ['--fd' as string]: `${duration}s`,
-            ['--fgd' as string]: `${glowDuration}s`,
-            ['--fdl' as string]: `${delay}s`
-          }}
-        >
-          <span className="cover-lamp-glow" />
-          <span className="cover-lamp-flame" />
-        </span>
-      );
-    });
-
   return (
+    <>
     <section id="hero">
       <div className="cover-scene" aria-hidden="true">
         <div className="cover-light" />
-
-        {/* Upper floral & jasmine canopy + floating brass lamps with independent flame flicker */}
-        <div className="cover-garland-stage">
-          <div className="cover-garland" />
-          <div className="cover-lamps cover-lamps--desktop">
-            {renderLampFlames(LAMP_FLAMES.desktop, 'd')}
-          </div>
-          <div className="cover-lamps cover-lamps--mobile">
-            {renderLampFlames(LAMP_FLAMES.mobile, 'm')}
-          </div>
-        </div>
-
-        {/* Lower-left flanking group: ceremonial muthukkuda umbrellas & panchavadyam musicians */}
-        <div className="cover-procession-left" />
-
-        {/* Lower-right flanking group: caparisoned ceremonial elephant facing inward */}
-        <div className="cover-procession-elephant" />
-
-        {/* Lower-right outer corner: blooming pink lotuses, scattered petals & floral sprays */}
-        <div className="cover-decor-right" />
+        <CoverGarland />
+        <CoverProcession />
 
         {/* Warm sandy-parchment ground wash unifying the lower ceremonial stage */}
         <div className="cover-floor" />
@@ -144,7 +86,7 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, languag
 
         {guestName && (
           <p className="cover-greeting" id="cover-greeting" lang={language}>
-            {text.greetPrefix}<b>{guestName}</b>{text.greetSuffix}
+            {text.greetPrefix}<b>{guestName}</b>,
           </p>
         )}
 
@@ -169,6 +111,9 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, languag
           </svg>
           <span className="cover-ornament-line" />
         </div>
+
+        <p className="cover-invite" lang={language}>{text.inv1}</p>
+        <p className="cover-invite-note" lang={language}>{text.inv3}</p>
 
         <p className="cover-date">November 29, 2026</p>
 
@@ -196,12 +141,23 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, languag
           </div>
         )}
 
-        <div className="ob">
-          <button type="button" className="btn" id="op" onClick={onOpen} onPointerDown={() => hapticTap()} lang={language}>
-            {text.open}
-          </button>
-        </div>
+        <a className="cover-scroll" href="#s2" aria-label="Scroll to the wedding events">
+          <span>Scroll</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
+            <path d="M3 6l5 5 5-5" />
+          </svg>
+        </a>
       </div>
     </section>
+
+    {/* Full-bleed lotus portrait with the groom's vow, leading into the events */}
+    <figure className="cover-band">
+      <img src={INVITE_PORTRAIT} alt={`${WEDDING_CONTENT.groom} and ${WEDDING_CONTENT.bride} with pink lotuses`} loading="lazy" decoding="async" />
+      <figcaption>
+        <span className="cover-band-quote">{WEDDING_CONTENT.groomVow}</span>
+        <small>{WEDDING_CONTENT.groom} &amp; {WEDDING_CONTENT.bride} · 29 · 11 · 2026</small>
+      </figcaption>
+    </figure>
+    </>
   );
 };

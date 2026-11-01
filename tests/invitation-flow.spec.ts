@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-// Core guest journey: cover → open → sections → RSVP → wishes → overlays.
-// Uses reduced motion so the curtain opens instantly and marquees stand still.
+// Core guest journey: temple doors → cover → sections → RSVP → wishes → overlays.
+// Uses reduced motion so the doors open instantly and marquees stand still.
 test.use({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
 
 test.beforeEach(async ({ page }) => {
@@ -56,4 +56,24 @@ test('guest tracker opens from ?tracker=1 and closes with Escape', async ({ page
   await expect(page.getByText(/\?to=Meena&lang=en/)).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(title).toHaveCount(0);
+});
+
+test.describe('Temple door landing', () => {
+  test('doors open to the personalised cover with the invitation words', async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const page = await context.newPage();
+    await page.goto('/?to=Ravi%20%26%20Family');
+
+    await expect(page.locator('.temple')).toBeVisible();
+    await expect(page.locator('#op')).toBeVisible();
+    await expect(page.locator('#mu')).toBeVisible();
+    await expect(page.locator('#mh')).toHaveCount(0);
+
+    await page.locator('#op').click();
+    await expect(page.locator('.temple')).toHaveCount(0, { timeout: 5000 });
+    await expect(page.locator('#cover-greeting')).toHaveText('Dear Ravi & Family,');
+    await expect(page.locator('#hero .cover-invite')).toBeVisible();
+    await expect(page.locator('#hero .cover-invite-note')).toBeVisible();
+    await context.close();
+  });
 });
