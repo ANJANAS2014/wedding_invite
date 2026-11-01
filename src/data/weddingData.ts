@@ -22,8 +22,6 @@ export const WEDDING_IMAGES = {
   p9: "/images/gallery/gallery-bride-lotus-landscape.jpg",
   p10: "/images/couple/bride-office-portrait.jpg",
   p12: "/images/couple/groom-park-portrait.jpg",
-  p13: "/images/gallery/story-photo-01.jpg",
-  p14: "/images/gallery/story-photo-02.jpg",
   w1: "/images/venues/wedding-venue-central-auditorium.jpg",
   r1: "/images/venues/reception-venue-annalakshmi.jpg",
   hero_cover: "/images/cover/wedding-couple-cutout-refined.webp",
@@ -73,16 +71,6 @@ export const REELS_PHOTOS: ReelPhoto[] = [
     src: WEDDING_IMAGES.story_photo_four,
     caption: 'Choosing each other, always',
     subcaption: 'A lifetime of adventures together'
-  },
-  {
-    src: WEDDING_IMAGES.p13,
-    caption: 'Cherished memories',
-    subcaption: 'Every day turned into a celebration'
-  },
-  {
-    src: WEDDING_IMAGES.p14,
-    caption: 'Ready for our new chapter',
-    subcaption: 'With love and gratitude'
   }
 ];
 
