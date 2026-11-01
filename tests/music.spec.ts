@@ -4,7 +4,7 @@ test.describe('Music mute/unmute', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true });
 
   test('toggle mute button works on mobile', async ({ page }) => {
-    await page.goto('http://localhost:3001');
+    await page.goto('/');
 
     const muteBtn = page.locator('#mu');
     await expect(muteBtn).toBeVisible();
@@ -23,7 +23,7 @@ test.describe('Wishes Wall on desktop', () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3001');
+    await page.goto('/');
     // Open the invitation to reveal the wishes wall
     await page.locator('#op').click();
     await page.waitForTimeout(1800);

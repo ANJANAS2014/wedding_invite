@@ -1,0 +1,10 @@
+/* ==========================================================================
+   SHARED MODAL FOUNDATION
+   Behaviour-level styles only. Each modal's look lives in its own stylesheet
+   (keyed on the id / class passed to <Modal>).
+   ========================================================================== */
+.modal-overlay {
+  outline: none;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}

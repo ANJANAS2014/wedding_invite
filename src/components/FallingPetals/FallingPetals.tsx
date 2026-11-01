@@ -20,11 +20,13 @@ const PETAL_SHAPES = [
   }
 ];
 
+// Each tone maps to a .pt--<tone> colour class in FallingPetals.css.
+const PETAL_TONES = ['blush', 'rose', 'pink'] as const;
+
 export const FallingPetals: React.FC = () => {
   // 24 petals distributed across the viewport width with varied sizes, timings, and shapes
   const petals = Array.from({ length: 24 }, (_, i) => {
-    const tones = ['blush', 'rose', 'pink'];
-    const tone = tones[i % tones.length];
+    const tone = PETAL_TONES[i % PETAL_TONES.length];
     const shape = PETAL_SHAPES[i % PETAL_SHAPES.length];
     // Distribute across 2vw to 95vw
     const left = Number(((i * 4.15 + 2) % 94).toFixed(1));

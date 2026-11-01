@@ -1,14 +1,18 @@
 import './MusicPlayer.css';
 import React, { useEffect, useRef, useState } from 'react';
+import { isMusicMuted, setMusicMuted } from '../../services/storage';
 
+const MUSIC_SRC = '/audio/background-music.mp3';
+type WebkitWindow = Window & { webkitAudioContext?: typeof AudioContext };
+
+/**
+ * Background music toggle (#mu) and "tap for music" hint (#mh).
+ * Plays the MP3 when allowed by autoplay policy (otherwise on first tap);
+ * falls back to a synthesised tanpura drone if the MP3 fails to load.
+ * Mute preference persists in localStorage (also honoured by the chime).
+ */
 export const MusicPlayer: React.FC = () => {
-  const [muted, setMuted] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('inv-mute') === '1';
-    } catch {
-      return false;
-    }
-  });
+  const [muted, setMuted] = useState<boolean>(isMusicMuted);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [showHint, setShowHint] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -17,7 +21,7 @@ export const MusicPlayer: React.FC = () => {
   // Initialize synth fallback if mp3 fails or audio context needed
   const initSynth = () => {
     try {
-      const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AC = window.AudioContext || (window as WebkitWindow).webkitAudioContext;
       if (!AC) return;
       if (!audioCtxRef.current) {
         const ac = new AC();
@@ -67,7 +71,7 @@ export const MusicPlayer: React.FC = () => {
   };
 
   useEffect(() => {
-    const audio = new Audio('/audio/background-music.mp3');
+    const audio = new Audio(MUSIC_SRC);
     audio.loop = true;
     audio.preload = 'auto';
     audioRef.current = audio;
@@ -106,9 +110,7 @@ export const MusicPlayer: React.FC = () => {
   const toggleMute = async () => {
     const nextMuted = !muted;
     setMuted(nextMuted);
-    try {
-      localStorage.setItem('inv-mute', nextMuted ? '1' : '0');
-    } catch {}
+    setMusicMuted(nextMuted);
 
     if (nextMuted) {
       audioRef.current?.pause();

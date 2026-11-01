@@ -53,10 +53,6 @@
   opacity: 0.74;
 }
 
-.pt--gold {
-  color: #deb868;
-  opacity: 0.70;
-}
 
 @keyframes petal-fall {
   0% { transform: translateY(-50px); }

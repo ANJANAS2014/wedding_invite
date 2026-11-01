@@ -1,69 +1,46 @@
 import './EventDayNotice.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { WEDDING_EVENTS, type WeddingEvent } from '../../data/events';
+import { makeDirectionsUrl } from '../../utils/calendar';
+import { istDateKey } from '../../utils/countdown';
 
+/**
+ * The event happening today in IST, if any.
+ * `?now=<ISO date>` overrides the clock for testing (e.g. ?now=2026-11-29T10:00).
+ */
+function findTodaysEvent(): WeddingEvent | null {
+  try {
+    const nowOverride = new URLSearchParams(window.location.search).get('now');
+    const today = istDateKey(nowOverride ? new Date(nowOverride) : new Date());
+    return WEDDING_EVENTS.find((ev) => ev.istDate === today) || null;
+  } catch {
+    return null;
+  }
+}
+
+/** Fixed "happening now" banner with directions, shown only on event days. */
 export const EventDayNotice: React.FC = () => {
-  const [notice, setNotice] = useState<{ title: string; venue: string; times: string; directionsUrl: string } | null>(null);
+  const [event] = useState<WeddingEvent | null>(findTodaysEvent);
   const [dismissed, setDismissed] = useState<boolean>(false);
 
-  useEffect(() => {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const nowOverride = urlParams.get('now');
-      const now = nowOverride ? new Date(nowOverride) : new Date();
-
-      // Format in IST (en-CA gives YYYY-MM-DD)
-      const istDay = new Intl.DateTimeFormat('en-CA', {
-        timeZone: 'Asia/Kolkata',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      }).format(now);
-
-      if (istDay === '2026-11-29') {
-        setNotice({
-          title: 'The wedding is happening now!',
-          venue: 'Central Auditorium',
-          times: '8:00 AM – 9:20 AM IST',
-          directionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent('Central Auditorium, North Paravur, Kerala, India')
-        });
-      } else if (istDay === '2026-12-06') {
-        setNotice({
-          title: 'The reception is happening now!',
-          venue: 'Annalakshmi Restaurant',
-          times: '6:00 PM – 10:30 PM IST',
-          directionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent('Annalakshmi Restaurant, 6 Mayor Ramanathan Salai, Chennai, India')
-        });
-      } else {
-        setNotice(null);
-      }
-    } catch {
-      setNotice(null);
-    }
-  }, []);
-
-  if (!notice || dismissed) return null;
+  if (!event || dismissed) return null;
 
   return (
     <aside className="event-notice" role="status">
       <span className="en-dot" aria-hidden="true" />
       <div className="en-copy">
-        <b>{notice.title}</b>
-        <span>{notice.venue} · {notice.times}</span>
+        <b>{event.dayOfTitle}</b>
+        <span>{event.venue} · {event.timeStr} IST</span>
       </div>
       <a
         className="en-dir"
-        href={notice.directionsUrl}
+        href={makeDirectionsUrl(`${event.venue}, ${event.address}`)}
         target="_blank"
         rel="noopener noreferrer"
       >
         Directions
       </a>
-      <button
-        className="en-close"
-        type="button"
-        aria-label="Hide notice"
-        onClick={() => setDismissed(true)}
-      >
+      <button className="en-close" type="button" aria-label="Hide notice" onClick={() => setDismissed(true)}>
         ×
       </button>
     </aside>

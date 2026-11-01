@@ -10,6 +10,7 @@
   place-items: center;
   gap: 18px;
   padding: 52px 76px 22px;
+  padding-bottom: max(22px, env(safe-area-inset-bottom, 0px));
   z-index: 250;
   backdrop-filter: blur(8px);
 }
@@ -19,6 +20,7 @@
   grid-row: 1;
   max-width: 100%;
   max-height: calc(100vh - 100px);
+  max-height: calc(100svh - 100px); /* iOS Safari: exclude the dynamic toolbar */
   object-fit: contain;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(193, 154, 61, 0.4);
@@ -55,4 +57,4 @@
 #lb .lb-prev:hover, #lb .lb-next:hover, #lb .lb-close:hover {
   background: #46141d;
 }
-
+

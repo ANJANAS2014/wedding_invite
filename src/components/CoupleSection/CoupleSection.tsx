@@ -1,20 +1,14 @@
 import './CoupleSection.css';
 import React from 'react';
 import { WEDDING_CONTENT, WEDDING_IMAGES } from '../../data/weddingData';
+import { MandalaDivider } from '../shared/MandalaDivider/MandalaDivider';
 
 export const CoupleSection: React.FC = () => {
   return (
-    <section className="sec rv in" id="couple">
+    <section className="sec" id="couple">
       <div className="eyebrow">The couple</div>
       <h2>Bride &amp; Groom</h2>
-      <div className="div">
-        <svg viewBox="-50 -50 100 100" className="man">
-          {Array.from({ length: 8 }, (_, i) => (
-            <ellipse key={i} rx="4" ry="22" cy="-26" transform={`rotate(${(i * 360) / 8})`} />
-          ))}
-          <circle r="2" style={{ fill: 'var(--gold)' }} />
-        </svg>
-      </div>
+      <MandalaDivider />
 
       <div className="cards">
         <div className="card">

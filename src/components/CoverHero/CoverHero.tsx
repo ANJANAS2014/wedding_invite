@@ -1,12 +1,16 @@
 import './CoverHero.css';
-import React, { useEffect, useState } from 'react';
-import { WEDDING_CONTENT, WEDDING_IMAGES } from '../../data/weddingData';
+import React from 'react';
+import { LANG_MAPPINGS, WEDDING_CONTENT, WEDDING_IMAGES } from '../../data/weddingData';
+import { WEDDING_START_MS } from '../../data/events';
+import { useNow } from '../../hooks/useNow';
+import { getCountdown, pad2 } from '../../utils/countdown';
 import { hapticTap } from '../../utils/haptics';
+import type { Language } from '../../types';
 
 interface CoverHeroProps {
   onOpen: () => void;
   guestName: string;
-  language: 'en' | 'ta' | 'ml';
+  language: Language;
 }
 
 // Exact wick coordinates (% of 2160x760 desktop garland and 1080x760 mobile garland)
@@ -32,46 +36,9 @@ const LAMP_FLAMES = {
 };
 
 export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, language }) => {
-  const [countdown, setCountdown] = useState<{ days: number; hours: number; minutes: number } | null>(null);
-
-  // Live IST countdown calculation to wedding Muhurtham (2026-11-29T08:00+05:30)
-  useEffect(() => {
-    const updateCountdown = () => {
-      const targetTime = new Date('2026-11-29T08:00:00+05:30').getTime();
-      const now = Date.now();
-      const diffSecs = Math.floor((targetTime - now) / 1000);
-
-      if (diffSecs > 0) {
-        const days = Math.floor(diffSecs / 86400);
-        const hours = Math.floor((diffSecs % 86400) / 3600);
-        const minutes = Math.floor((diffSecs % 3600) / 60);
-        setCountdown({ days, hours, minutes });
-      } else {
-        setCountdown(null);
-      }
-    };
-
-    updateCountdown();
-    const timer = setInterval(updateCountdown, 10000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const getGreeting = () => {
-    if (!guestName) return null;
-    if (language === 'ta') {
-      return <>அன்புள்ள <b>{guestName}</b>, அன்புடன் உங்களை அழைக்கிறோம்</>;
-    }
-    if (language === 'ml') {
-      return <>പ്രിയപ്പെട്ട <b>{guestName}</b>, സ്നേഹത്തോടെ ഞങ്ങൾ നിങ്ങളെ ക്ഷണിക്കുന്നു</>;
-    }
-    return <>Dear <b>{guestName}</b>, with love we invite you</>;
-  };
-
-  const getOpenBtnText = () => {
-    if (language === 'ta') return 'அழைப்பிதழைத் திறக்கவும்';
-    if (language === 'ml') return 'ക്ഷണക്കത്ത് തുറക്കുക';
-    return 'Open Invitation';
-  };
+  // Live IST countdown to the wedding Muhurtham; hidden once it starts.
+  const countdown = getCountdown(WEDDING_START_MS, useNow(10000));
+  const text = LANG_MAPPINGS[language] || LANG_MAPPINGS.en;
 
   const renderLampFlames = (coords: number[][], keyPrefix: string) =>
     coords.map(([x, y], i) => {
@@ -97,7 +64,7 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, languag
     });
 
   return (
-    <section id="hero" className="cover-intro-complete">
+    <section id="hero">
       <div className="cover-scene" aria-hidden="true">
         <div className="cover-light" />
 
@@ -177,7 +144,7 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, languag
 
         {guestName && (
           <p className="cover-greeting" id="cover-greeting" lang={language}>
-            {getGreeting()}
+            {text.greetPrefix}<b>{guestName}</b>{text.greetSuffix}
           </p>
         )}
 
@@ -213,17 +180,17 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, languag
             aria-label={`${countdown.days} days, ${countdown.hours} hours and ${countdown.minutes} minutes to the wedding`}
           >
             <span className="ccd-unit">
-              <b>{String(countdown.days).padStart(2, '0')}</b>
+              <b>{pad2(countdown.days)}</b>
               <small>Days</small>
             </span>
             <span className="ccd-sep" aria-hidden="true" />
             <span className="ccd-unit">
-              <b>{String(countdown.hours).padStart(2, '0')}</b>
+              <b>{pad2(countdown.hours)}</b>
               <small>Hours</small>
             </span>
             <span className="ccd-sep" aria-hidden="true" />
             <span className="ccd-unit">
-              <b>{String(countdown.minutes).padStart(2, '0')}</b>
+              <b>{pad2(countdown.minutes)}</b>
               <small>Minutes</small>
             </span>
           </div>
@@ -231,7 +198,7 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ onOpen, guestName, languag
 
         <div className="ob">
           <button type="button" className="btn" id="op" onClick={onOpen} onPointerDown={() => hapticTap()} lang={language}>
-            {getOpenBtnText()}
+            {text.open}
           </button>
         </div>
       </div>

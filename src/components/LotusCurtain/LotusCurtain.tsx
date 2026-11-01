@@ -1,8 +1,10 @@
 import './LotusCurtain.css';
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef } from 'react';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import type { CurtainStatus } from '../../types';
 
 interface LotusCurtainProps {
-  status: 'closing' | 'parting' | 'idle';
+  status: CurtainStatus;
   onParted?: () => void;
 }
 
@@ -13,22 +15,8 @@ export const LotusCurtain: React.FC<LotusCurtainProps> = ({ status, onParted }) 
   const id = useId().replace(/:/g, '');
   const gradId = 'lcg-' + id;
   const goldId = 'lcg-gold-' + id;
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const partedCalledRef = useRef(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setPrefersReducedMotion(mq.matches);
-    update();
-    if (mq.addEventListener) {
-      mq.addEventListener('change', update);
-      return () => mq.removeEventListener('change', update);
-    } else {
-      mq.addListener(update);
-      return () => mq.removeListener(update);
-    }
-  }, []);
 
   useEffect(() => {
     if (status !== 'parting') {
@@ -48,7 +36,7 @@ export const LotusCurtain: React.FC<LotusCurtainProps> = ({ status, onParted }) 
     const panels = [leftRef.current, rightRef.current].filter(Boolean) as HTMLElement[];
     const bloom = bloomRef.current;
 
-    const handleEnd = (e: TransitionEvent) => {
+    const handleEnd = () => {
       done += 1;
       if (done >= 2) {
         if (!partedCalledRef.current) {

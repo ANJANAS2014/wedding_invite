@@ -1,27 +1,9 @@
 import {
-  supabaseConfig, rpc, findInvitation, cleanText, cleanName,
+  sendJson, isSameOrigin, supabaseConfig, rpc, findInvitation, cleanText, cleanName,
   UUID_PATTERN, MAX_GUESTS_PER_EVENT, TOKEN_PATTERN,
 } from "./_shared/supabase.js";
 
 const MAX_BODY_LENGTH = 12000;
-
-function jsonResponse(res, statusCode, body) {
-  res.setHeader("Content-Type", "application/json; charset=utf-8");
-  res.setHeader("Cache-Control", "no-store");
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.status(statusCode).json(body);
-}
-
-function isSameOrigin(req) {
-  const origin = req.headers?.origin;
-  const host = req.headers?.host;
-  if (!origin || !host) return true;
-  try {
-    return new URL(origin).host.toLowerCase() === host.toLowerCase();
-  } catch {
-    return false;
-  }
-}
 
 function statusForBackendError(error) {
   if (error === "invalid_request") return 400;
@@ -73,25 +55,25 @@ async function totals(cfg) {
 
 async function handleSupabase(req, res, cfg) {
   try {
-    if (req.method === "GET") return sharedJson(200, { ok: true, ...(await totals(cfg)) });
+    if (req.method === "GET") return sendJson(res, 200, { ok: true, ...(await totals(cfg)) });
     const rawBody = req.body;
     const bodyStr = typeof rawBody === "string" ? rawBody : JSON.stringify(rawBody);
     if (bodyStr.length > MAX_BODY_LENGTH) {
-      return jsonResponse(res, 400, { ok: false, message: "Invalid RSVP submission." });
+      return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." });
     }
     let body;
-    try { body = typeof rawBody === "object" ? rawBody : JSON.parse(rawBody); } catch { return jsonResponse(res, 400, { ok: false, message: "Invalid RSVP submission." }); }
-    if (!body || typeof body !== "object") return jsonResponse(res, 400, { ok: false, message: "Invalid RSVP submission." });
-    if (typeof body.website === "string" && body.website.trim()) return jsonResponse(res, 400, { ok: false, message: "Invalid RSVP submission." });
+    try { body = typeof rawBody === "object" ? rawBody : JSON.parse(rawBody); } catch { return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." }); }
+    if (!body || typeof body !== "object") return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." });
+    if (typeof body.website === "string" && body.website.trim()) return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." });
     const { errors, value } = validateRsvp(body);
     if (Object.keys(errors).length) {
-      return jsonResponse(res, 400, { ok: false, message: Object.values(errors)[0], fields: errors });
+      return sendJson(res, 400, { ok: false, message: Object.values(errors)[0], fields: errors });
     }
     let invitationId = null;
     if (value.token) {
       const invitation = await findInvitation(cfg, value.token);
       if (!invitation) {
-        return jsonResponse(res, 400, { ok: false, message: "This invitation link isn't valid any more. Please contact Lalith & Anjana for a new one.", fields: { invite: "invalid" } });
+        return sendJson(res, 400, { ok: false, message: "This invitation link isn't valid any more. Please contact Lalith & Anjana for a new one.", fields: { invite: "invalid" } });
       }
       invitationId = invitation.id;
     }
@@ -116,16 +98,16 @@ async function handleSupabase(req, res, cfg) {
     });
   } catch {
     // Never forward database details to guests.
-    jsonResponse(res, 502, { ok: false, message: "We couldn't save your response just now. Please try again in a moment." });
+    sendJson(res, 502, { ok: false, message: "We couldn't save your response just now. Please try again in a moment." });
   }
 }
 
 export default async function handler(req, res) {
   if (!["GET", "POST"].includes(req.method)) {
-    return jsonResponse(res, 405, { ok: false, message: "Method not allowed." });
+    return sendJson(res, 405, { ok: false, message: "Method not allowed." });
   }
   if (!isSameOrigin(req)) {
-    return jsonResponse(res, 403, { ok: false, message: "Request origin not allowed." });
+    return sendJson(res, 403, { ok: false, message: "Request origin not allowed." });
   }
 
   const cfg = supabaseConfig();
@@ -134,7 +116,7 @@ export default async function handler(req, res) {
   const scriptUrl = process.env.APPS_SCRIPT_URL;
   const secret = process.env.RSVP_SHARED_SECRET;
   if (!scriptUrl || !secret || secret.length < 32) {
-    return jsonResponse(res, 503, {
+    return sendJson(res, 503, {
       ok: false,
       message: "The RSVP service is not configured yet.",
     });
@@ -144,10 +126,10 @@ export default async function handler(req, res) {
   try {
     endpoint = new URL(scriptUrl);
   } catch {
-    return jsonResponse(res, 503, { ok: false, message: "The RSVP service is misconfigured." });
+    return sendJson(res, 503, { ok: false, message: "The RSVP service is misconfigured." });
   }
   if (endpoint.protocol !== "https:" || endpoint.hostname !== "script.google.com") {
-    return jsonResponse(res, 503, { ok: false, message: "The RSVP service is misconfigured." });
+    return sendJson(res, 503, { ok: false, message: "The RSVP service is misconfigured." });
   }
 
   let request;
@@ -157,12 +139,12 @@ export default async function handler(req, res) {
     const rawBody = req.body;
     const bodyStr = typeof rawBody === "string" ? rawBody : JSON.stringify(rawBody);
     if (bodyStr.length > MAX_BODY_LENGTH) {
-      return jsonResponse(res, 400, { ok: false, message: "Invalid RSVP submission." });
+      return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." });
     }
     try {
       const body = typeof rawBody === "object" ? rawBody : JSON.parse(rawBody);
       if (body && typeof body.website === "string" && body.website.trim()) {
-        return jsonResponse(res, 400, { ok: false, message: "Invalid RSVP submission." });
+        return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." });
       }
       request = {
         action: "submit",
@@ -177,7 +159,7 @@ export default async function handler(req, res) {
         submissionId: body.submissionId,
       };
     } catch {
-      return jsonResponse(res, 400, { ok: false, message: "Invalid RSVP submission." });
+      return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." });
     }
   }
 
@@ -190,7 +172,7 @@ export default async function handler(req, res) {
     });
     const result = await upstream.json();
     if (!upstream.ok || result?.ok !== true) {
-      return jsonResponse(
+      return sendJson(
         res,
         statusForBackendError(result?.error),
         { ok: false, message: result?.message || "The RSVP service could not complete your request." },
@@ -202,11 +184,11 @@ export default async function handler(req, res) {
       !Number.isSafeInteger(result.receptionTotalConfirmed) ||
       result.receptionTotalConfirmed < 0
     ) {
-      return jsonResponse(res, 502, { ok: false, message: "The RSVP service returned invalid totals." });
+      return sendJson(res, 502, { ok: false, message: "The RSVP service returned invalid totals." });
     }
     const totalConfirmed = result.weddingTotalConfirmed + result.receptionTotalConfirmed;
     if (!Number.isSafeInteger(totalConfirmed)) {
-      return jsonResponse(res, 502, { ok: false, message: "The RSVP service returned invalid totals." });
+      return sendJson(res, 502, { ok: false, message: "The RSVP service returned invalid totals." });
     }
     res.status(200).json({
       ok: true,
@@ -216,7 +198,7 @@ export default async function handler(req, res) {
       ...(result.duplicate === true ? { duplicate: true } : {}),
     });
   } catch {
-    jsonResponse(res, 502, {
+    sendJson(res, 502, {
       ok: false,
       message: "The RSVP service is temporarily unavailable.",
     });
