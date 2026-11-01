@@ -1,5 +1,5 @@
-// Shared helpers for the Supabase-backed Netlify Functions.
-// The service-role/secret key is read from Netlify environment variables only and never sent to the browser.
+// Shared helpers for the Supabase-backed serverless functions in /api (Vercel).
+// The service-role/secret key is read from server environment variables only and never sent to the browser.
 import crypto from "node:crypto";
 
 const PHOTO_TYPES = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
@@ -9,21 +9,18 @@ const LANGUAGES = ["en", "ta", "ml"];
 const TOKEN_PATTERN = /^[A-Za-z0-9_-]{32}$/;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-function jsonResponse(statusCode, body, cache = "no-store") {
-  return {
-    statusCode,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": cache,
-      "X-Content-Type-Options": "nosniff",
-    },
-    body: JSON.stringify(body),
-  };
+/** Sends a JSON response with no-store caching and nosniff (Vercel/Node `res`). */
+function sendJson(res, statusCode, body) {
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.status(statusCode).json(body);
 }
 
-function isSameOrigin(event) {
-  const origin = event.headers?.origin;
-  const host = event.headers?.host;
+/** True when the request has no Origin header or its Origin matches Host. */
+function isSameOrigin(req) {
+  const origin = req.headers?.origin;
+  const host = req.headers?.host;
   if (!origin || !host) return true;
   try {
     return new URL(origin).host.toLowerCase() === host.toLowerCase();
@@ -112,6 +109,6 @@ async function signPhotoUrls(cfg, paths, expiresIn = 3600) {
 
 export {
   PHOTO_TYPES, PHOTO_MAX_BYTES, MAX_GUESTS_PER_EVENT, LANGUAGES, TOKEN_PATTERN, UUID_PATTERN,
-  jsonResponse, isSameOrigin, supabaseConfig, supabaseRequest, rpc, SupabaseError,
+  sendJson, isSameOrigin, supabaseConfig, supabaseRequest, rpc, SupabaseError,
   newInvitationToken, cleanText, cleanName, findInvitation, signPhotoUrls,
 };
