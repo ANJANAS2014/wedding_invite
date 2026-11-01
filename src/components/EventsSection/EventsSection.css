@@ -215,6 +215,10 @@
 }
 
 /* Event Countdown */
+#date #cdl {
+  margin-top: 38px;
+}
+
 #date .cd {
   display: flex;
   justify-content: center;

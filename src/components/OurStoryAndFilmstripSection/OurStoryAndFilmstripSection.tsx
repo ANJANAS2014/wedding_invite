@@ -1,8 +1,11 @@
 import './OurStoryAndFilmstripSection.css';
-import './StoryReelsLayout.css';
-import './GalleryScrapbook.css';
 import React, { useState } from 'react';
-import { WEDDING_CONTENT, UNIFIED_MEMORIES_WITH_EXTRAS } from '../../data/weddingData';
+import { WEDDING_CONTENT, UNIFIED_MEMORIES } from '../../data/weddingData';
+import { MandalaDivider } from '../shared/MandalaDivider/MandalaDivider';
+
+// Rendered twice back-to-back so the CSS marquee loops seamlessly.
+const FILMSTRIP_FRAMES = [...UNIFIED_MEMORIES, ...UNIFIED_MEMORIES];
+const SPROCKETS = [0, 1, 2, 3];
 
 interface OurStoryAndFilmstripSectionProps {
   onOpenLightbox: (index: number) => void;
@@ -23,14 +26,7 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
           <div className="story-header">
             <span className="eyebrow story-prompt">Read how it all began</span>
             <h2 id="our-story-heading" className="story-title">Our Story</h2>
-            <div className="div story-div">
-              <svg viewBox="-50 -50 100 100" className="man">
-                {Array.from({ length: 8 }, (_, i) => (
-                  <ellipse key={i} rx="4" ry="22" cy="-26" transform={`rotate(${(i * 360) / 8})`} />
-                ))}
-                <circle r="2" style={{ fill: 'var(--gold)' }} />
-              </svg>
-            </div>
+            <MandalaDivider className="story-div" />
           </div>
 
           <div className={`story-body-container ${isExpanded ? 'is-expanded' : 'is-collapsed'}`}>
@@ -57,7 +53,7 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
 
         {/* Part 2: Moving 35mm Photographic Filmstrip */}
         <div className="filmstrip-wrapper" aria-label="35mm photographic memory filmstrip">
-          <div className="filmstrip-header-bar" style={{ justifyContent: 'flex-end', borderBottom: 'none', paddingBottom: 0, marginBottom: 12 }}>
+          <div className="filmstrip-header-bar">
             <div className="filmstrip-controls">
               <button
                 type="button"
@@ -74,11 +70,10 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
           <div className="filmstrip-viewport">
             <div
               className={`filmstrip-track ${isPaused ? 'is-paused' : ''}`}
-              style={{ '--total-items': UNIFIED_MEMORIES_WITH_EXTRAS.length } as React.CSSProperties}
+              style={{ '--total-items': UNIFIED_MEMORIES.length } as React.CSSProperties}
             >
-              {/* Render track twice for seamless infinite looping */}
-              {[...UNIFIED_MEMORIES_WITH_EXTRAS, ...UNIFIED_MEMORIES_WITH_EXTRAS].map((photo, index) => {
-                const actualIndex = index % UNIFIED_MEMORIES_WITH_EXTRAS.length;
+              {FILMSTRIP_FRAMES.map((photo, index) => {
+                const actualIndex = index % UNIFIED_MEMORIES.length;
                 const frameNum = (actualIndex + 20).toString();
                 return (
                   <div
@@ -97,7 +92,7 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
                   >
                     {/* Top Sprocket Holes */}
                     <div className="film-sprockets top-sprockets">
-                      {Array.from({ length: 4 }, (_, s) => (
+                      {SPROCKETS.map((s) => (
                         <span key={s} className="sprocket-hole" />
                       ))}
                     </div>
@@ -115,7 +110,7 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
 
                     {/* Bottom Sprocket Holes & Film Numbering */}
                     <div className="film-sprockets bottom-sprockets">
-                      {Array.from({ length: 4 }, (_, s) => (
+                      {SPROCKETS.map((s) => (
                         <span key={s} className="sprocket-hole" />
                       ))}
                       <span className="film-edge-code">{frameNum}</span>

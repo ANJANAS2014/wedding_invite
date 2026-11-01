@@ -1,0 +1,17 @@
+/* ==========================================================================
+   APP SHELL — #main wrapper shown once the invitation is opened
+   (body.opened is toggled by useInvitationOpening)
+   ========================================================================== */
+#main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+body:not(.opened) #main {
+  display: none;
+}
+
+body.opened #main {
+  animation: invitation-arrive .65s both cubic-bezier(.2, .7, .2, 1);
+}

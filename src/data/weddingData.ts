@@ -1,25 +1,16 @@
-export interface EventItem {
-  id: 'wedding' | 'reception';
-  title: string;
-  sub: string;
-  dateStr: string;
-  startTime: string;
-  endTime: string;
-  venue: string;
-  address: string;
-  mapUrl: string;
-  photoKey: string;
-}
+import type { Language } from '../types';
 
 export interface GalleryPhoto {
-  src: string;
+  src: WeddingImageKey;
   alt: string;
   ratio: string;
   position?: string;
   caption?: string;
 }
 
-export const WEDDING_IMAGES: Record<string, string> = {
+// Image paths are served from /public. Section backgrounds and cover art are
+// referenced directly by CSS variables in src/styles/variables.css.
+export const WEDDING_IMAGES = {
   p1: "/images/gallery/gallery-couple-doorway-portrait.jpg",
   p2: "/images/gallery/wedding-hero-couple-trees.jpg",
   p3: "/images/gallery/gallery-couple-white-wall-portrait.jpg",
@@ -30,17 +21,9 @@ export const WEDDING_IMAGES: Record<string, string> = {
   p8: "/images/gallery/gallery-couple-lotus-wide-landscape.jpg",
   p9: "/images/gallery/gallery-bride-lotus-landscape.jpg",
   p10: "/images/couple/bride-office-portrait.jpg",
-  p11: "/images/couple/groom-studio-portrait.jpg",
   p12: "/images/couple/groom-park-portrait.jpg",
   p13: "/images/gallery/story-photo-01.jpg",
   p14: "/images/gallery/story-photo-02.jpg",
-  p15: "/images/backgrounds/invitation-floral-background.jpg",
-  p16: "/images/backgrounds/couple-floral-background.jpg",
-  p17: "/images/backgrounds/events-elephant-floral-background.jpg",
-  p18: "/images/cover/hero-decoration-mobile.jpg",
-  p18w: "/images/cover/hero-decoration-desktop-wide.jpg",
-  p19: "/images/cover/hero-decoration-bottom-right.jpg",
-  wedding_procession: "/images/cover/wedding-procession.png",
   w1: "/images/venues/wedding-venue-central-auditorium.jpg",
   r1: "/images/venues/reception-venue-annalakshmi.jpg",
   hero_cover: "/images/cover/wedding-couple-cutout-refined.webp",
@@ -48,7 +31,9 @@ export const WEDDING_IMAGES: Record<string, string> = {
   story_photo_two: "/images/couple/couple_photo_2.jpg",
   story_photo_three: "/images/couple/couple_photo_3.jpg",
   story_photo_four: "/images/couple/couple_photo_4.png",
-};
+} satisfies Record<string, string>;
+
+export type WeddingImageKey = keyof typeof WEDDING_IMAGES;
 
 export const WEDDING_GALLERY: GalleryPhoto[] = [
   { src: 'p7', alt: 'Lalith and Anjana among the lotus blooms', ratio: '3/2' },
@@ -111,7 +96,7 @@ export interface UnifiedMemoryPhoto {
 
 export const UNIFIED_MEMORIES: UnifiedMemoryPhoto[] = [
   ...WEDDING_GALLERY.map(g => ({
-    src: WEDDING_IMAGES[g.src] || g.src,
+    src: WEDDING_IMAGES[g.src],
     alt: g.alt,
     caption: g.alt,
     ratio: g.ratio || '3/2'
@@ -125,35 +110,14 @@ export const UNIFIED_MEMORIES: UnifiedMemoryPhoto[] = [
   }))
 ];
 
-export const UNIFIED_MEMORIES_WITH_EXTRAS: UnifiedMemoryPhoto[] = [...UNIFIED_MEMORIES];
-
-export const GALLERY_DIMENSIONS: Record<string, [number, number]> = {
-  p1: [1125, 1500],
-  p2: [1125, 1500],
-  p3: [960, 1280],
-  p4: [1163, 1500],
-  p5: [1500, 1000],
-  p6: [1500, 1000],
-  p7: [1500, 1000],
-  p8: [1500, 1000],
-  p9: [1500, 1000]
-};
-
 export const WEDDING_CONTENT = {
   groom: 'Lalith',
   bride: 'Anjana',
-  bless: 'With the blessings of our families, friends and elders',
   inv1: 'We cordially invite you to celebrate our wedding and reception with the blessings of our families and elders.',
-  inv2: '',
   inv3: 'Your presence would make our celebration truly special.',
-  shloka: '॥ श्री गणेशाय नमः ॥',
-  weddingDate: '2026-11-29T08:00',
-  weddingEnd: '09:20',
   weddingVenue: 'Central Auditorium',
   weddingAddr: 'North Paravur, Kerala, India',
   weddingMap: 'https://maps.app.goo.gl/XAEM92g9pdnygrfF6',
-  receptionDate: '2026-12-06T18:00',
-  receptionEnd: '22:30',
   receptionVenue: 'Annalakshmi Restaurant',
   receptionAddr: '6 Mayor Ramanathan Salai, Chennai, India',
   receptionMap: 'https://maps.app.goo.gl/vN3tiGAB5BfHAyBB8',
@@ -176,23 +140,36 @@ Their journey brought challenges, but patience, understanding, and love gave the
 Now, with their families’ blessings, they are ready to begin a new chapter filled with songs, adventures, memories, and a lifetime of choosing each other.`
 };
 
-export const LANG_MAPPINGS = {
+export interface LanguageContent {
+  /** Cover greeting rendered as `{greetPrefix}<b>{name}</b>{greetSuffix}`. */
+  greetPrefix: string;
+  greetSuffix: string;
+  open: string;
+  inv1: string;
+  inv3: string;
+  shareMsg: (name: string, link: string) => string;
+}
+
+export const LANG_MAPPINGS: Record<Language, LanguageContent> = {
   en: {
-    greet: (name: string) => `Dear <b>${name}</b>, with love we invite you`,
+    greetPrefix: 'Dear ',
+    greetSuffix: ', with love we invite you',
     open: 'Open Invitation',
     inv1: 'We cordially invite you to celebrate our wedding and reception with the blessings of our families and elders.',
     inv3: 'Your presence would make our celebration truly special.',
     shareMsg: (name: string, link: string) => `Dear ${name},\n\nWith joy, Lalith & Anjana invite you to celebrate our wedding on November 29, 2026, and our reception on December 6, 2026. 🌺\n\nYour personal invitation: ${link}`
   },
   ta: {
-    greet: (name: string) => `அன்புள்ள <b>${name}</b>, அன்புடன் உங்களை அழைக்கிறோம்`,
+    greetPrefix: 'அன்புள்ள ',
+    greetSuffix: ', அன்புடன் உங்களை அழைக்கிறோம்',
     open: 'அழைப்பிதழைத் திறக்கவும்',
     inv1: 'எங்கள் குடும்பத்தினர் மற்றும் பெரியோர்களின் ஆசீர்வாதத்துடன், எங்கள் திருமணம் மற்றும் வரவேற்பு விழாவில் கலந்துகொண்டு சிறப்பிக்குமாறு உங்களை அன்புடன் அழைக்கிறோம்.',
     inv3: 'உங்கள் வருகை எங்கள் கொண்டாட்டத்தை மேலும் சிறப்பாக்கும்.',
     shareMsg: (name: string, link: string) => `அன்புள்ள ${name},\n\nலலித் & அஞ்சனா திருமணத்திற்கு (நவம்பர் 29, 2026) மற்றும் வரவேற்பு விழாவிற்கு (டிசம்பர் 6, 2026) உங்களை அன்புடன் அழைக்கிறோம். 🌺\n\nஉங்கள் அழைப்பிதழ்: ${link}`
   },
   ml: {
-    greet: (name: string) => `പ്രിയപ്പെട്ട <b>${name}</b>, സ്നേഹത്തോടെ ഞങ്ങൾ നിങ്ങളെ ക്ഷണിക്കുന്നു`,
+    greetPrefix: 'പ്രിയപ്പെട്ട ',
+    greetSuffix: ', സ്നേഹത്തോടെ ഞങ്ങൾ നിങ്ങളെ ക്ഷണിക്കുന്നു',
     open: 'ക്ഷണക്കത്ത് തുറക്കുക',
     inv1: 'ഞങ്ങളുടെ കുടുംബാംഗങ്ങളുടെയും മുതിർന്നവരുടെയും അനുഗ്രഹത്തോടെ, ഞങ്ങളുടെ വിവാഹത്തിലും വിവാഹ സൽക്കാരത്തിലും പങ്കുചേരാൻ നിങ്ങളെ സ്നേഹപൂർവ്വം ക്ഷണിക്കുന്നു.',
     inv3: 'നിങ്ങളുടെ സാന്നിധ്യം ഞങ്ങളുടെ ആഘോഷത്തെ കൂടുതൽ സവിശേഷമാക്കും.',
