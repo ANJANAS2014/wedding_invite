@@ -108,7 +108,7 @@ States: `idle → closing → parting`. Purely animated; nothing to operate manu
 
 ### 3.6 Music player (MusicPlayer)
 
-Floating gold button, bottom-left. Tap to toggle background music. Animated equalizer bars = playing; strike-through = muted. Mute state persists in `localStorage` (`inv-mute`).
+Floating gold button, bottom-left. Tap to toggle background music. Animated equalizer bars = playing; strike-through = muted. Mute state persists in `localStorage` (`inv-mute`, see `src/services/storage.ts`).
 
 ### 3.7 Event-day notice (EventDayNotice)
 
@@ -164,102 +164,49 @@ Open the **Network** URL from §2 on your phone. Verify:
 
 ## 5. Playwright tests
 
-`@playwright/test` is already a devDependency.
+`@playwright/test` is a devDependency and `playwright.config.ts` is in the repo root.
 
 ### 5.1 One-time setup
 
 ```powershell
+npm install
 npx playwright install chromium
 ```
 
-### 5.2 No config file exists yet — create one
+### 5.2 How the config works
 
-There is currently no `playwright.config.ts` in the repo. Create it at the project root:
+- `baseURL` is `http://localhost:3001`; specs use relative paths (`page.goto('/')`).
+- `webServer` runs `npm run build && npm run preview -- --port 3001 --strictPort`,
+  so tests exercise the **production build**. If something is already serving
+  port 3001, it is reused.
 
-```ts
-import { defineConfig } from '@playwright/test';
+### 5.3 Specs
 
-export default defineConfig({
-  testDir: './tests',
-  timeout: 30_000,
-  use: {
-    baseURL: 'http://localhost:3000',
-    viewport: { width: 390, height: 844 }, // mobile-first, iPhone 12-ish
-  },
-  webServer: {
-    command: 'npm run dev',
-    port: 3000,
-    reuseExistingServer: true,
-    timeout: 60_000,
-  },
-  projects: [
-    { name: 'mobile', use: { viewport: { width: 390, height: 844 } } },
-    { name: 'desktop', use: { viewport: { width: 1440, height: 900 } } },
-    { name: 'small-mobile', use: { viewport: { width: 320, height: 568 } } },
-  ],
-});
-```
-
-### 5.3 Example smoke test
-
-Create `tests/smoke.spec.ts`:
-
-```ts
-import { test, expect } from '@playwright/test';
-
-test('cover loads and invitation opens', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.locator('#hero')).toBeVisible();
-  await expect(page.getByText(/open invitation/i)).toBeVisible();
-
-  // Open the invitation
-  await page.getByRole('button', { name: /open invitation/i }).click();
-  await expect(page.locator('#main')).toBeVisible({ timeout: 10_000 });
-  await expect(page.locator('#hero')).toBeHidden();
-});
-
-test('events section shows both events', async ({ page }) => {
-  await page.goto('/?to=Test+Guest');
-  await page.getByRole('button', { name: /open invitation/i }).click();
-  await expect(page.getByText(/muhurtham/i)).toBeVisible();
-  await expect(page.getByText(/reception/i)).toBeVisible();
-  await expect(page.getByText(/Test Guest/i).first()).toBeVisible();
-});
-
-test('RSVP form validation', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: /open invitation/i }).click();
-  await page.locator('#rsvp').scrollIntoViewIfNeeded();
-  // Try to submit with no event selected
-  await page.getByRole('button', { name: /send rsvp/i }).click();
-  await expect(page.getByText(/select at least one celebration/i)).toBeVisible();
-});
-```
+| Spec | Covers |
+|---|---|
+| `tests/invitation-flow.spec.ts` | open invitation, RSVP validation + submit + wishes refresh, lightbox (arrows/Esc), likes, guest tracker (`?tracker=1`, Esc) |
+| `tests/wishes-mobile.spec.ts` | wishes marquee on mobile, enlarged postcard modal |
+| `tests/music.spec.ts` | mute/unmute toggle, desktop marquee |
 
 ### 5.4 Running tests
 
 ```powershell
-npx playwright test                 # all projects (mobile + desktop + small-mobile)
-npx playwright test --project=mobile
-npx playwright test tests/smoke.spec.ts
+npm run test:e2e                    # build + preview + all specs
+npx playwright test tests/invitation-flow.spec.ts
 npx playwright test --headed        # watch the browser
 npx playwright test --ui            # interactive UI mode
 npx playwright show-report          # after a run
 ```
 
-> If port 3000 is busy, `reuseExistingServer: true` reuses the running dev server; otherwise Playwright starts a fresh one.
+Without a backend (`/api/*` not served by `vite preview`), RSVPs fall back to
+localStorage and the wishes wall shows the sample postcards — the specs rely
+on that behaviour.
 
-### 5.5 What to automate
+### 5.5 Ideas for more automation
 
-- Cover → open invitation → curtain → main visible
-- Guest personalisation via `?to=`
-- Event cards, countdown, map links present
-- RSVP toggles, steppers, validation error, success panel
-- Wishes wall renders (marquee or grid), like button increments
-- Enlarged postcard modal opens/closes
-- Lightbox opens from filmstrip, prev/next/close work
-- Music toggle button toggles `.off` class
-- No console errors on load (page.on('console') listener)
+- Viewport sweep (320, 360, 375, 390, 414, 430, 768, 1024, 1440) with screenshots
+- Event-day banner via `?now=2026-11-29T10:00`
+- Tamil / Malayalam greetings via `?lang=ta|ml`
 
 ---
 
@@ -279,17 +226,19 @@ npx playwright show-report          # after a run
 
 ## 7. Quick reference — file map
 
-```text
-index.html                 static shell, font + image preloads
+See the **Project structure** section of `README.md` for the full map. In short:
+
+```
 src/main.tsx               entry point; loads shared CSS then mounts App
-src/App.tsx                orchestrator: open state, curtain, URL params, lightbox
-src/styles/
-  variables.css            design tokens (--maroon, --gold, fonts, image URLs)
-  global.css               body/html defaults, .sec/.eyebrow/.div/.btn utilities
-  animations.css           keyframes shared across components
-src/data/weddingData.ts    all content: names, events, gallery photos
-src/utils/haptics.ts       vibration helpers
-src/components/<Name>/     each component + its own CSS (see README/§3 above)
-tests/                     Playwright specs (create per §5.3)
-playwright.config.ts       Playwright config (create per §5.2)
+src/app/                   App composition, lazy-loaded sections, App.css
+src/components/<Feature>/  feature component + its CSS (+ feature-only sub-components)
+src/components/shared/     MandalaDivider, Modal (portal, scroll lock, focus trap)
+src/hooks/                 reusable React hooks
+src/services/              /api calls, RSVP, wishes, photo upload, localStorage
+src/data/                  wedding content, events, sample wishes
+src/utils/                 pure helpers (countdown, calendar, chime, haptics…)
+src/types/                 shared TypeScript types
+src/styles/                design tokens, global base styles, shared keyframes
+api/                       Vercel serverless functions (Supabase / Apps Script)
+tests/                     Playwright specs (config: playwright.config.ts)
 ```

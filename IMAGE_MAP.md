@@ -11,7 +11,6 @@ public/
 │   ├── gallery/       Filmstrip / lightbox / gallery photos
 │   ├── couple/        Bride & groom portraits (couple + story photos)
 │   ├── venues/        Wedding & reception venue photos
-│   └── _unused/       Files not referenced anywhere — delete when ready
 ├── audio/             background-music.mp3
 └── icons/             favicon.svg
 ```
@@ -20,12 +19,12 @@ public/
 
 | Folder | Referenced by |
 |---|---|
-| `images/cover/` | `src/styles/invitation.css` (`--wT`, `--cover-*` vars), `index.html` preloads, `WEDDING_IMAGES` |
-| `images/backgrounds/` | `src/styles/invitation.css` (`--b1`, `--b2`, `--b3`) |
+| `images/cover/` | `src/styles/variables.css` (`--wT`, `--cover-*` vars), `index.html` preloads, `WEDDING_IMAGES.hero_cover` |
+| `images/backgrounds/` | `src/styles/variables.css` (`--b1`, `--b2`, `--b3`) |
 | `images/gallery/` | `src/data/weddingData.ts` (`WEDDING_IMAGES` p1–p9, p13–p14), filmstrip, lightbox |
-| `images/couple/` | `weddingData.ts` (p10–p12, story_photo_one–four), `CoupleSection.tsx` |
-| `images/venues/` | `weddingData.ts` (w1, r1), `EventsSection` |
-| `audio/` | `src/components/MusicPlayer.tsx` |
+| `images/couple/` | `weddingData.ts` (p10, p12, story_photo_one–four), `CoupleSection.tsx`. `groom-studio-portrait.jpg` is currently not displayed anywhere. |
+| `images/venues/` | `weddingData.ts` (w1, r1) → `src/data/events.ts` → `EventsSection` |
+| `audio/` | `src/components/MusicPlayer/MusicPlayer.tsx` |
 | `icons/` | `index.html` favicon |
 
 ## How to edit a photo

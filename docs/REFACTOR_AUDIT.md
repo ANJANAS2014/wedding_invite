@@ -106,3 +106,34 @@ Audit date: 1 Nov 2026. Taken from `main` at `e5224c1`, before any refactoring.
 6. De-duplicate the `api/` helpers and fix the `sharedJson` bug.
 7. Add `playwright.config.ts` and an end-to-end invitation-flow spec, then update the README and docs.
 8. Verify after each phase: typecheck, bundle, Playwright, and a screenshot diff at 320–1440 px.
+
+## 9. Status after the refactor
+
+**Resolved:**
+
+- App, sections, hooks, services, types and shared UI are now modular (see README "Project structure").
+- The mandala divider, countdown, event data, storage keys, modal behaviour and API helpers are de-duplicated.
+- Dead CSS, the two abandoned scripts, `vite.err` and the four unused fonts were removed.
+- The `api/rsvp.js` GET bug is fixed.
+- All three modals now use `components/shared/Modal`: portal, iOS-safe scroll lock with scroll restore, Escape, focus trap and restore, safe-area padding.
+- `playwright.config.ts` was added, plus `npm run test:e2e` and `tests/invitation-flow.spec.ts`.
+
+**Behaviour changes that came with the refactor (all deliberate):**
+
+- The lightbox and Guest Tracker now lock background scroll. The Guest Tracker now closes on Escape.
+- Countdowns render on the first paint instead of appearing a moment later.
+- At 320 px the lightbox and wish modal now sit correctly in the viewport (because they are portalled and body-locked).
+
+**Still open (not changed, by design or because it needs a decision):**
+
+- The Guest Tracker is localStorage-only and accepts any password. `api/admin-guests.js` and `api/invite.js` are not called from the frontend.
+- Wish likes are per-browser only. There is no backend likes column or endpoint.
+- RSVP shows success even when `/api/rsvp` fails (it keeps a local copy).
+- Sample postcards show in production when there are no wishes.
+- `netlify.toml` points at a `netlify/functions` folder that doesn't exist (the site deploys on Vercel).
+- `dist/` and `test-results/` are tracked in git (`test-results/` is now in `.gitignore`).
+- `memory/SPEC.md` describes the earlier static-site version.
+- `public/images/couple/groom-studio-portrait.jpg` isn't displayed anywhere.
+- `@vitejs/plugin-react@4` vs `vite@8` peer conflict (needs `legacy-peer-deps`).
+- Local `node_modules` needs `npm install` to match the lockfile.
+- Empty class hooks `rv`/`in` were removed from section markup. `#s2:after` is an empty decorative pseudo-element (kept).
