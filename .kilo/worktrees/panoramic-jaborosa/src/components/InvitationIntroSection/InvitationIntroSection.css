@@ -1,0 +1,55 @@
+/* ==========================================================================
+   APP MAIN WRAPPER & INTRODUCTION SECTION (#s1 / #fam)
+   ========================================================================== */
+#main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+body:not(.opened) #main {
+  display: none;
+}
+
+body.opened #main {
+  animation: invitation-arrive .65s both cubic-bezier(.2, .7, .2, 1);
+}
+
+/* Section #s1 / #fam */
+#s1 {
+  background: linear-gradient(color-mix(in srgb, var(--paper) 62%, transparent), color-mix(in srgb, var(--paper) 72%, transparent)), var(--b1) center/cover;
+}
+
+#s1 #fam {
+  position: relative;
+  isolation: isolate;
+  padding: 56px 20px 48px;
+}
+
+#s1 #fam:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 6% max(0px, calc(50% - 380px));
+  border-radius: 24px;
+  background: radial-gradient(ellipse at center, #fbf5eaf0 0%, #fbf5eadb 55%, #fbf5ea00 100%);
+  pointer-events: none;
+}
+
+#s1 h2 {
+  color: #5a1a26;
+  font-size: clamp(42px, 8vw, 76px);
+  margin-bottom: 4px;
+}
+
+#s1 #fam > p {
+  color: #3a1a1c;
+  max-width: 620px;
+  margin: 14px auto 0;
+}
+
+#s1 #fam > p.story {
+  font: italic 500 clamp(19px, 3.6vw, 24px)/1.55 var(--fh);
+  color: #4a1520;
+}
+
