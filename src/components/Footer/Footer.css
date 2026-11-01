@@ -1,28 +1,21 @@
-
-/* Footer */
-footer {
-  padding: 50px 20px 70px;
-  text-align: center;
-  font-size: 14px;
-  background: #190509;
-  color: var(--cream);
+/* Thank-you footer */
+.site-footer {
   position: relative;
+  padding: clamp(80px, 12vw, 140px) 20px clamp(90px, 12vw, 150px);
+  text-align: center;
+  background: radial-gradient(900px 420px at 50% 0, #7a2232, var(--burg) 50%, var(--burg-d));
+  color: var(--cream);
 }
 
-footer:before {
-  content: "";
-  display: block;
-  height: 18px;
-  background: linear-gradient(var(--gold), var(--gold)) 0 0/100% 2px no-repeat, linear-gradient(var(--gold), var(--gold)) 0 6px/100% 6px no-repeat;
-  opacity: .85;
-  margin: -50px -20px 40px;
+.footer-thanks {
+  margin: 0 0 18px;
+  font-size: clamp(42px, 11vw, 82px);
+  line-height: 1.15;
 }
 
-.footer-names {
-  margin-top: 8px;
-}
-
-.footer-signoff {
-  margin-top: 6px;
-  color: #c5a882;
+.footer-date {
+  margin: 16px 0 0;
+  color: var(--champ);
+  font: 500 11px / 1 var(--fb);
+  letter-spacing: 0.4em;
 }

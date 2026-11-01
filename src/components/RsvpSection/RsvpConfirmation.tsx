@@ -14,7 +14,7 @@ const attendanceLabel = (attending: boolean, count: number) =>
 export const RsvpConfirmation: React.FC<RsvpConfirmationProps> = ({ rsvp, onEdit }) => (
   <div className="rsvp-confirmation-panel" role="alert">
     <span className="rsvp-conf-heart" aria-hidden="true">♥</span>
-    <h3>Thank you!</h3>
+    <h3 className="foil">Thank you!</h3>
     <p className="conf-sub">Your response has been received. We look forward to celebrating with you.</p>
 
     <ul className="rsvp-summary-list">
@@ -40,7 +40,7 @@ export const RsvpConfirmation: React.FC<RsvpConfirmationProps> = ({ rsvp, onEdit
       )}
     </ul>
 
-    <p className="rsvp-conf-signoff">With love, Anjana &amp; Lalith</p>
+    <p className="rsvp-conf-signoff foil">With love, Anjana &amp; Lalith</p>
 
     <button type="button" className="btn o rsvp-edit-btn" onClick={onEdit}>
       Change my response

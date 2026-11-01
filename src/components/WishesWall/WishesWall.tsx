@@ -2,7 +2,9 @@ import './WishesWall.css';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { WishRecord } from '../../types';
 import { useWishes } from '../../hooks/useWishes';
-import { MandalaDivider } from '../shared/MandalaDivider/MandalaDivider';
+import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
+import { haptic } from '../../utils/haptics';
+import { WishesPond } from './WishesPond';
 import { computeCarouselLayout } from './wishesCarousel';
 import { WishPostcard } from './WishPostcard';
 import { WishModal } from './WishModal';
@@ -56,6 +58,11 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
   const [touchPaused, setTouchPaused] = useState<boolean>(false);
   const [failedPhotos, setFailedPhotos] = useState<Record<string, boolean>>({});
   const [selectedWishId, setSelectedWishId] = useState<string | null>(null);
+  const [view, setView] = useState<'diyas' | 'cards'>('diyas');
+  const likeWish = (id: string) => {
+    haptic(10);
+    toggleLike(id);
+  };
   const railRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const resumeTimerRef = useRef<number | undefined>(undefined);
@@ -65,7 +72,8 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
     viewportWidth
   );
   const selectedWish = selectedWishId ? wishes.find((w) => w.id === selectedWishId) || null : null;
-  const showRail = !isLoading && wishes.length > 0 && shouldAutoScroll;
+  const showCards = view === 'cards';
+  const showRail = showCards && !isLoading && wishes.length > 0 && shouldAutoScroll;
   const isPaused = userPaused || offscreen || touchPaused;
 
   // Pause the marquee while the wall is off-screen.
@@ -120,19 +128,35 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
       photoFailed={!!failedPhotos[item.id]}
       onPhotoError={() => markPhotoFailed(item.id)}
       onOpen={() => setSelectedWishId(item.id)}
-      onToggleLike={() => toggleLike(item.id)}
+      onToggleLike={() => likeWish(item.id)}
     />
   );
 
   return (
-    <section className="sec wishes-wall-section" id="wishes" aria-labelledby="wishes-title">
-      <div className="wishes-section-header">
-        <div className="wishes-heart-crest" aria-hidden="true">
-          ♥
-        </div>
+    <section className="sec wishes-wall-section grain" id="wishes" aria-labelledby="wishes-title">
+      <div className="wishes-section-header reveal">
+        <div className="eyebrow">Wishes Wall</div>
         <h2 id="wishes-title">With love, from our people</h2>
         <p className="wishes-subtitle">A little love from everyone celebrating with us</p>
-        <MandalaDivider className="wishes-divider" />
+        <HeaderRule className="wishes-divider" />
+
+        {!isLoading && wishes.length > 0 && (
+          <p className="wishes-hint">
+            <span>
+              {wishes.length} {wishes.length === 1 ? 'wish' : 'wishes'} so far
+            </span>{' '}
+            · Tap a glowing lamp to read a wish
+          </p>
+        )}
+
+        <div className="wishes-view-toggle" role="tablist" aria-label="Wishes view">
+          <button type="button" role="tab" aria-selected={view === 'diyas'} onClick={() => setView('diyas')}>
+            ✦ Floating lamps
+          </button>
+          <button type="button" role="tab" aria-selected={view === 'cards'} onClick={() => setView('cards')}>
+            ☰ Read all wishes
+          </button>
+        </div>
 
         {showRail && (
           <div className="wishes-controls-row">
@@ -153,6 +177,10 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
 
       {!isLoading && wishes.length === 0 && <WishesEmptyState />}
 
+      {!showCards && !isLoading && wishes.length > 0 && (
+        <WishesPond wishes={wishes} onOpen={setSelectedWishId} />
+      )}
+
       {showRail && (
         <div
           className="wishes-rail-viewport"
@@ -172,7 +200,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
         </div>
       )}
 
-      {!isLoading && wishes.length > 0 && !shouldAutoScroll && (
+      {showCards && !isLoading && wishes.length > 0 && !shouldAutoScroll && (
         <div
           className={`wishes-static-row wishes-static-row--${Math.min(wishes.length, 3)}`}
           aria-label="Wedding wishes collection"
@@ -181,13 +209,28 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
         </div>
       )}
 
+      <div className="wishes-write">
+        <a
+          href="#rsvp-wishes"
+          onClick={(e) => {
+            const box = document.getElementById('rsvp-wishes');
+            if (!box) return;
+            e.preventDefault();
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            window.setTimeout(() => box.focus({ preventScroll: true }), 700);
+          }}
+        >
+          Write your own wish →
+        </a>
+      </div>
+
       {selectedWish && (
         <WishModal
           wish={selectedWish}
           liked={isLiked(selectedWish.id)}
           photoFailed={!!failedPhotos[selectedWish.id]}
           onPhotoError={() => markPhotoFailed(selectedWish.id)}
-          onToggleLike={() => toggleLike(selectedWish.id)}
+          onToggleLike={() => likeWish(selectedWish.id)}
           onClose={() => setSelectedWishId(null)}
         />
       )}

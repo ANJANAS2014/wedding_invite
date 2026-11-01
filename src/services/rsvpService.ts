@@ -18,9 +18,7 @@ export interface RsvpFormValues {
 /** Client-side validation; returns a guest-facing error message or null. */
 export function validateRsvp(values: RsvpFormValues): string | null {
   if (!values.name.trim()) return 'Please enter your name.';
-  if (!values.weddingAttending && !values.receptionAttending) {
-    return 'Please select at least one celebration to attend, or let us know if you cannot make it.';
-  }
+  // Declining both celebrations is allowed (the API and database accept it).
   if (values.wishes.trim().length > MAX_WISH_CHARS) {
     return `Wish message cannot exceed ${MAX_WISH_CHARS} characters.`;
   }

@@ -10,6 +10,8 @@ test.describe('Wishes Wall on mobile', () => {
     await page.locator('#op').click();
     // Wait for the curtain to part and main content to appear
     await page.waitForTimeout(1800);
+    // Diyas is the default view; these tests cover the postcard ("Read all wishes") view
+    await page.getByRole('tab', { name: /Read all wishes/ }).click();
   });
 
   test('wishes marquee scrolls on mobile', async ({ page }) => {
@@ -37,6 +39,10 @@ test.describe('Wishes Wall on mobile', () => {
   });
 
   test('wishes card click opens modal with full content', async ({ page }) => {
+    // The Cards tab sits right above the rail, so the marquee is already moving; pause it first
+    const pause = page.locator('.wishes-pause-btn');
+    if (await pause.count()) await pause.click();
+
     const card = page.locator('.postcard-card').first();
     await expect(card).toBeVisible();
 

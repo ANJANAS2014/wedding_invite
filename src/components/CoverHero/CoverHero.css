@@ -1078,3 +1078,44 @@ body.revealed .cv > :nth-child(9) { transition-delay: 1.15s; }
   letter-spacing: 0.3em;
   text-transform: uppercase;
 }
+
+/* Names in the script face with a gold-foil sweep (see .foil in global.css) */
+#hero .names.foil {
+  font-family: var(--fs);
+  font-weight: 400;
+  font-size: clamp(54px, 14vw, 104px);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  padding: 0 0.12em;
+  text-shadow: none;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.4));
+}
+
+#hero .names.foil i {
+  font: inherit;
+  margin: 0 0.08em;
+  background: none;
+  filter: none;
+  -webkit-text-fill-color: inherit;
+  color: inherit;
+}
+
+.cover-std {
+  position: relative;
+  z-index: 2;
+  margin: clamp(10px, 1.6svh, 16px) 0 -2px;
+  color: #9a7022;
+  font: 400 clamp(26px, 6vw, 34px) / 1 var(--fs);
+}
+
+.cover-band figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cover-band-credit {
+  font-size: 8.5px !important;
+  opacity: 0.6;
+  letter-spacing: 0.24em !important;
+}

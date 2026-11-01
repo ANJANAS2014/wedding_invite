@@ -6,6 +6,7 @@ import { lazy, type ComponentType } from 'react';
 // "Open Invitation" feels instant).
 const loaders = {
   EventDayNotice: () => import('../components/EventDayNotice/EventDayNotice').then((m) => ({ default: m.EventDayNotice })),
+  TeamPicker: () => import('../components/TeamPicker/TeamPicker').then((m) => ({ default: m.TeamPicker })),
   CoupleSection: () => import('../components/CoupleSection/CoupleSection').then((m) => ({ default: m.CoupleSection })),
   EventsSection: () => import('../components/EventsSection/EventsSection').then((m) => ({ default: m.EventsSection })),
   OurStoryAndFilmstripSection: () =>
@@ -19,6 +20,7 @@ const loaders = {
 const lazyNamed = <P,>(loader: () => Promise<{ default: ComponentType<P> }>) => lazy(loader);
 
 export const EventDayNotice = lazyNamed(loaders.EventDayNotice);
+export const TeamPicker = lazyNamed(loaders.TeamPicker);
 export const CoupleSection = lazyNamed(loaders.CoupleSection);
 export const EventsSection = lazyNamed(loaders.EventsSection);
 export const OurStoryAndFilmstripSection = lazyNamed(loaders.OurStoryAndFilmstripSection);

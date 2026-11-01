@@ -74,6 +74,27 @@ export const REELS_PHOTOS: ReelPhoto[] = [
   }
 ];
 
+/** "Our Story" swipeable moments (hook + cards). Lines are taken from WEDDING_CONTENT.story. */
+export interface StoryMoment {
+  title: string;
+  text: string;
+  image: WeddingImageKey;
+  objectPosition?: string;
+  /** extra zoom, e.g. to crop black bars baked into a photo */
+  zoom?: number;
+}
+
+export const STORY_HOOK = 'After learning almost every South Indian language except Malayalam, he fell for a Malayali girl.';
+
+export const STORY_MOMENTS: StoryMoment[] = [
+  { title: 'Bangalore', text: 'Traffic moves slowly here, but somehow love found the express lane.', image: 'story_photo_one', objectPosition: '50% 20%' },
+  { title: 'Two languages, one laugh', text: 'She’s from Keralam, he’s from Chennai. Different mother tongues, one shared language: laughter.', image: 'story_photo_four', objectPosition: '50% 30%' },
+  { title: 'The Wayanad trip', text: 'Long drives, off-key singing and jokes only they understood.', image: 'story_photo_two', objectPosition: '50% 40%' },
+  { title: 'The checklist', text: 'Hers: respect, reassurance, someone who makes life lighter. His: none. He just knew.', image: 'story_photo_three', objectPosition: '50% 25%', zoom: 1.3 },
+  { title: 'Fate’s sense of humour', text: 'He learned almost every South Indian language except Malayalam… then fell for a Malayali girl.', image: 'p4', objectPosition: '50% 30%' },
+  { title: 'Home', text: 'His keyboard, her ukulele, endless conversations. Now, with their families’ blessings, a lifetime of choosing each other.', image: 'p7', objectPosition: '50% 50%' }
+];
+
 export interface UnifiedMemoryPhoto {
   src: string;
   alt: string;

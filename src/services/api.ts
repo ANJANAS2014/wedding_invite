@@ -6,6 +6,7 @@ export const API_ROUTES = {
   rsvp: '/api/rsvp',
   rsvpPhoto: '/api/rsvp-photo',
   wishes: '/api/wishes',
+  team: '/api/team',
 } as const;
 
 /** True on the Vite dev/preview servers, where the /api routes don't exist. */

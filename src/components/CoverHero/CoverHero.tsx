@@ -5,7 +5,7 @@ import { WEDDING_START_MS } from '../../data/events';
 import { useNow } from '../../hooks/useNow';
 import { getCountdown, pad2 } from '../../utils/countdown';
 import type { Language } from '../../types';
-import { CoverGarland, CoverProcession, INVITE_PORTRAIT } from './CoverArt';
+import { CoverGarland, CoverProcession } from './CoverArt';
 
 interface CoverHeroProps {
   guestName: string;
@@ -90,7 +90,7 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => 
           </p>
         )}
 
-        <h1 className="names">
+        <h1 className="names foil">
           <span className="n1">{WEDDING_CONTENT.groom}</span>
           <i aria-hidden="true">&amp;</i>
           <span className="sr-and"> and </span>
@@ -115,6 +115,7 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => 
         <p className="cover-invite" lang={language}>{text.inv1}</p>
         <p className="cover-invite-note" lang={language}>{text.inv3}</p>
 
+        <p className="cover-std">Save the date</p>
         <p className="cover-date">November 29, 2026</p>
 
         {countdown && (
@@ -141,7 +142,7 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => 
           </div>
         )}
 
-        <a className="cover-scroll" href="#s2" aria-label="Scroll to the wedding events">
+        <a className="cover-scroll" href="#couple" aria-label="Scroll to the invitation">
           <span>Scroll</span>
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
             <path d="M3 6l5 5 5-5" />
@@ -149,15 +150,6 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => 
         </a>
       </div>
     </section>
-
-    {/* Full-bleed lotus portrait with the groom's vow, leading into the events */}
-    <figure className="cover-band">
-      <img src={INVITE_PORTRAIT} alt={`${WEDDING_CONTENT.groom} and ${WEDDING_CONTENT.bride} with pink lotuses`} loading="lazy" decoding="async" />
-      <figcaption>
-        <span className="cover-band-quote">{WEDDING_CONTENT.groomVow}</span>
-        <small>{WEDDING_CONTENT.groom} &amp; {WEDDING_CONTENT.bride} · 29 · 11 · 2026</small>
-      </figcaption>
-    </figure>
     </>
   );
 };

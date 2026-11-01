@@ -11,6 +11,13 @@
   --ink: #3a1218;
   --fh: 'Cormorant Garamond', Georgia, serif;
   --fb: 'Jost', system-ui, sans-serif;
+  --fs: 'Great Vibes', 'Cormorant Garamond', cursive; /* script: couple names, "Save the date", thank-you lines only */
+  --burg: #5a1420;
+  --burg-d: #3a0b14;
+  --ivory: #f8efdc;
+  --champ: #e9d3a4;
+  --gold-l: #f0d68e;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   color-scheme: only light;
   box-sizing: border-box;
 

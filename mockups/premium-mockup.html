@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Premium Touches Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+:root{--maroon:#6b1020;--maroon-d:#4a0a15;--gold:#c9a24a;--gold-l:#f3dc95;--ivory:#fbf6ec;--ink:#3a2a20;--ease:cubic-bezier(.22,.61,.36,1)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ivory);color:var(--ink);font:400 19px/1.6 'Cormorant Garamond',serif;overflow-x:hidden;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.tag{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:50;background:var(--maroon);color:var(--gold-l);font-size:13px;letter-spacing:.15em;text-transform:uppercase;padding:6px 14px;border-radius:20px;box-shadow:0 4px 14px #0003}
+section{padding:120px 16px;text-align:center;max-width:560px;margin:0 auto}
+.label{font-variant:small-caps;letter-spacing:.3em;font-size:15px;color:var(--maroon);opacity:.8}
+.note{font-size:14px;font-style:italic;opacity:.6;margin-top:18px}
+p.body{max-width:32ch;margin:14px auto}
+
+/* #1 slow soft reveal */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 1.4s var(--ease),transform 1.4s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* #3 gold foil */
+.foil{font-family:'Great Vibes',cursive;font-size:clamp(54px,14vw,84px);line-height:1.1;margin:10px 0;
+ background:linear-gradient(100deg,#9c7a2c 0%,#c9a24a 35%,#fff4c8 48%,#c9a24a 60%,#9c7a2c 100%);background-size:300% 100%;
+ -webkit-background-clip:text;background-clip:text;color:transparent;animation:foil 5s var(--ease) infinite}
+@keyframes foil{0%,60%{background-position:100% 0}100%{background-position:0 0}}
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center}
+
+/* #6 kasavu divider */
+.kasavu{height:34px;margin:0 auto;max-width:620px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='34'%3E%3Crect y='0' width='40' height='2' fill='%23c9a24a'/%3E%3Crect y='5' width='40' height='1' fill='%23c9a24a' opacity='.6'/%3E%3Cpath d='M20 10 L27 17 L20 24 L13 17Z' fill='none' stroke='%23c9a24a' stroke-width='1.3'/%3E%3Ccircle cx='20' cy='17' r='2' fill='%236b1020'/%3E%3Ccircle cx='0' cy='17' r='1.6' fill='%23c9a24a'/%3E%3Ccircle cx='40' cy='17' r='1.6' fill='%23c9a24a'/%3E%3Crect y='28' width='40' height='1' fill='%23c9a24a' opacity='.6'/%3E%3Crect y='32' width='40' height='2' fill='%23c9a24a'/%3E%3C/svg%3E") repeat-x center;
+ -webkit-mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent)}
+
+/* #11 wax-seal RSVP */
+.stage{position:relative;height:340px;perspective:900px;margin-top:24px}
+form.card{position:absolute;inset:0;background:#fffdf7;border:1px solid #e6d6ad;border-radius:6px;padding:26px 22px;box-shadow:0 10px 30px #6b102018;transform-origin:top;transition:transform 1s var(--ease),opacity .6s}
+form input,form select{width:100%;margin:8px 0;padding:10px;border:0;border-bottom:1px solid #d9c391;background:transparent;font:inherit;font-size:17px;color:var(--ink);outline:none}
+.btn{margin-top:14px;background:var(--maroon);color:var(--gold-l);border:0;padding:12px 30px;border-radius:30px;font:600 16px 'Cormorant Garamond';letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
+.env{position:absolute;left:50%;top:50%;width:260px;height:170px;margin:-85px 0 0 -130px;background:#f2e3c2;border-radius:4px;box-shadow:0 12px 30px #0002;opacity:0;transform:scale(.6);transition:all .8s var(--ease)}
+.env:before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom right,transparent 49.5%,#e4cfa1 50%),linear-gradient(to bottom left,transparent 49.5%,#e4cfa1 50%);background-size:50% 100%;background-position:left,right;background-repeat:no-repeat}
+.flap{position:absolute;left:0;right:0;top:0;height:95px;background:#ead7ad;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transform:rotateX(180deg);transition:transform .7s var(--ease) .2s}
+.seal{position:absolute;left:50%;top:72px;width:58px;height:58px;margin-left:-29px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#a8283c,#6b1020 60%,#4a0a15);color:var(--gold-l);font:600 16px 'Cormorant Garamond';display:grid;place-items:center;box-shadow:0 3px 6px #0005,inset 0 0 0 4px #5a0d1b;transform:scale(2.4);opacity:0}
+.thanks{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity 1.2s var(--ease)}
+.stage.s1 form.card{transform:rotateX(85deg) scaleY(.3);opacity:0}
+.stage.s1 .env{opacity:1;transform:none}
+.stage.s2 .flap{transform:none}
+.stage.s3 .seal{animation:stamp .5s var(--ease) forwards}
+@keyframes stamp{60%{transform:scale(.9);opacity:1}100%{transform:scale(1);opacity:1}}
+.stage.s4 .env{transform:translate(120vw,-260px) rotate(18deg) scale(.5);transition:transform 1.3s cubic-bezier(.6,0,.4,1)}
+.stage.s4 .thanks{opacity:1}
+.petal{position:fixed;width:12px;height:16px;border-radius:60% 0 60% 0;pointer-events:none;z-index:40}
+
+/* #14 diyas on water */
+.pond{position:relative;height:360px;margin-top:24px;border-radius:14px;overflow:hidden;
+ background:radial-gradient(ellipse at 50% 0%,#2b3a5a 0%,#141c30 70%)}
+.pond:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,#ffffff06 0 2px,transparent 2px 9px);animation:ripple 6s linear infinite}
+@keyframes ripple{to{background-position:0 90px}}
+.diya{position:absolute;width:56px;cursor:pointer;z-index:2;animation:float 7s ease-in-out infinite}
+.diya .flame{width:12px;height:20px;margin:0 auto -4px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 50% 70%,#fff6c8,#ffb43a 55%,#ff6a00);box-shadow:0 0 22px 8px #ffae3a66;animation:flick .25s ease-in-out infinite alternate}
+.diya .bowl{height:18px;background:linear-gradient(#c86b3a,#7a3216);border-radius:0 0 30px 30px/0 0 18px 18px}
+.diya .glow{height:10px;margin-top:2px;background:radial-gradient(ellipse,#ffae3a55,transparent 70%)}
+@keyframes flick{to{transform:scale(.9,1.08) translateY(-1px)}}
+@keyframes float{0%,100%{transform:translate(0,0) rotate(-2deg)}50%{transform:translate(14px,-8px) rotate(2deg)}}
+.wish{position:absolute;left:50%;bottom:16px;width:min(88%,340px);transform:translate(-50%,20px);opacity:0;z-index:3;background:#fbf6ecee;border-radius:8px;padding:14px 18px;font-size:17px;transition:all .9s var(--ease);pointer-events:none}
+.wish.on{opacity:1;transform:translate(-50%,0)}
+.wish b{display:block;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--maroon);margin-top:6px}
+.sendwish{display:flex;gap:8px;margin-top:14px}
+.sendwish input{flex:1;padding:10px 12px;border:1px solid #d9c391;border-radius:30px;background:#fffdf7;font:inherit;font-size:16px}
+.sendwish .btn{margin:0;padding:10px 18px}
+</style></head><body>
+<div class="tag">Mockup · 1 · 3 · 6 · 11 · 14</div>
+
+<section class="hero">
+  <div class="label reveal">Together with their families</div>
+  <h1 class="foil reveal">Lalith &amp; Anjana</h1>
+  <div class="label reveal">Save the date</div>
+  <p class="note reveal">#3 Gold-foil shimmer sweeps every few seconds · #1 slow, soft drift-in. Scroll ↓</p>
+</section>
+
+<div class="kasavu reveal"></div>
+
+<section>
+  <div class="label reveal">Shubha Muhurtham</div>
+  <h2 class="reveal" style="font-weight:400;font-size:38px;margin:6px 0">The Events</h2>
+  <p class="body reveal">Every section now drifts up a few pixels as it arrives, with one gentle easing used everywhere and more room to breathe.</p>
+  <p class="note reveal">#6 Kasavu border above and below replaces plain lines.</p>
+</section>
+
+<div class="kasavu reveal"></div>
+
+<section>
+  <div class="label reveal">Kindly respond</div>
+  <h2 class="reveal" style="font-weight:400;font-size:38px;margin:6px 0">RSVP</h2>
+  <div class="stage reveal" id="stage">
+    <form class="card" id="rsvp">
+      <input placeholder="Your name" value="Ravi">
+      <select><option>Joyfully attending</option><option>Regretfully declining</option></select>
+      <select><option>2 guests</option><option>1 guest</option><option>3 guests</option></select>
+      <button class="btn">Send RSVP</button>
+    </form>
+    <div class="env"><div class="flap"></div><div class="seal">L&amp;A</div></div>
+    <div class="thanks"><div><div class="foil" style="font-size:44px">Thank you, Ravi</div><p class="body">We've saved a seat for you.</p><button class="btn" type="button" onclick="resetRsvp()">Replay</button></div></div>
+  </div>
+  <p class="note reveal">#11 Tap Send: the form folds into an envelope, the seal stamps, it flies off with petals.</p>
+</section>
+
+<div class="kasavu reveal"></div>
+
+<section>
+  <div class="label reveal">Blessings from loved ones</div>
+  <h2 class="reveal" style="font-weight:400;font-size:38px;margin:6px 0">Wishes Wall</h2>
+  <div class="pond reveal" id="pond"><div class="wish" id="wish"></div></div>
+  <div class="sendwish reveal"><input id="wtext" placeholder="Float a wish…"><button class="btn" onclick="addWish()">Float</button></div>
+  <p class="note reveal">#14 Each wish is a diya floating on water. Tap a lamp to read it; add your own.</p>
+</section>
+
+<script>
+// #1 reveals
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4)*120+'ms';io.observe(el)});
+
+// #11 RSVP
+const stage=document.getElementById('stage');
+document.getElementById('rsvp').onsubmit=e=>{e.preventDefault();navigator.vibrate&&navigator.vibrate(30);
+ const t=[[0,'s1'],[900,'s2'],[1700,'s3'],[2600,'s4']];t.forEach(([d,c])=>setTimeout(()=>stage.classList.add(c),d));
+ setTimeout(()=>{const r=stage.getBoundingClientRect();petals(r.left+r.width/2,r.top+r.height/2)},2600)};
+function resetRsvp(){stage.className='stage reveal in'}
+function petals(x,y){for(let i=0;i<28;i++){const p=document.createElement('div');p.className='petal';
+ p.style.background=['#e8899a','#f3c2c8','#d94f6a','#f6e0a8'][i%4];p.style.left=x+'px';p.style.top=y+'px';document.body.appendChild(p);
+ const a=Math.random()*Math.PI*2,d=80+Math.random()*160;
+ p.animate([{transform:'translate(0,0) rotate(0)',opacity:1},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d+140}px) rotate(${Math.random()*540}deg)`,opacity:0}],{duration:1800+Math.random()*900,easing:'cubic-bezier(.22,.61,.36,1)'}).onfinish=()=>p.remove()}}
+
+// #14 diyas
+const pond=document.getElementById('pond'),wish=document.getElementById('wish');
+const wishes=[["May your home always be full of laughter and light.","Meera Aunty"],["Wishing you a lifetime of filter coffee mornings together!","Karthik"],["Two hearts, one journey. God bless you both.","Ammachi"],["So happy for you, Anju! Can't wait to dance at the sangeet.","Divya"],["Wishing you patience, kindness and endless adventures.","Ravi"]];
+let hide;
+function diya(text,name,i){const d=document.createElement('div');d.className='diya';
+ d.innerHTML='<div class="flame"></div><div class="bowl"></div><div class="glow"></div>';
+ d.style.left=(8+Math.random()*72)+'%';d.style.top=(12+Math.random()*48)+'%';d.style.animationDelay=(-Math.random()*7)+'s';d.style.animationDuration=(6+Math.random()*4)+'s';
+ d.onclick=()=>{wish.innerHTML='“'+text+'”<b>— '+name+'</b>';wish.classList.add('on');navigator.vibrate&&navigator.vibrate(15);clearTimeout(hide);hide=setTimeout(()=>wish.classList.remove('on'),4500)};
+ pond.appendChild(d);return d}
+wishes.forEach((w,i)=>diya(w[0],w[1],i));
+function addWish(){const v=document.getElementById('wtext').value.trim();if(!v)return;
+ const d=diya(v,'You');d.style.left='44%';d.style.top='105%';d.style.transition='top 3s cubic-bezier(.22,.61,.36,1)';
+ requestAnimationFrame(()=>requestAnimationFrame(()=>d.style.top='55%'));document.getElementById('wtext').value='';setTimeout(()=>d.click(),3000)}
+</script>
+</body></html>

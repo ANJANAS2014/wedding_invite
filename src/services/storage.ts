@@ -15,6 +15,10 @@ export const STORAGE_KEYS = {
   musicMuted: 'inv-mute',
   /** `{ name, token, lang }` from the last personal invite link opened on this device. */
   invitedGuest: 'inv-guest-v1',
+  /** 'bride' | 'groom' — the guest's Team Bride / Team Groom pick on this device. */
+  teamSide: 'inv-team-side-v1',
+  /** Random UUID identifying this device for the team pick (no personal data). */
+  visitorId: 'inv-visitor-v1',
 } as const;
 
 export const SESSION_KEYS = {

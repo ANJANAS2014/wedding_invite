@@ -28,6 +28,7 @@ test.describe('Wishes Wall on desktop', () => {
     await page.locator('#op').click();
     // Temple doors take ~2.7s to open and unmount
     await expect(page.locator('.temple')).toHaveCount(0, { timeout: 5000 });
+    await page.getByRole('tab', { name: /Read all wishes/ }).click();
   });
 
   test('marquee scrolls when enough cards', async ({ page }) => {

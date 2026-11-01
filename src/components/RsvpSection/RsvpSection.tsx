@@ -1,9 +1,11 @@
 import './RsvpSection.css';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { RsvpRecord } from '../../types';
 import { MAX_GUESTS_PER_EVENT, MAX_WISH_CHARS, submitRsvp, validateRsvp } from '../../services/rsvpService';
 import { readFileAsDataUrl, validatePhoto } from '../../services/photoUploadService';
-import { MandalaDivider } from '../shared/MandalaDivider/MandalaDivider';
+import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
+import { haptic } from '../../utils/haptics';
+import { prefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { RsvpEventCard } from './RsvpEventCard';
 import { EmojiPicker } from './EmojiPicker';
 import { RsvpConfirmation } from './RsvpConfirmation';
@@ -16,12 +18,14 @@ interface RsvpSectionProps {
   onSubmittedSuccess?: (rsvp: RsvpRecord) => void;
 }
 
+/** `answer` stays null until the guest picks "Yes" or "Sorry" for that celebration. */
 interface EventAnswer {
-  attending: boolean;
+  answer: 'yes' | 'no' | null;
   count: number;
 }
 
-const NOT_ATTENDING: EventAnswer = { attending: false, count: 1 };
+const UNANSWERED: EventAnswer = { answer: null, count: 1 };
+const BOTH_REQUIRED_MESSAGE = 'Please choose Yes or Sorry for both celebrations.';
 
 export const RsvpSection: React.FC<RsvpSectionProps> = ({
   guestName: initialGuestName,
@@ -30,19 +34,55 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
   onSubmittedSuccess,
 }) => {
   const [name, setName] = useState<string>(initialGuestName || '');
-  const [wedding, setWedding] = useState<EventAnswer>(NOT_ATTENDING);
-  const [reception, setReception] = useState<EventAnswer>(NOT_ATTENDING);
+  const [wedding, setWedding] = useState<EventAnswer>(UNANSWERED);
+  const [reception, setReception] = useState<EventAnswer>(UNANSWERED);
+  const bothAnswered = wedding.answer !== null && reception.answer !== null;
   const [wishes, setWishes] = useState<string>('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [submittedData, setSubmittedData] = useState<RsvpRecord | null>(null);
+  // Wax-seal sequence after a successful submit: 0 idle · 1 form folds · 2 envelope in
+  // · 3 flap closes · 4 seal stamps · 5 envelope flies off (then the summary shows)
+  const [sealStage, setSealStage] = useState<number>(0);
+  const envelopeRef = useRef<HTMLDivElement>(null);
+  const sealTimers = useRef<number[]>([]);
+  useEffect(() => () => sealTimers.current.forEach((t) => window.clearTimeout(t)), []);
+  // keep the envelope in view once it replaces the (taller) form
+  useEffect(() => {
+    if (sealStage === 2) envelopeRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, [sealStage]);
 
-  // Selecting an event starts at 1 guest; deselecting clears the count.
-  const toggleEvent = (setter: React.Dispatch<React.SetStateAction<EventAnswer>>) => () => {
+  const playSealSequence = (record: RsvpRecord) => {
+    if (prefersReducedMotion()) {
+      setSubmittedData(record);
+      burstPetals(null, 30);
+      return;
+    }
+    const at = (ms: number, fn: () => void) => sealTimers.current.push(window.setTimeout(fn, ms));
+    setSealStage(1);
+    at(700, () => setSealStage(2));
+    at(1350, () => setSealStage(3));
+    at(2000, () => {
+      setSealStage(4);
+      haptic(10);
+    });
+    at(2700, () => {
+      burstPetals(envelopeRef.current, 46);
+      setSealStage(5);
+    });
+    at(3700, () => {
+      setSealStage(0);
+      setSubmittedData(record);
+      document.getElementById('rsvp')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+  };
+
+  // "Yes" starts at 1 guest (or keeps the chosen count); "Sorry" clears it.
+  const answerEvent = (setter: React.Dispatch<React.SetStateAction<EventAnswer>>) => (answer: 'yes' | 'no') => {
     setErrorMessage('');
-    setter((prev) => (prev.attending ? { attending: false, count: 0 } : { attending: true, count: 1 }));
+    setter((prev) => ({ answer, count: answer === 'yes' ? Math.max(1, prev.count) : 1 }));
   };
 
   const stepEvent = (setter: React.Dispatch<React.SetStateAction<EventAnswer>>) => (step: number) =>
@@ -77,25 +117,24 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
 
     const values = {
       name,
-      weddingAttending: wedding.attending,
+      weddingAttending: wedding.answer === 'yes',
       weddingGuestCount: wedding.count,
-      receptionAttending: reception.attending,
+      receptionAttending: reception.answer === 'yes',
       receptionGuestCount: reception.count,
       wishes,
     };
-    const validationError = validateRsvp(values);
+    const validationError = validateRsvp(values) ?? (bothAnswered ? null : BOTH_REQUIRED_MESSAGE);
     if (validationError) {
       setErrorMessage(validationError);
       return;
     }
 
-    const submitBtn = document.activeElement;
+    haptic(15);
     setIsSubmitting(true);
     try {
       const record = await submitRsvp(values, { inviteToken, photoFile, photoPreview });
-      setSubmittedData(record);
       onSubmittedSuccess?.(record);
-      burstPetals(submitBtn);
+      playSealSequence(record);
     } catch (error) {
       setErrorMessage(
         error instanceof Error && error.message ? error.message : "We couldn't send your response just yet. Please try again."
@@ -106,29 +145,56 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
   };
 
   return (
-    <section className="mar" id="s5">
+    <section className="mar rs" id="s5">
       <div className="sec" id="rsvp">
-        <div className="eyebrow">RSVP</div>
-        <h2>Will you be celebrating with us?</h2>
-        <MandalaDivider />
+        <header className="rs-head reveal">
+          <div className="eyebrow">RSVP</div>
+          <h2>Will you be celebrating with us?</h2>
+          <HeaderRule />
+        </header>
+
+        {sealStage >= 2 && (
+          <div className={`rs-envst s${sealStage}`} aria-hidden="true">
+            <div className="rs-fly">
+            <div className="rs-env" ref={envelopeRef}>
+              <div className="rs-env-back" />
+              <div className="rs-env-letter" />
+              <div className="rs-env-pocket" />
+              <div className="rs-env-flap" />
+              <div className="rs-env-seal">
+                <span>L&amp;A</span>
+              </div>
+            </div>
+            </div>
+          </div>
+        )}
 
         {submittedData ? (
           <RsvpConfirmation rsvp={submittedData} onEdit={() => setSubmittedData(null)} />
         ) : (
-          <form className="rsvp-upgrade-form" onSubmit={handleSubmit} noValidate>
-            {/* Guest name (pre-filled from a personal link) */}
+          <form
+            className={`rsvp-upgrade-form ${sealStage === 1 ? 'is-folding' : ''}`}
+            onSubmit={handleSubmit}
+            noValidate
+            hidden={sealStage >= 2}
+          >
+            {initialGuestName && (
+              <p className="rsvp-seat">
+                <b>{initialGuestName}</b>, we’ve saved a seat for you.
+              </p>
+            )}
+
+            {/* Step 1 — guest name (pre-filled from a personal link) */}
+            <p className="rsvp-step" id="rsvp-step-1">
+              <span aria-hidden="true">1</span>Your name
+            </p>
             <div className="rsvp-name-block">
-              {inviteToken && initialGuestName && (
-                <div className="rsvp-guest-chip">
-                  Replying to the invitation for <b>{initialGuestName}</b>
-                </div>
-              )}
               <input
                 id="rsvp-name"
                 name="name"
                 type="text"
                 className="rsvp-input"
-                placeholder="Your name *"
+                placeholder=" "
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
@@ -136,37 +202,48 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                 }}
                 maxLength={120}
                 required
+                aria-invalid={errorMessage === 'Please enter your name.' || undefined}
               />
+              <label htmlFor="rsvp-name" className="rsvp-float-label">
+                Your name *
+              </label>
             </div>
 
+            {/* Step 2 — Yes / Sorry for each celebration */}
+            <p className="rsvp-step">
+              <span aria-hidden="true">2</span>Will you be joining us? <em>Choose for each celebration</em>
+            </p>
             <div className="rsvp-events-grid">
               <RsvpEventCard
                 eventKey="wedding"
                 tag="OUR WEDDING"
                 dateLabel="29 November 2026"
-                attending={wedding.attending}
+                answer={wedding.answer}
                 guestCount={wedding.count}
                 maxGuests={maxGuests}
-                onToggle={toggleEvent(setWedding)}
+                onAnswer={answerEvent(setWedding)}
                 onStep={stepEvent(setWedding)}
               />
               <RsvpEventCard
                 eventKey="reception"
                 tag="OUR RECEPTION"
                 dateLabel="6 December 2026"
-                attending={reception.attending}
+                answer={reception.answer}
                 guestCount={reception.count}
                 maxGuests={maxGuests}
-                onToggle={toggleEvent(setReception)}
+                onAnswer={answerEvent(setReception)}
                 onStep={stepEvent(setReception)}
               />
             </div>
 
-            {/* Optional wish, photo and emoji */}
+            {/* Step 3 — optional wish, photo and emoji */}
             <div className="rsvp-wishes-section">
+              <p className="rsvp-step">
+                <span aria-hidden="true">3</span>A little wish for us <em>Optional · it will appear on our Wishes Wall</em>
+              </p>
               <div className="rsvp-wishes-header-row">
-                <label htmlFor="rsvp-wishes" className="rsvp-wishes-heading">
-                  A little wish for us ❤️
+                <label htmlFor="rsvp-wishes" className="rsvp-wishes-heading rsvp-sr">
+                  A little wish for us
                 </label>
 
                 <div className="rsvp-camera-upload-container">
@@ -214,10 +291,19 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             </div>
 
             <div className="rsvp-submit-block">
-              <p className="rsvp-submit-hint">Your responses for both celebrations will be submitted together.</p>
+              <p className={`rsvp-submit-hint ${bothAnswered ? '' : 'is-waiting'}`} id="rsvp-submit-hint">
+                {bothAnswered ? 'You can change your answer any time.' : 'Answer both celebrations above to send your RSVP.'}
+              </p>
 
-              <button type="submit" className="btn rsvp-submit-btn" disabled={isSubmitting}>
-                {isSubmitting ? 'Sending with love…' : 'Send with Love ❤️'}
+              <button
+                type="submit"
+                className="btn rsvp-submit-btn"
+                disabled={isSubmitting}
+                data-waiting={!bothAnswered || undefined}
+                aria-describedby="rsvp-submit-hint"
+              >
+                {isSubmitting && <span className="rs-spin" aria-hidden="true" />}
+                {isSubmitting ? 'Sending with love…' : 'Send my RSVP ❤️'}
               </button>
 
               {errorMessage && (

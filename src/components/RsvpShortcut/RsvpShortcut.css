@@ -1,0 +1,36 @@
+/* Floating RSVP shortcut (bottom-right; the music toggle sits top-right) */
+.rsvp-shortcut {
+  position: fixed;
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  z-index: 205;
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 1px solid #f3dc8e;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f8e8b2, var(--gold) 55%, #9a7022);
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.45);
+  color: #2b0d12;
+  font: 500 12px / 1 var(--fb);
+  letter-spacing: 0.22em;
+  text-decoration: none;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+
+.rsvp-shortcut.is-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rsvp-shortcut {
+    transition: none;
+  }
+}

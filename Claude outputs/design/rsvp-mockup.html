@@ -1,0 +1,333 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RSVP Mockup</title>
+<style>body{margin:0;background:#1b0d10;font:500 12px system-ui;color:#e9d3a4}h1{font:500 13px system-ui;letter-spacing:.2em;text-transform:uppercase;margin:18px 20px 8px}
+.row{display:flex;gap:28px;align-items:flex-start;padding:0 20px 30px;flex-wrap:wrap}.lab{margin:0 0 8px;opacity:.7}
+.dbox{width:806px;height:1240px;overflow:hidden;border-radius:10px;box-shadow:0 0 0 1px #4a2a30}.dbox iframe{width:1300px;height:2000px;border:0;transform:scale(.62);transform-origin:0 0}
+.mbox{width:390px;height:1240px;overflow:hidden;border-radius:24px;box-shadow:0 0 0 8px #000}.mbox iframe{width:390px;height:1240px;border:0}</style></head><body>
+<h1>RSVP — proposed redesign</h1><div class="row"><div><p class="lab">Desktop · 1300px (shown at 62%, scroll inside)</p><div class="dbox"><iframe srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;family=Jost:wght@300;400;500&amp;display=swap&quot;&gt;
+&lt;style&gt;
+:root{--burg:#5a1420;--burg-d:#3a0b14;--ivory:#f8efdc;--champ:#e9d3a4;--gold:#c19a3d;--gold-l:#f0d68e;--fh:&#x27;Cormorant Garamond&#x27;,Georgia,serif;--fb:&#x27;Jost&#x27;,system-ui,sans-serif;--line:rgba(240,214,142,.28)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--burg-d);font:300 16px/1.6 var(--fb);color:var(--ivory);-webkit-font-smoothing:antialiased}
+/* mockup-only state switcher */
+.mk{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:10px;background:#1b0d10;font:500 11px var(--fb)}
+.mk button{border:1px solid #6b3a40;border-radius:999px;padding:7px 12px;background:none;color:#e9d3a4;cursor:pointer}
+.mk button.on{background:#e9d3a4;color:#2b0d12}
+/* ===== RSVP (proposed) — maps onto RsvpSection.tsx: section#s5 &gt; .sec#rsvp ===== */
+.rs{position:relative;padding:clamp(56px,8vw,100px) clamp(18px,5vw,72px);background:radial-gradient(1000px 520px at 50% -10%,#7a2232,var(--burg) 46%,var(--burg-d));overflow:hidden}
+.head{text-align:center;max-width:680px;margin:0 auto clamp(34px,5vw,56px)}
+.eyebrow{font:500 11px/1 var(--fb);letter-spacing:.38em;text-transform:uppercase;color:var(--gold)}
+.head h2{font:400 clamp(36px,5vw,58px)/1.05 var(--fh);color:var(--champ);margin:14px 0 18px}
+.rule{display:flex;align-items:center;justify-content:center;gap:12px;color:var(--gold)}
+.rule::before,.rule::after{content:&quot;&quot;;width:clamp(48px,8vw,88px);height:1px;background:linear-gradient(90deg,transparent,var(--gold))}.rule::after{transform:scaleX(-1)}
+.rule svg{width:14px;height:14px}
+.form{max-width:860px;margin:0 auto}
+.chip{display:table;margin:0 auto 26px;padding:7px 16px;border:1px solid var(--line);border-radius:999px;font:400 13px var(--fb);color:rgba(248,239,220,.8)}
+.chip b{font-weight:500;color:var(--gold-l)}
+.field{position:relative;max-width:520px;margin:0 auto clamp(34px,5vw,48px)}
+.field input{width:100%;padding:22px 0 10px;background:none;border:0;border-bottom:1px solid rgba(240,214,142,.45);color:var(--ivory);font:400 24px/1.2 var(--fh);outline:none;text-align:center}
+.field label{position:absolute;left:0;right:0;top:22px;text-align:center;font:400 22px var(--fh);color:rgba(248,239,220,.55);pointer-events:none;transition:all .25s}
+.field input:focus,.field.err input{border-color:var(--gold-l)}
+.field input:focus+label,.field input:not(:placeholder-shown)+label{top:0;font:500 10px var(--fb);letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.field.err input{border-color:#f0a3a3}
+.events{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.evr{position:relative;padding:26px clamp(18px,3vw,36px) 24px;transition:background .4s}
+.evr+.evr{border-left:1px solid var(--line)}
+.evr.on{background:linear-gradient(180deg,rgba(240,214,142,.07),rgba(240,214,142,.02))}
+.evr.on::before{content:&quot;&quot;;position:absolute;left:0;right:0;top:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--gold-l),transparent)}
+.tag{font:500 10.5px/1 var(--fb);letter-spacing:.32em;color:var(--gold)}
+.dt{margin:8px 0 2px;font:400 clamp(26px,2.6vw,32px)/1.1 var(--fh);color:var(--champ)}
+.q{font:italic 400 17px var(--fh);color:rgba(248,239,220,.75)}
+.yes{display:flex;align-items:center;gap:12px;width:100%;margin-top:16px;min-height:48px;padding:0 4px;background:none;border:0;color:var(--ivory);cursor:pointer;font:400 15px var(--fb);text-align:left}
+.sw{flex:none;width:44px;height:26px;border-radius:999px;border:1px solid rgba(240,214,142,.55);position:relative;transition:background .3s}
+.sw::after{content:&quot;&quot;;position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--champ);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.evr.on .sw{background:var(--gold)}.evr.on .sw::after{transform:translateX(18px);background:#fff8e6}
+.guests{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s ease}
+.evr.on .guests{grid-template-rows:1fr}
+.guests&gt;div{overflow:hidden}
+.gi{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.gi span{font:500 10.5px/1.4 var(--fb);letter-spacing:.24em;text-transform:uppercase;color:rgba(233,211,164,.75)}
+.step{display:flex;align-items:center;gap:6px}
+.step button{width:40px;height:40px;border-radius:50%;border:1px solid rgba(240,214,142,.55);background:none;color:var(--gold-l);font:400 20px/1 var(--fb);cursor:pointer}
+.step button:disabled{opacity:.3;cursor:default}
+.step b{min-width:34px;text-align:center;font:500 26px/1 var(--fh);color:var(--champ)}
+.wish{margin-top:clamp(30px,4vw,44px)}
+.wish-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.wish label{font:italic 400 22px var(--fh);color:var(--champ)}
+.wish label small{font:500 10px var(--fb);font-style:normal;letter-spacing:.24em;text-transform:uppercase;color:rgba(233,211,164,.6);margin-left:8px}
+.tbtn{display:inline-flex;align-items:center;gap:8px;min-height:40px;background:none;border:0;border-bottom:1px solid rgba(240,214,142,.45);color:var(--gold-l);font:500 11px var(--fb);letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.tbtn svg{width:16px;height:16px}
+textarea{display:block;width:100%;margin-top:10px;min-height:96px;padding:14px 16px;resize:vertical;background:rgba(0,0,0,.14);border:1px solid var(--line);border-radius:4px;color:var(--ivory);font:400 19px/1.5 var(--fh);outline:none}
+textarea:focus{border-color:rgba(240,214,142,.6)}
+textarea::placeholder{color:rgba(248,239,220,.45);font-style:italic}
+.wish-foot{display:flex;justify-content:space-between;margin-top:6px;font:400 12px var(--fb);color:rgba(248,239,220,.55)}
+.emo{background:none;border:0;font-size:18px;cursor:pointer;min-width:40px;min-height:36px}
+.submit{margin-top:clamp(30px,4vw,44px);text-align:center}
+.submit p{font:400 13px var(--fb);color:rgba(248,239,220,.65);margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:min(100%,340px);min-height:56px;padding:0 34px;border-radius:999px;border:1px solid #f3dc8e;
+  background:linear-gradient(180deg,#f8e8b2 0%,var(--gold) 50%,#9a7022 100%);color:#2b0d12;font:500 13px var(--fb);letter-spacing:.3em;text-transform:uppercase;cursor:pointer;
+  box-shadow:inset 0 1px 0 #fff9,0 14px 30px -12px rgba(0,0,0,.6)}
+.btn[disabled]{filter:saturate(.7) brightness(.92);cursor:progress}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(43,13,18,.25);border-top-color:#2b0d12;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.alert{display:flex;gap:10px;align-items:flex-start;max-width:560px;margin:16px auto 0;padding:12px 16px;border:1px solid rgba(240,163,163,.55);border-radius:6px;background:rgba(120,20,30,.35);text-align:left;font:400 14px/1.5 var(--fb);color:#ffd9d9}
+.alert svg{flex:none;width:18px;height:18px;margin-top:2px}
+/* success */
+.done{max-width:620px;margin:0 auto;text-align:center}
+.done .heart{font-size:26px;color:var(--gold-l)}
+.done h3{font:italic 400 clamp(44px,6vw,64px)/1 var(--fh);color:var(--champ);margin:8px 0 10px}
+.done .sub{font:400 19px/1.55 var(--fh);color:rgba(248,239,220,.82)}
+.sum{list-style:none;margin:28px 0;border-top:1px solid var(--line);text-align:left}
+.sum li{display:grid;grid-template-columns:minmax(120px,.8fr) 1.2fr;gap:16px;padding:14px 0;border-bottom:1px solid rgba(240,214,142,.16)}
+.sum span{font:500 10.5px/1.8 var(--fb);letter-spacing:.24em;text-transform:uppercase;color:rgba(233,211,164,.75)}
+.sum b{font:500 20px/1.35 var(--fh);color:var(--ivory)}
+.sum b.wishq{font-style:italic;font-weight:400}
+.sign{font:italic 400 22px var(--fh);color:var(--gold-l);margin-bottom:18px}
+.link{min-height:44px;background:none;border:0;border-bottom:1px solid rgba(240,214,142,.5);color:var(--gold-l);font:500 11px var(--fb);letter-spacing:.24em;text-transform:uppercase;cursor:pointer}
+[hidden]{display:none!important}
+@media (max-width:720px){
+  .events{grid-template-columns:1fr}
+  .evr+.evr{border-left:0;border-top:1px solid var(--line)}
+  .evr{padding:22px 6px 20px}
+  .wish-top{flex-wrap:wrap}
+  .sum li{grid-template-columns:1fr;gap:2px}
+  .btn{width:100%}
+}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;div class=&quot;mk&quot; role=&quot;tablist&quot; aria-label=&quot;Mockup states&quot;&gt;
+  &lt;button data-s=&quot;empty&quot;&gt;Empty&lt;/button&gt;&lt;button data-s=&quot;saved&quot; class=&quot;on&quot;&gt;Filled (saved selections)&lt;/button&gt;&lt;button data-s=&quot;submitting&quot;&gt;Submitting&lt;/button&gt;&lt;button data-s=&quot;error&quot;&gt;Error&lt;/button&gt;&lt;button data-s=&quot;success&quot;&gt;Success&lt;/button&gt;
+&lt;/div&gt;
+&lt;section class=&quot;rs&quot; id=&quot;s5&quot; aria-labelledby=&quot;rs-title&quot;&gt;
+  &lt;header class=&quot;head&quot;&gt;&lt;div class=&quot;eyebrow&quot;&gt;RSVP&lt;/div&gt;&lt;h2 id=&quot;rs-title&quot;&gt;Will you be celebrating with us?&lt;/h2&gt;
+    &lt;div class=&quot;rule&quot;&gt;&lt;svg viewBox=&quot;-12 -12 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1&quot;&gt;&lt;path d=&quot;M0 -10C2 -6 2 -3 0 0C-2 -3 -2 -6 0 -10Z M0 10C2 6 2 3 0 0C-2 3 -2 6 0 10Z M-10 0C-6 -2 -3 -2 0 0C-3 2 -6 2 -10 0Z M10 0C6 -2 3 -2 0 0C3 2 6 2 10 0Z&quot;/&gt;&lt;/svg&gt;&lt;/div&gt;&lt;/header&gt;
+
+  &lt;form class=&quot;form&quot; id=&quot;form&quot; novalidate onsubmit=&quot;return false&quot;&gt;
+    &lt;p class=&quot;chip&quot;&gt;Replying to the invitation for &lt;b&gt;Ravi &amp;amp; Family&lt;/b&gt;&lt;/p&gt;
+    &lt;div class=&quot;field&quot; id=&quot;nf&quot;&gt;&lt;input id=&quot;rsvp-name&quot; placeholder=&quot; &quot; maxlength=&quot;120&quot; required&gt;&lt;label for=&quot;rsvp-name&quot;&gt;Your name *&lt;/label&gt;&lt;/div&gt;
+
+    &lt;div class=&quot;events&quot;&gt;
+      &lt;div class=&quot;evr&quot; data-ev=&quot;wedding&quot;&gt;
+        &lt;div class=&quot;tag&quot;&gt;OUR WEDDING&lt;/div&gt;&lt;div class=&quot;dt&quot;&gt;29 November 2026&lt;/div&gt;&lt;div class=&quot;q&quot;&gt;Will you be there?&lt;/div&gt;
+        &lt;button type=&quot;button&quot; class=&quot;yes&quot; aria-pressed=&quot;false&quot;&gt;&lt;span class=&quot;sw&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;Yes, will be there&lt;/button&gt;
+        &lt;div class=&quot;guests&quot;&gt;&lt;div&gt;&lt;div class=&quot;gi&quot;&gt;&lt;span&gt;Guests (including you)&lt;/span&gt;
+          &lt;div class=&quot;step&quot;&gt;&lt;button type=&quot;button&quot; data-d=&quot;-1&quot; aria-label=&quot;Decrease wedding guests&quot;&gt;−&lt;/button&gt;&lt;b&gt;1&lt;/b&gt;&lt;button type=&quot;button&quot; data-d=&quot;1&quot; aria-label=&quot;Increase wedding guests&quot;&gt;+&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;evr&quot; data-ev=&quot;reception&quot;&gt;
+        &lt;div class=&quot;tag&quot;&gt;OUR RECEPTION&lt;/div&gt;&lt;div class=&quot;dt&quot;&gt;6 December 2026&lt;/div&gt;&lt;div class=&quot;q&quot;&gt;Will you be there?&lt;/div&gt;
+        &lt;button type=&quot;button&quot; class=&quot;yes&quot; aria-pressed=&quot;false&quot;&gt;&lt;span class=&quot;sw&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;Yes, will be there&lt;/button&gt;
+        &lt;div class=&quot;guests&quot;&gt;&lt;div&gt;&lt;div class=&quot;gi&quot;&gt;&lt;span&gt;Guests (including you)&lt;/span&gt;
+          &lt;div class=&quot;step&quot;&gt;&lt;button type=&quot;button&quot; data-d=&quot;-1&quot; aria-label=&quot;Decrease reception guests&quot;&gt;−&lt;/button&gt;&lt;b&gt;1&lt;/b&gt;&lt;button type=&quot;button&quot; data-d=&quot;1&quot; aria-label=&quot;Increase reception guests&quot;&gt;+&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;wish&quot;&gt;
+      &lt;div class=&quot;wish-top&quot;&gt;&lt;label for=&quot;rsvp-wishes&quot;&gt;A little wish for us ❤️ &lt;small&gt;Optional&lt;/small&gt;&lt;/label&gt;
+        &lt;button type=&quot;button&quot; class=&quot;tbtn&quot;&gt;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.6&quot;&gt;&lt;path d=&quot;M4 8h3l2-3h6l2 3h3v11H4z&quot;/&gt;&lt;circle cx=&quot;12&quot; cy=&quot;13&quot; r=&quot;3.5&quot;/&gt;&lt;/svg&gt;Add Photo&lt;/button&gt;&lt;/div&gt;
+      &lt;textarea id=&quot;rsvp-wishes&quot; maxlength=&quot;200&quot; placeholder=&quot;Leave us a little message or your blessings...&quot;&gt;&lt;/textarea&gt;
+      &lt;div class=&quot;wish-foot&quot;&gt;&lt;button type=&quot;button&quot; class=&quot;emo&quot; aria-label=&quot;Add an emoji&quot;&gt;😊&lt;/button&gt;&lt;span id=&quot;cc&quot;&gt;0/200&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;submit&quot;&gt;
+      &lt;p&gt;Your responses for both celebrations will be submitted together.&lt;/p&gt;
+      &lt;button type=&quot;submit&quot; class=&quot;btn&quot; id=&quot;sb&quot;&gt;Send with Love ❤️&lt;/button&gt;
+      &lt;div class=&quot;alert&quot; id=&quot;al&quot; role=&quot;alert&quot; hidden&gt;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.7&quot;&gt;&lt;circle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;9&quot;/&gt;&lt;path d=&quot;M12 7v6M12 16.5v.5&quot;/&gt;&lt;/svg&gt;&lt;span id=&quot;alt&quot;&gt;We couldn&#x27;t send your response just yet. Please try again.&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/form&gt;
+
+  &lt;div class=&quot;done&quot; id=&quot;done&quot; role=&quot;alert&quot; hidden&gt;
+    &lt;div class=&quot;heart&quot; aria-hidden=&quot;true&quot;&gt;♥&lt;/div&gt;&lt;h3&gt;Thank you!&lt;/h3&gt;
+    &lt;p class=&quot;sub&quot;&gt;Your response has been received. We look forward to celebrating with you.&lt;/p&gt;
+    &lt;ul class=&quot;sum&quot;&gt;
+      &lt;li&gt;&lt;span&gt;Our Wedding · 29 Nov&lt;/span&gt;&lt;b id=&quot;s1&quot;&gt;Attending · 2 guests&lt;/b&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span&gt;Our Reception · 6 Dec&lt;/span&gt;&lt;b id=&quot;s2&quot;&gt;Not attending&lt;/b&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span&gt;Your Message&lt;/span&gt;&lt;b class=&quot;wishq&quot; id=&quot;s3&quot;&gt;“Wishing you both a lifetime of love and laughter!”&lt;/b&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p class=&quot;sign&quot;&gt;With love, Anjana &amp;amp; Lalith&lt;/p&gt;
+    &lt;button type=&quot;button&quot; class=&quot;link&quot; onclick=&quot;setS(&#x27;saved&#x27;)&quot;&gt;Change my response&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+&lt;script&gt;
+var $=function(s){return document.querySelector(s)},$$=function(s){return document.querySelectorAll(s)};
+function setEv(row,on,n){row.classList.toggle(&#x27;on&#x27;,on);row.querySelector(&#x27;.yes&#x27;).setAttribute(&#x27;aria-pressed&#x27;,on);if(n)row.querySelector(&#x27;.step b&#x27;).textContent=n;upd(row)}
+function upd(row){var n=+row.querySelector(&#x27;.step b&#x27;).textContent;row.querySelector(&#x27;[data-d=&quot;-1&quot;]&#x27;).disabled=n&lt;=1;row.querySelector(&#x27;[data-d=&quot;1&quot;]&#x27;).disabled=n&gt;=10}
+$$(&#x27;.evr&#x27;).forEach(function(r){r.querySelector(&#x27;.yes&#x27;).onclick=function(){setEv(r,!r.classList.contains(&#x27;on&#x27;))};
+  r.querySelectorAll(&#x27;.step button&#x27;).forEach(function(b){b.onclick=function(){var e=r.querySelector(&#x27;.step b&#x27;);e.textContent=Math.min(10,Math.max(1,+e.textContent+ +b.dataset.d));upd(r)}});upd(r)});
+var ta=$(&#x27;#rsvp-wishes&#x27;);ta.oninput=function(){$(&#x27;#cc&#x27;).textContent=ta.value.length+&#x27;/200&#x27;};
+function fill(){ $(&#x27;#rsvp-name&#x27;).value=&#x27;Ravi &amp; Family&#x27;;setEv($(&#x27;[data-ev=wedding]&#x27;),true,2);setEv($(&#x27;[data-ev=reception]&#x27;),false,1);ta.value=&#x27;Wishing you both a lifetime of love and laughter!&#x27;;ta.oninput()}
+function clear(){ $(&#x27;#rsvp-name&#x27;).value=&#x27;&#x27;;$$(&#x27;.evr&#x27;).forEach(function(r){setEv(r,false,1)});ta.value=&#x27;&#x27;;ta.oninput()}
+function setS(s){$$(&#x27;.mk button&#x27;).forEach(function(b){b.classList.toggle(&#x27;on&#x27;,b.dataset.s===s)});
+  var sb=$(&#x27;#sb&#x27;);$(&#x27;#al&#x27;).hidden=true;$(&#x27;#nf&#x27;).classList.remove(&#x27;err&#x27;);sb.disabled=false;sb.innerHTML=&#x27;Send with Love ❤️&#x27;;$(&#x27;#form&#x27;).hidden=s===&#x27;success&#x27;;$(&#x27;#done&#x27;).hidden=s!==&#x27;success&#x27;;
+  if(s===&#x27;empty&#x27;)clear();else fill();
+  if(s===&#x27;submitting&#x27;){sb.disabled=true;sb.innerHTML=&#x27;&lt;span class=&quot;spin&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;Sending with love…&#x27;}
+  if(s===&#x27;error&#x27;){$(&#x27;#alt&#x27;).textContent=&quot;We couldn&#x27;t send your response just yet. Please try again.&quot;;$(&#x27;#al&#x27;).hidden=false}}
+$$(&#x27;.mk button&#x27;).forEach(function(b){b.onclick=function(){setS(b.dataset.s)}});
+$(&#x27;#sb&#x27;).onclick=function(){ if(!$(&#x27;#rsvp-name&#x27;).value.trim()){$(&#x27;#nf&#x27;).classList.add(&#x27;err&#x27;);$(&#x27;#alt&#x27;).textContent=&#x27;Please enter your name.&#x27;;$(&#x27;#al&#x27;).hidden=false;return}
+  if(!$$(&#x27;.evr.on&#x27;).length){$(&#x27;#alt&#x27;).textContent=&#x27;Please select at least one celebration to attend, or let us know if you cannot make it.&#x27;;$(&#x27;#al&#x27;).hidden=false;return}
+  setS(&#x27;submitting&#x27;);setTimeout(function(){setS(&#x27;success&#x27;)},1400)};
+setS(&#x27;saved&#x27;);
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+"></iframe></div></div>
+<div><p class="lab">Mobile · 390px (scroll inside)</p><div class="mbox"><iframe srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;family=Jost:wght@300;400;500&amp;display=swap&quot;&gt;
+&lt;style&gt;
+:root{--burg:#5a1420;--burg-d:#3a0b14;--ivory:#f8efdc;--champ:#e9d3a4;--gold:#c19a3d;--gold-l:#f0d68e;--fh:&#x27;Cormorant Garamond&#x27;,Georgia,serif;--fb:&#x27;Jost&#x27;,system-ui,sans-serif;--line:rgba(240,214,142,.28)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--burg-d);font:300 16px/1.6 var(--fb);color:var(--ivory);-webkit-font-smoothing:antialiased}
+/* mockup-only state switcher */
+.mk{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:10px;background:#1b0d10;font:500 11px var(--fb)}
+.mk button{border:1px solid #6b3a40;border-radius:999px;padding:7px 12px;background:none;color:#e9d3a4;cursor:pointer}
+.mk button.on{background:#e9d3a4;color:#2b0d12}
+/* ===== RSVP (proposed) — maps onto RsvpSection.tsx: section#s5 &gt; .sec#rsvp ===== */
+.rs{position:relative;padding:clamp(56px,8vw,100px) clamp(18px,5vw,72px);background:radial-gradient(1000px 520px at 50% -10%,#7a2232,var(--burg) 46%,var(--burg-d));overflow:hidden}
+.head{text-align:center;max-width:680px;margin:0 auto clamp(34px,5vw,56px)}
+.eyebrow{font:500 11px/1 var(--fb);letter-spacing:.38em;text-transform:uppercase;color:var(--gold)}
+.head h2{font:400 clamp(36px,5vw,58px)/1.05 var(--fh);color:var(--champ);margin:14px 0 18px}
+.rule{display:flex;align-items:center;justify-content:center;gap:12px;color:var(--gold)}
+.rule::before,.rule::after{content:&quot;&quot;;width:clamp(48px,8vw,88px);height:1px;background:linear-gradient(90deg,transparent,var(--gold))}.rule::after{transform:scaleX(-1)}
+.rule svg{width:14px;height:14px}
+.form{max-width:860px;margin:0 auto}
+.chip{display:table;margin:0 auto 26px;padding:7px 16px;border:1px solid var(--line);border-radius:999px;font:400 13px var(--fb);color:rgba(248,239,220,.8)}
+.chip b{font-weight:500;color:var(--gold-l)}
+.field{position:relative;max-width:520px;margin:0 auto clamp(34px,5vw,48px)}
+.field input{width:100%;padding:22px 0 10px;background:none;border:0;border-bottom:1px solid rgba(240,214,142,.45);color:var(--ivory);font:400 24px/1.2 var(--fh);outline:none;text-align:center}
+.field label{position:absolute;left:0;right:0;top:22px;text-align:center;font:400 22px var(--fh);color:rgba(248,239,220,.55);pointer-events:none;transition:all .25s}
+.field input:focus,.field.err input{border-color:var(--gold-l)}
+.field input:focus+label,.field input:not(:placeholder-shown)+label{top:0;font:500 10px var(--fb);letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.field.err input{border-color:#f0a3a3}
+.events{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.evr{position:relative;padding:26px clamp(18px,3vw,36px) 24px;transition:background .4s}
+.evr+.evr{border-left:1px solid var(--line)}
+.evr.on{background:linear-gradient(180deg,rgba(240,214,142,.07),rgba(240,214,142,.02))}
+.evr.on::before{content:&quot;&quot;;position:absolute;left:0;right:0;top:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--gold-l),transparent)}
+.tag{font:500 10.5px/1 var(--fb);letter-spacing:.32em;color:var(--gold)}
+.dt{margin:8px 0 2px;font:400 clamp(26px,2.6vw,32px)/1.1 var(--fh);color:var(--champ)}
+.q{font:italic 400 17px var(--fh);color:rgba(248,239,220,.75)}
+.yes{display:flex;align-items:center;gap:12px;width:100%;margin-top:16px;min-height:48px;padding:0 4px;background:none;border:0;color:var(--ivory);cursor:pointer;font:400 15px var(--fb);text-align:left}
+.sw{flex:none;width:44px;height:26px;border-radius:999px;border:1px solid rgba(240,214,142,.55);position:relative;transition:background .3s}
+.sw::after{content:&quot;&quot;;position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--champ);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.evr.on .sw{background:var(--gold)}.evr.on .sw::after{transform:translateX(18px);background:#fff8e6}
+.guests{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s ease}
+.evr.on .guests{grid-template-rows:1fr}
+.guests&gt;div{overflow:hidden}
+.gi{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.gi span{font:500 10.5px/1.4 var(--fb);letter-spacing:.24em;text-transform:uppercase;color:rgba(233,211,164,.75)}
+.step{display:flex;align-items:center;gap:6px}
+.step button{width:40px;height:40px;border-radius:50%;border:1px solid rgba(240,214,142,.55);background:none;color:var(--gold-l);font:400 20px/1 var(--fb);cursor:pointer}
+.step button:disabled{opacity:.3;cursor:default}
+.step b{min-width:34px;text-align:center;font:500 26px/1 var(--fh);color:var(--champ)}
+.wish{margin-top:clamp(30px,4vw,44px)}
+.wish-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.wish label{font:italic 400 22px var(--fh);color:var(--champ)}
+.wish label small{font:500 10px var(--fb);font-style:normal;letter-spacing:.24em;text-transform:uppercase;color:rgba(233,211,164,.6);margin-left:8px}
+.tbtn{display:inline-flex;align-items:center;gap:8px;min-height:40px;background:none;border:0;border-bottom:1px solid rgba(240,214,142,.45);color:var(--gold-l);font:500 11px var(--fb);letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.tbtn svg{width:16px;height:16px}
+textarea{display:block;width:100%;margin-top:10px;min-height:96px;padding:14px 16px;resize:vertical;background:rgba(0,0,0,.14);border:1px solid var(--line);border-radius:4px;color:var(--ivory);font:400 19px/1.5 var(--fh);outline:none}
+textarea:focus{border-color:rgba(240,214,142,.6)}
+textarea::placeholder{color:rgba(248,239,220,.45);font-style:italic}
+.wish-foot{display:flex;justify-content:space-between;margin-top:6px;font:400 12px var(--fb);color:rgba(248,239,220,.55)}
+.emo{background:none;border:0;font-size:18px;cursor:pointer;min-width:40px;min-height:36px}
+.submit{margin-top:clamp(30px,4vw,44px);text-align:center}
+.submit p{font:400 13px var(--fb);color:rgba(248,239,220,.65);margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:min(100%,340px);min-height:56px;padding:0 34px;border-radius:999px;border:1px solid #f3dc8e;
+  background:linear-gradient(180deg,#f8e8b2 0%,var(--gold) 50%,#9a7022 100%);color:#2b0d12;font:500 13px var(--fb);letter-spacing:.3em;text-transform:uppercase;cursor:pointer;
+  box-shadow:inset 0 1px 0 #fff9,0 14px 30px -12px rgba(0,0,0,.6)}
+.btn[disabled]{filter:saturate(.7) brightness(.92);cursor:progress}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(43,13,18,.25);border-top-color:#2b0d12;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.alert{display:flex;gap:10px;align-items:flex-start;max-width:560px;margin:16px auto 0;padding:12px 16px;border:1px solid rgba(240,163,163,.55);border-radius:6px;background:rgba(120,20,30,.35);text-align:left;font:400 14px/1.5 var(--fb);color:#ffd9d9}
+.alert svg{flex:none;width:18px;height:18px;margin-top:2px}
+/* success */
+.done{max-width:620px;margin:0 auto;text-align:center}
+.done .heart{font-size:26px;color:var(--gold-l)}
+.done h3{font:italic 400 clamp(44px,6vw,64px)/1 var(--fh);color:var(--champ);margin:8px 0 10px}
+.done .sub{font:400 19px/1.55 var(--fh);color:rgba(248,239,220,.82)}
+.sum{list-style:none;margin:28px 0;border-top:1px solid var(--line);text-align:left}
+.sum li{display:grid;grid-template-columns:minmax(120px,.8fr) 1.2fr;gap:16px;padding:14px 0;border-bottom:1px solid rgba(240,214,142,.16)}
+.sum span{font:500 10.5px/1.8 var(--fb);letter-spacing:.24em;text-transform:uppercase;color:rgba(233,211,164,.75)}
+.sum b{font:500 20px/1.35 var(--fh);color:var(--ivory)}
+.sum b.wishq{font-style:italic;font-weight:400}
+.sign{font:italic 400 22px var(--fh);color:var(--gold-l);margin-bottom:18px}
+.link{min-height:44px;background:none;border:0;border-bottom:1px solid rgba(240,214,142,.5);color:var(--gold-l);font:500 11px var(--fb);letter-spacing:.24em;text-transform:uppercase;cursor:pointer}
+[hidden]{display:none!important}
+@media (max-width:720px){
+  .events{grid-template-columns:1fr}
+  .evr+.evr{border-left:0;border-top:1px solid var(--line)}
+  .evr{padding:22px 6px 20px}
+  .wish-top{flex-wrap:wrap}
+  .sum li{grid-template-columns:1fr;gap:2px}
+  .btn{width:100%}
+}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;div class=&quot;mk&quot; role=&quot;tablist&quot; aria-label=&quot;Mockup states&quot;&gt;
+  &lt;button data-s=&quot;empty&quot;&gt;Empty&lt;/button&gt;&lt;button data-s=&quot;saved&quot; class=&quot;on&quot;&gt;Filled (saved selections)&lt;/button&gt;&lt;button data-s=&quot;submitting&quot;&gt;Submitting&lt;/button&gt;&lt;button data-s=&quot;error&quot;&gt;Error&lt;/button&gt;&lt;button data-s=&quot;success&quot;&gt;Success&lt;/button&gt;
+&lt;/div&gt;
+&lt;section class=&quot;rs&quot; id=&quot;s5&quot; aria-labelledby=&quot;rs-title&quot;&gt;
+  &lt;header class=&quot;head&quot;&gt;&lt;div class=&quot;eyebrow&quot;&gt;RSVP&lt;/div&gt;&lt;h2 id=&quot;rs-title&quot;&gt;Will you be celebrating with us?&lt;/h2&gt;
+    &lt;div class=&quot;rule&quot;&gt;&lt;svg viewBox=&quot;-12 -12 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1&quot;&gt;&lt;path d=&quot;M0 -10C2 -6 2 -3 0 0C-2 -3 -2 -6 0 -10Z M0 10C2 6 2 3 0 0C-2 3 -2 6 0 10Z M-10 0C-6 -2 -3 -2 0 0C-3 2 -6 2 -10 0Z M10 0C6 -2 3 -2 0 0C3 2 6 2 10 0Z&quot;/&gt;&lt;/svg&gt;&lt;/div&gt;&lt;/header&gt;
+
+  &lt;form class=&quot;form&quot; id=&quot;form&quot; novalidate onsubmit=&quot;return false&quot;&gt;
+    &lt;p class=&quot;chip&quot;&gt;Replying to the invitation for &lt;b&gt;Ravi &amp;amp; Family&lt;/b&gt;&lt;/p&gt;
+    &lt;div class=&quot;field&quot; id=&quot;nf&quot;&gt;&lt;input id=&quot;rsvp-name&quot; placeholder=&quot; &quot; maxlength=&quot;120&quot; required&gt;&lt;label for=&quot;rsvp-name&quot;&gt;Your name *&lt;/label&gt;&lt;/div&gt;
+
+    &lt;div class=&quot;events&quot;&gt;
+      &lt;div class=&quot;evr&quot; data-ev=&quot;wedding&quot;&gt;
+        &lt;div class=&quot;tag&quot;&gt;OUR WEDDING&lt;/div&gt;&lt;div class=&quot;dt&quot;&gt;29 November 2026&lt;/div&gt;&lt;div class=&quot;q&quot;&gt;Will you be there?&lt;/div&gt;
+        &lt;button type=&quot;button&quot; class=&quot;yes&quot; aria-pressed=&quot;false&quot;&gt;&lt;span class=&quot;sw&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;Yes, will be there&lt;/button&gt;
+        &lt;div class=&quot;guests&quot;&gt;&lt;div&gt;&lt;div class=&quot;gi&quot;&gt;&lt;span&gt;Guests (including you)&lt;/span&gt;
+          &lt;div class=&quot;step&quot;&gt;&lt;button type=&quot;button&quot; data-d=&quot;-1&quot; aria-label=&quot;Decrease wedding guests&quot;&gt;−&lt;/button&gt;&lt;b&gt;1&lt;/b&gt;&lt;button type=&quot;button&quot; data-d=&quot;1&quot; aria-label=&quot;Increase wedding guests&quot;&gt;+&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;evr&quot; data-ev=&quot;reception&quot;&gt;
+        &lt;div class=&quot;tag&quot;&gt;OUR RECEPTION&lt;/div&gt;&lt;div class=&quot;dt&quot;&gt;6 December 2026&lt;/div&gt;&lt;div class=&quot;q&quot;&gt;Will you be there?&lt;/div&gt;
+        &lt;button type=&quot;button&quot; class=&quot;yes&quot; aria-pressed=&quot;false&quot;&gt;&lt;span class=&quot;sw&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;Yes, will be there&lt;/button&gt;
+        &lt;div class=&quot;guests&quot;&gt;&lt;div&gt;&lt;div class=&quot;gi&quot;&gt;&lt;span&gt;Guests (including you)&lt;/span&gt;
+          &lt;div class=&quot;step&quot;&gt;&lt;button type=&quot;button&quot; data-d=&quot;-1&quot; aria-label=&quot;Decrease reception guests&quot;&gt;−&lt;/button&gt;&lt;b&gt;1&lt;/b&gt;&lt;button type=&quot;button&quot; data-d=&quot;1&quot; aria-label=&quot;Increase reception guests&quot;&gt;+&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;wish&quot;&gt;
+      &lt;div class=&quot;wish-top&quot;&gt;&lt;label for=&quot;rsvp-wishes&quot;&gt;A little wish for us ❤️ &lt;small&gt;Optional&lt;/small&gt;&lt;/label&gt;
+        &lt;button type=&quot;button&quot; class=&quot;tbtn&quot;&gt;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.6&quot;&gt;&lt;path d=&quot;M4 8h3l2-3h6l2 3h3v11H4z&quot;/&gt;&lt;circle cx=&quot;12&quot; cy=&quot;13&quot; r=&quot;3.5&quot;/&gt;&lt;/svg&gt;Add Photo&lt;/button&gt;&lt;/div&gt;
+      &lt;textarea id=&quot;rsvp-wishes&quot; maxlength=&quot;200&quot; placeholder=&quot;Leave us a little message or your blessings...&quot;&gt;&lt;/textarea&gt;
+      &lt;div class=&quot;wish-foot&quot;&gt;&lt;button type=&quot;button&quot; class=&quot;emo&quot; aria-label=&quot;Add an emoji&quot;&gt;😊&lt;/button&gt;&lt;span id=&quot;cc&quot;&gt;0/200&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;submit&quot;&gt;
+      &lt;p&gt;Your responses for both celebrations will be submitted together.&lt;/p&gt;
+      &lt;button type=&quot;submit&quot; class=&quot;btn&quot; id=&quot;sb&quot;&gt;Send with Love ❤️&lt;/button&gt;
+      &lt;div class=&quot;alert&quot; id=&quot;al&quot; role=&quot;alert&quot; hidden&gt;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.7&quot;&gt;&lt;circle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;9&quot;/&gt;&lt;path d=&quot;M12 7v6M12 16.5v.5&quot;/&gt;&lt;/svg&gt;&lt;span id=&quot;alt&quot;&gt;We couldn&#x27;t send your response just yet. Please try again.&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/form&gt;
+
+  &lt;div class=&quot;done&quot; id=&quot;done&quot; role=&quot;alert&quot; hidden&gt;
+    &lt;div class=&quot;heart&quot; aria-hidden=&quot;true&quot;&gt;♥&lt;/div&gt;&lt;h3&gt;Thank you!&lt;/h3&gt;
+    &lt;p class=&quot;sub&quot;&gt;Your response has been received. We look forward to celebrating with you.&lt;/p&gt;
+    &lt;ul class=&quot;sum&quot;&gt;
+      &lt;li&gt;&lt;span&gt;Our Wedding · 29 Nov&lt;/span&gt;&lt;b id=&quot;s1&quot;&gt;Attending · 2 guests&lt;/b&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span&gt;Our Reception · 6 Dec&lt;/span&gt;&lt;b id=&quot;s2&quot;&gt;Not attending&lt;/b&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span&gt;Your Message&lt;/span&gt;&lt;b class=&quot;wishq&quot; id=&quot;s3&quot;&gt;“Wishing you both a lifetime of love and laughter!”&lt;/b&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p class=&quot;sign&quot;&gt;With love, Anjana &amp;amp; Lalith&lt;/p&gt;
+    &lt;button type=&quot;button&quot; class=&quot;link&quot; onclick=&quot;setS(&#x27;saved&#x27;)&quot;&gt;Change my response&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+&lt;script&gt;
+var $=function(s){return document.querySelector(s)},$$=function(s){return document.querySelectorAll(s)};
+function setEv(row,on,n){row.classList.toggle(&#x27;on&#x27;,on);row.querySelector(&#x27;.yes&#x27;).setAttribute(&#x27;aria-pressed&#x27;,on);if(n)row.querySelector(&#x27;.step b&#x27;).textContent=n;upd(row)}
+function upd(row){var n=+row.querySelector(&#x27;.step b&#x27;).textContent;row.querySelector(&#x27;[data-d=&quot;-1&quot;]&#x27;).disabled=n&lt;=1;row.querySelector(&#x27;[data-d=&quot;1&quot;]&#x27;).disabled=n&gt;=10}
+$$(&#x27;.evr&#x27;).forEach(function(r){r.querySelector(&#x27;.yes&#x27;).onclick=function(){setEv(r,!r.classList.contains(&#x27;on&#x27;))};
+  r.querySelectorAll(&#x27;.step button&#x27;).forEach(function(b){b.onclick=function(){var e=r.querySelector(&#x27;.step b&#x27;);e.textContent=Math.min(10,Math.max(1,+e.textContent+ +b.dataset.d));upd(r)}});upd(r)});
+var ta=$(&#x27;#rsvp-wishes&#x27;);ta.oninput=function(){$(&#x27;#cc&#x27;).textContent=ta.value.length+&#x27;/200&#x27;};
+function fill(){ $(&#x27;#rsvp-name&#x27;).value=&#x27;Ravi &amp; Family&#x27;;setEv($(&#x27;[data-ev=wedding]&#x27;),true,2);setEv($(&#x27;[data-ev=reception]&#x27;),false,1);ta.value=&#x27;Wishing you both a lifetime of love and laughter!&#x27;;ta.oninput()}
+function clear(){ $(&#x27;#rsvp-name&#x27;).value=&#x27;&#x27;;$$(&#x27;.evr&#x27;).forEach(function(r){setEv(r,false,1)});ta.value=&#x27;&#x27;;ta.oninput()}
+function setS(s){$$(&#x27;.mk button&#x27;).forEach(function(b){b.classList.toggle(&#x27;on&#x27;,b.dataset.s===s)});
+  var sb=$(&#x27;#sb&#x27;);$(&#x27;#al&#x27;).hidden=true;$(&#x27;#nf&#x27;).classList.remove(&#x27;err&#x27;);sb.disabled=false;sb.innerHTML=&#x27;Send with Love ❤️&#x27;;$(&#x27;#form&#x27;).hidden=s===&#x27;success&#x27;;$(&#x27;#done&#x27;).hidden=s!==&#x27;success&#x27;;
+  if(s===&#x27;empty&#x27;)clear();else fill();
+  if(s===&#x27;submitting&#x27;){sb.disabled=true;sb.innerHTML=&#x27;&lt;span class=&quot;spin&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;Sending with love…&#x27;}
+  if(s===&#x27;error&#x27;){$(&#x27;#alt&#x27;).textContent=&quot;We couldn&#x27;t send your response just yet. Please try again.&quot;;$(&#x27;#al&#x27;).hidden=false}}
+$$(&#x27;.mk button&#x27;).forEach(function(b){b.onclick=function(){setS(b.dataset.s)}});
+$(&#x27;#sb&#x27;).onclick=function(){ if(!$(&#x27;#rsvp-name&#x27;).value.trim()){$(&#x27;#nf&#x27;).classList.add(&#x27;err&#x27;);$(&#x27;#alt&#x27;).textContent=&#x27;Please enter your name.&#x27;;$(&#x27;#al&#x27;).hidden=false;return}
+  if(!$$(&#x27;.evr.on&#x27;).length){$(&#x27;#alt&#x27;).textContent=&#x27;Please select at least one celebration to attend, or let us know if you cannot make it.&#x27;;$(&#x27;#al&#x27;).hidden=false;return}
+  setS(&#x27;submitting&#x27;);setTimeout(function(){setS(&#x27;success&#x27;)},1400)};
+setS(&#x27;saved&#x27;);
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+"></iframe></div></div></div></body></html>

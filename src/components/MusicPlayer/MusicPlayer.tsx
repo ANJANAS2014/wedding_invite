@@ -2,6 +2,11 @@ import './MusicPlayer.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { isMusicMuted, setMusicMuted } from '../../services/storage';
 import { INVITE_OPEN_EVENT } from '../../utils/inviteEvents';
+import { MUSIC_DUCK_EVENT } from '../../utils/musicEvents';
+
+const FULL_VOLUME = 0.6;
+const DUCK_VOLUME = 0.12;
+const FADE_IN_S = 2.6;
 
 const MUSIC_SRC = '/audio/background-music.mp3';
 type WebkitWindow = Window & { webkitAudioContext?: typeof AudioContext };
@@ -20,6 +25,51 @@ export const MusicPlayer: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const useSynthRef = useRef<boolean>(false);
+  // Gain stage for soft fades. iOS ignores HTMLMediaElement.volume, so the MP3
+  // is routed through a Web Audio GainNode where available.
+  const fadeCtxRef = useRef<AudioContext | null>(null);
+  const gainRef = useRef<GainNode | null>(null);
+
+  const ensureGain = () => {
+    if (gainRef.current || !audioRef.current) return;
+    try {
+      const AC = window.AudioContext || (window as WebkitWindow).webkitAudioContext;
+      if (!AC) return;
+      const ctx = new AC();
+      const gain = ctx.createGain();
+      gain.gain.value = 0;
+      ctx.createMediaElementSource(audioRef.current).connect(gain);
+      gain.connect(ctx.destination);
+      fadeCtxRef.current = ctx;
+      gainRef.current = gain;
+    } catch {
+      // fall back to element volume
+    }
+  };
+
+  /** Ramp the music to `level` over `seconds` (never an abrupt start). */
+  const fadeTo = (level: number, seconds: number) => {
+    const gain = gainRef.current;
+    const ctx = fadeCtxRef.current;
+    if (gain && ctx) {
+      if (ctx.state === 'suspended') void ctx.resume();
+      const now = ctx.currentTime;
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setValueAtTime(gain.gain.value, now);
+      gain.gain.linearRampToValueAtTime(level, now + seconds);
+      return;
+    }
+    const audio = audioRef.current;
+    if (!audio) return;
+    const start = audio.volume;
+    const t0 = performance.now();
+    const step = () => {
+      const k = Math.min(1, (performance.now() - t0) / (seconds * 1000));
+      audio.volume = Math.max(0, Math.min(1, start + (level - start) * k));
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
 
   // Synth fallback (only used when the MP3 cannot be loaded)
   const startSynth = () => {
@@ -64,9 +114,16 @@ export const MusicPlayer: React.FC = () => {
       startSynth();
       return;
     }
-    audioRef.current?.play().catch(() => {
-      // Blocked by autoplay policy — the guest can still use the toggle.
-    });
+    const audio = audioRef.current;
+    if (!audio) return;
+    ensureGain();
+    if (!gainRef.current) audio.volume = 0;
+    audio
+      .play()
+      .then(() => fadeTo(FULL_VOLUME, FADE_IN_S))
+      .catch(() => {
+        // Blocked by autoplay policy — the guest can still use the toggle.
+      });
   };
 
   useEffect(() => {
@@ -78,10 +135,19 @@ export const MusicPlayer: React.FC = () => {
       useSynthRef.current = true;
     };
 
+    // Dip under the lightbox / videos, then come back up softly
+    const onDuck = (e: Event) => {
+      if (mutedRef.current || audio.paused) return;
+      fadeTo((e as CustomEvent<boolean>).detail ? DUCK_VOLUME : FULL_VOLUME, 0.9);
+    };
+
     window.addEventListener(INVITE_OPEN_EVENT, startPlayback);
+    window.addEventListener(MUSIC_DUCK_EVENT, onDuck);
 
     return () => {
       window.removeEventListener(INVITE_OPEN_EVENT, startPlayback);
+      window.removeEventListener(MUSIC_DUCK_EVENT, onDuck);
+      fadeCtxRef.current?.close().catch(() => {});
       audio.pause();
       if (audioCtxRef.current) {
         audioCtxRef.current.close().catch(() => {});

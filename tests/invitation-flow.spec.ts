@@ -20,10 +20,24 @@ test('RSVP validates, submits and refreshes the wishes wall', async ({ page }) =
   await page.locator('.rsvp-attend-toggle').first().click();
   await page.getByRole('button', { name: 'Increase wedding guests' }).click();
   await page.locator('#rsvp-wishes').fill('Congratulations from the e2e suite!');
+  // Both celebrations need an answer before sending
+  await page.locator('.rsvp-submit-btn').click();
+  await expect(page.locator('.rsvp-error-alert')).toContainText('both celebrations');
+  await page.locator('.rsvp-decline-toggle').nth(1).click();
   await page.locator('.rsvp-submit-btn').click();
 
   await expect(page.locator('.rsvp-confirmation-panel')).toContainText('Attending · 2 guests');
   await expect(page.locator('#wishes')).toContainText('Congratulations from the e2e suite!');
+});
+
+test('RSVP: guests can decline both celebrations', async ({ page }) => {
+  await page.locator('#rsvp-name').fill('Regretful Guest');
+  await page.locator('.rsvp-decline-toggle').nth(0).click();
+  await page.locator('.rsvp-decline-toggle').nth(1).click();
+  await page.locator('.rsvp-submit-btn').click();
+  const panel = page.locator('.rsvp-confirmation-panel');
+  await expect(panel).toBeVisible();
+  await expect(panel.getByText('Not attending')).toHaveCount(2);
 });
 
 test('filmstrip opens the lightbox; arrows and Escape work', async ({ page }) => {
@@ -38,6 +52,7 @@ test('filmstrip opens the lightbox; arrows and Escape work', async ({ page }) =>
 });
 
 test('wish likes toggle and persist locally', async ({ page }) => {
+  await page.getByRole('tab', { name: /Read all wishes/ }).click();
   const like = page.locator('#wishes .postcard-like-btn').first();
   const before = await like.getAttribute('aria-label');
   await like.click();
@@ -76,4 +91,13 @@ test.describe('Temple door landing', () => {
     await expect(page.locator('#hero .cover-invite-note')).toBeVisible();
     await context.close();
   });
+});
+
+test('wishes wall shows diyas by default; a lamp shows its wish and opens the full card', async ({ page }) => {
+  const lamp = page.locator('#wishes .diya').first();
+  await expect(lamp).toBeVisible();
+  await lamp.click();
+  await expect(page.locator('#wishes .pond-card')).toBeVisible();
+  await page.getByRole('button', { name: 'Read full wish' }).click();
+  await expect(page.locator('.postcard-modal-overlay')).toBeVisible();
 });

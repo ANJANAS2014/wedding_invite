@@ -28,6 +28,7 @@ Why it is built this way:
 
 - `supabase/01_schema.sql`: tables, keys, unique constraints, indexes, defaults, timestamps, the `submit_rsvp()` and `rsvp_totals()` functions, and the `guest_tracker` view.
 - `supabase/02_security.sql`: RLS, revoked public grants, service-role grants, the private `guest-photos` bucket (5 MB limit, JPG/PNG/WebP only) and the storage policy clean-up.
+- `supabase/03_team_picks.sql`: the Team Bride / Team Groom picks (`team_picks` table, `submit_team_pick` / `team_totals` functions, the `team_tracker` view) with the same service-role-only security.
 
 Tables:
 
@@ -50,6 +51,7 @@ Tables:
 2. In the left sidebar open **SQL Editor** → **New query**.
 3. Open `supabase/01_schema.sql` from this project, copy **all** of it, paste it and press **Run**. You should see "Success. No rows returned".
 4. Click **New query** again. Paste **all** of `supabase/02_security.sql` and press **Run**. The last result lists every table with `rls_enabled = true`.
+   - Then run `supabase/03_team_picks.sql` the same way (needed for the Team Bride / Team Groom picker; until it runs, picks are only kept on the guest's phone). To see who picked which side, open the `team_tracker` view in the Table Editor.
 5. Storage bucket: the security script already created it. Check under **Storage** that the bucket `guest-photos` exists and shows **Private**. Under its settings you should see a 5 MB file size limit and the allowed types `image/jpeg, image/png, image/webp`.
    - If the bucket is missing, click **New bucket**: name `guest-photos`, Public **off**, file size limit `5 MB`, allowed MIME types `image/jpeg,image/png,image/webp`.
 6. Storage policies: **add none.** Under Storage → Policies, the `guest-photos` bucket should have no policies. Uploads and downloads only happen through short-lived signed URLs created by the Netlify Functions.

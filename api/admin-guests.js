@@ -41,7 +41,7 @@ function shapeResponse(response, photoUrls) {
 const RESPONSE_SELECT = "id,submitted_name,wishes,wish_approved,created_at,updated_at,revision,rsvp_event_responses(event_code,attending,guest_count),rsvp_photos(storage_path)";
 
 async function listGuests(cfg) {
-  const guests = await supabaseRequest(cfg, `/rest/v1/guests?select=id,display_name,language,phone,created_at,invitations(id,token,status,sent_at,last_opened_at,created_at,rsvp_responses(${RESPONSE_SELECT}))&order=created_at.desc&limit=1000`);
+  const guests = await supabaseRequest(cfg, `/rest/v1/guests?select=id,display_name,language,phone,created_at,invitations(id,token,status,sent_at,last_opened_at,created_at,team_picks(side),rsvp_responses(${RESPONSE_SELECT}))&order=created_at.desc&limit=1000`);
   const unlinked = await supabaseRequest(cfg, `/rest/v1/rsvp_responses?invitation_id=is.null&select=${RESPONSE_SELECT}&order=created_at.desc&limit=500`);
   const photoPaths = [];
   const collect = (r) => { const p = one(r?.rsvp_photos); if (p) photoPaths.push(p.storage_path); };
@@ -60,6 +60,7 @@ async function listGuests(cfg) {
         createdAt: g.created_at,
         invitation: invitation ? { id: invitation.id, token: invitation.token, sentAt: invitation.sent_at, lastOpenedAt: invitation.last_opened_at } : null,
         status: response ? "rsvp_received" : invitation?.status === "sent" ? "sent" : "created",
+        team: one(invitation?.team_picks)?.side || null,
         response,
       };
     }),

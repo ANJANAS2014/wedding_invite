@@ -4,10 +4,13 @@ import { UNIFIED_MEMORIES } from '../data/weddingData';
 import { CoverHero } from '../components/CoverHero/CoverHero';
 import { TempleDoors } from '../components/TempleDoors/TempleDoors';
 import { MusicPlayer } from '../components/MusicPlayer/MusicPlayer';
+import { RsvpShortcut } from '../components/RsvpShortcut/RsvpShortcut';
 import { FallingPetals } from '../components/FallingPetals/FallingPetals';
 import { Footer } from '../components/Footer/Footer';
 import { useInvitationParams } from '../hooks/useInvitationParams';
 import { useInvitationOpening } from '../hooks/useInvitationOpening';
+import { useScrollReveal } from '../hooks/useScrollReveal';
+import { duckMusic } from '../utils/musicEvents';
 import {
   CoupleSection,
   EventDayNotice,
@@ -16,6 +19,7 @@ import {
   LightboxModal,
   OurStoryAndFilmstripSection,
   RsvpSection,
+  TeamPicker,
   WishesWall,
   prefetchSections,
 } from './lazySections';
@@ -34,6 +38,10 @@ export const App: React.FC = () => {
   const [wishesRefreshKey, setWishesRefreshKey] = useState<number>(0);
 
   useEffect(() => prefetchSections(), []);
+  useScrollReveal('#main');
+
+  // Music dips while a photo is open in the lightbox
+  useEffect(() => duckMusic(lightboxIndex !== null), [lightboxIndex]);
 
   useEffect(() => {
     if (openTracker) setIsTrackerOpen(true);
@@ -64,17 +72,31 @@ export const App: React.FC = () => {
         {/* Page 2: cover — greeting, names and the invitation words */}
         <CoverHero guestName={guestName} language={language} />
 
+        <div className="kasavu" aria-hidden="true" />
+
         <Suspense fallback={null}>
-          <EventsSection />
+          <TeamPicker guestName={guestName} inviteToken={inviteToken} />
         </Suspense>
+
+        <div className="kasavu" aria-hidden="true" />
 
         <Suspense fallback={null}>
           <CoupleSection />
         </Suspense>
 
+        <div className="kasavu" aria-hidden="true" />
+
         <Suspense fallback={null}>
           <OurStoryAndFilmstripSection onOpenLightbox={setLightboxIndex} />
         </Suspense>
+
+        <div className="kasavu" aria-hidden="true" />
+
+        <Suspense fallback={null}>
+          <EventsSection />
+        </Suspense>
+
+        <div className="kasavu" aria-hidden="true" />
 
         <Suspense fallback={null}>
           <RsvpSection
@@ -84,6 +106,8 @@ export const App: React.FC = () => {
           />
         </Suspense>
 
+        <div className="kasavu" aria-hidden="true" />
+
         <Suspense fallback={null}>
           <WishesWall refreshKey={wishesRefreshKey} />
         </Suspense>
@@ -92,6 +116,7 @@ export const App: React.FC = () => {
       </main>
 
       <MusicPlayer />
+      <RsvpShortcut />
 
       <Suspense fallback={null}>
         {lightboxIndex !== null && (

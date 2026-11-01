@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Our Events · Cultural Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&family=Great+Vibes&family=Noto+Serif+Malayalam:wght@500&family=Noto+Serif+Tamil:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bur:#5a1420;--bur-d:#3a0b14;--ivory:#f8efdc;--champ:#e9d3a4;--gold:#c19a3d;--gold-l:#f0d68e;--ink:#3a2418;
+ --mag:#7a1236;--mag-d:#4a0a24;--ochre:#c8862a;--mgreen:#3f6b3a;--mred:#a3301f;--ease:cubic-bezier(.22,.61,.36,1)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ivory);color:var(--ink);font:400 18px/1.55 'Cormorant Garamond',serif;overflow-x:hidden;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.eyebrow,.lbl{font:500 11px 'Jost',sans-serif;letter-spacing:.32em;text-transform:uppercase}
+header.top{text-align:center;padding:56px 16px 10px}
+header.top h1{font-weight:400;font-size:40px;margin:6px 0}
+.toolbar{position:sticky;top:0;z-index:30;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px 12px;background:#f8efdcee;backdrop-filter:blur(6px);border-bottom:1px solid var(--champ)}
+.toolbar a,.toolbar button{font:500 11px 'Jost';letter-spacing:.18em;text-transform:uppercase;color:var(--bur);text-decoration:none;border:1px solid var(--champ);background:transparent;padding:7px 12px;border-radius:20px;cursor:pointer}
+.toolbar button.on{background:var(--bur);color:var(--gold-l);border-color:var(--bur)}
+.opt{padding:80px 16px;max-width:1180px;margin:0 auto}
+.opt>h2{text-align:center;font-weight:400;font-size:34px;margin:4px 0 4px}
+.opt>.eyebrow{text-align:center;color:var(--bur)}
+.opt>p.desc{text-align:center;max-width:46ch;margin:8px auto 40px;font-style:italic;opacity:.75}
+.rule{display:flex;align-items:center;justify-content:center;gap:10px;margin:8px auto 0;color:var(--gold)}
+.rule:before,.rule:after{content:"";width:70px;height:1px;background:var(--gold)}
+.legend{max-width:900px;margin:0 auto 34px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:4px 26px;font-size:15px}
+.legend b{font:500 11px 'Jost';display:inline-block;min-width:26px;color:var(--bur)}
+
+/* numbered badges */
+.b{position:absolute;z-index:9;font:500 10px/1 'Jost';font-style:normal;letter-spacing:.05em;background:#1d6fd8;color:#fff;padding:4px 5px;border-radius:10px;box-shadow:0 1px 3px #0004;pointer-events:none}
+body.nobadge .b{display:none}
+
+/* ---------- OPTION A : stationery cards ---------- */
+.pair{display:grid;gap:70px;grid-template-columns:1fr;max-width:1000px;margin:0 auto}
+@media(min-width:900px){.pair{grid-template-columns:1fr 1fr;gap:44px}}
+.card{position:relative;padding:62px 26px 30px;text-align:center;cursor:pointer;transition:transform 1s var(--ease),box-shadow 1s var(--ease)}
+.card:hover{transform:rotate(0) translateY(-4px)!important}
+.card h3{font:400 italic 46px/1 'Cormorant Garamond';margin:4px 0 18px}
+.bless{margin:0 0 6px;font-size:19px}
+.ml{font-family:'Noto Serif Malayalam',serif}.ta{font-family:'Noto Serif Tamil',serif}
+.rows{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;text-align:left;max-width:300px;margin:16px auto 0;font-size:17px}
+.rows small{font:500 10px 'Jost';letter-spacing:.25em;text-transform:uppercase;opacity:.7;padding-top:5px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:20px 0 0}
+.tags span{font:500 10px 'Jost';letter-spacing:.18em;text-transform:uppercase;padding:6px 10px;border-radius:20px}
+.sw{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;font:500 10px 'Jost';letter-spacing:.2em;text-transform:uppercase}
+.sw i{width:20px;height:20px;border-radius:50%;box-shadow:0 0 0 2px #fff8,0 1px 3px #0003}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:22px;text-align:left}
+.links a{display:block;color:inherit;font-size:17px;text-underline-offset:4px;margin:4px 0}
+.stamp{position:relative;flex:0 0 96px;height:116px;padding:6px;border:5px dotted;transform:rotate(4deg);box-shadow:0 3px 8px #0002}
+.stamp svg{width:100%;height:78px;display:block}
+.stamp div{font:500 8px 'Jost';letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-top:3px}
+.datewrap{position:relative;width:150px;height:150px;margin:20px auto 0;display:grid;place-items:center}
+.datewrap svg.ring{position:absolute;inset:0;width:100%;height:100%}
+.datewrap .num{position:relative;font:500 54px/1 'Cormorant Garamond'}
+.when{font:500 11px 'Jost';letter-spacing:.28em;text-transform:uppercase;margin-top:8px}
+.photo{position:relative;margin:0 auto;max-width:330px}
+.photo .img{aspect-ratio:4/3;background-size:cover;background-position:center;filter:sepia(.16)}
+.jasmine{position:absolute;top:-4px;right:-26px;width:140px;z-index:5;transform:rotate(28deg)}
+
+/* Kerala card */
+.kl{background:#fbf5e6;transform:rotate(-1.2deg);box-shadow:0 18px 40px #5a142022,0 2px 6px #5a142018;
+ border:9px solid transparent;border-image:linear-gradient(90deg,#a8832e,#f0d68e 30%,#c19a3d 50%,#f0d68e 75%,#a8832e) 1}
+.kl:after{content:"";position:absolute;inset:7px;border:1px solid var(--gold);pointer-events:none}
+.kl .eyebrow{color:var(--bur)}.kl h3{color:var(--bur)}
+.kl .bless{color:var(--gold)}
+.kuruthola{position:absolute;left:0;right:0;top:0;height:30px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='30'%3E%3Cpath d='M0 0h28' stroke='%23b9a24e' stroke-width='2'/%3E%3Cpath d='M2 1 L14 24 L26 1Z' fill='%23ebdf9c' stroke='%23c4b05c' stroke-width='.8'/%3E%3Cpath d='M8 1 L14 16 L20 1' fill='none' stroke='%23c4b05c' stroke-width='.6'/%3E%3Cpath d='M14 24v5' stroke='%23c4b05c' stroke-width='.8'/%3E%3C/svg%3E") repeat-x;transform-origin:top;animation:sway 5s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:skewX(-2deg)}50%{transform:skewX(2deg)}}
+.crest{position:absolute;top:22px;left:50%;width:46px;margin-left:-23px}
+.mural{padding:10px;background:var(--ochre) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M0 12 Q6 4 12 12 T24 12' fill='none' stroke='%233f6b3a' stroke-width='2'/%3E%3Cpath d='M6 8 q3-6 6-2 q-3 3-6 2z' fill='%23a3301f'/%3E%3Cpath d='M18 16 q-3 6 -6 2 q3-3 6-2z' fill='%233f6b3a'/%3E%3Ccircle cx='12' cy='12' r='1.6' fill='%23f0d68e'/%3E%3C/svg%3E");box-shadow:inset 0 0 0 2px #7a4a12}
+.mural .img{box-shadow:0 0 0 2px #7a4a12}
+.illus{display:flex;justify-content:center;align-items:flex-end;gap:18px;margin-top:20px;color:#a8832e;position:relative}
+.kl .tags span{background:#f2e6c6;color:var(--bur)}
+.kl .stamp{background:#efe0bb;border-color:#fbf5e6;color:var(--bur)}
+.flame{transform-origin:50% 100%;transform-box:fill-box;animation:fl .22s ease-in-out infinite alternate}
+@keyframes fl{to{transform:scale(.88,1.1)}}
+
+/* Tamil card */
+.tn{color:var(--champ);transform:rotate(1.1deg);box-shadow:0 18px 40px #4a0a2440,0 2px 6px #4a0a2430;padding-top:84px;padding-bottom:40px;
+ background:linear-gradient(115deg,#5a0f2a 0%,#7a1236 30%,#8f1a42 45%,#6a1030 60%,#4a0a24 100%);overflow:hidden}
+.tn:before{content:"";position:absolute;inset:0;opacity:.09;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23f3e3c3'/%3E%3Ccircle cx='20' cy='20' r='9' fill='%23b8452c'/%3E%3Cpath d='M20 13 L27 20 L20 27 L13 20Z' fill='%23f3e3c3'/%3E%3Ccircle cx='0' cy='0' r='9' fill='%23d8a33a'/%3E%3Ccircle cx='40' cy='0' r='9' fill='%23d8a33a'/%3E%3Ccircle cx='0' cy='40' r='9' fill='%23d8a33a'/%3E%3Ccircle cx='40' cy='40' r='9' fill='%23d8a33a'/%3E%3C/svg%3E")}
+.temple{position:absolute;left:0;right:0;height:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='22'%3E%3Crect width='24' height='4' fill='%23d6b25a'/%3E%3Crect y='5' width='24' height='1' fill='%23d6b25a'/%3E%3Cpath d='M0 22 L12 8 L24 22Z' fill='%23d6b25a'/%3E%3Cpath d='M5 22 L12 14 L19 22Z' fill='%236a1030'/%3E%3Ccircle cx='12' cy='19' r='1.4' fill='%23d6b25a'/%3E%3C/svg%3E") repeat-x}
+.temple.t{top:0}.temple.bt{bottom:0;transform:scaleY(-1)}
+.tn .side{position:absolute;top:0;bottom:0;width:3px;background:#d6b25a}.tn .side.l{left:8px}.tn .side.r{right:8px}
+.thoranam{position:absolute;left:-6px;right:-6px;top:22px;height:40px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M0 3 Q20 7 40 3' fill='none' stroke='%23c9a24a' stroke-width='1.2'/%3E%3Cpath d='M10 5 C3 15 5 28 10 37 C15 28 17 15 10 5Z' fill='%233f8a34'/%3E%3Cpath d='M10 6 V35' stroke='%23a9d38c' stroke-width='.7'/%3E%3Ccircle cx='30' cy='10' r='6' fill='%23f39a1e'/%3E%3Ccircle cx='30' cy='10' r='3.4' fill='%23e0700f'/%3E%3Ccircle cx='30' cy='10' r='1.2' fill='%23f7c64a'/%3E%3C/svg%3E") repeat-x;transform-origin:top;animation:sway 6s ease-in-out infinite}
+.tn .eyebrow{color:var(--gold-l)}.tn h3{color:#fff3d6}
+.tn .bless{color:var(--gold-l)}
+.gopuram-bg{position:absolute;top:70px;left:50%;width:220px;margin-left:-110px;color:#ffffff;opacity:.07;pointer-events:none}
+.tanjore{padding:9px;background:linear-gradient(135deg,#a8832e,#f0d68e,#c19a3d,#f6e2a0,#a8832e);border-radius:50% 50% 6px 6px/26% 26% 6px 6px;box-shadow:0 6px 18px #0005}
+.tanjore .in{position:relative;border-radius:50% 50% 3px 3px/25% 25% 3px 3px;overflow:hidden;outline:3px dotted #c4122f;outline-offset:-6px}
+.tanjore .gem{position:absolute;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#7ff0b0,#0c7a43);box-shadow:0 0 0 2px #f0d68e}
+.tn .rows{color:#f8efdc}
+.tn .tags span{background:#ffffff14;color:var(--gold-l);border:1px solid #d6b25a55}
+.tn .stamp{background:#f3e3c3;border-color:#6a1030;color:var(--mag)}
+.tn .links a{color:#f8efdc}
+.banana{position:absolute;bottom:18px;width:64px;opacity:.95;pointer-events:none}
+.banana.l{left:-8px}.banana.r{right:-8px;transform:scaleX(-1)}
+.kolam path{fill:none;stroke:#fff3d6;stroke-width:1.6;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 3s var(--ease)}
+.kolam .p2{transition-delay:.9s}
+.kolam circle{fill:#fff3d6;opacity:0;transition:opacity 1s 3s}
+.drawn .kolam path{stroke-dashoffset:0}.drawn .kolam circle{opacity:1}
+.kolam .lamp{opacity:0;transition:opacity 1s 3.4s}.drawn .kolam .lamp{opacity:1}
+.lampnext{display:flex;justify-content:center;gap:16px;align-items:flex-end;margin-top:6px;color:#d6b25a}
+
+/* ---------- OPTION B : moodboard ---------- */
+.board{columns:2 160px;column-gap:12px;max-width:1000px;margin:0 auto}
+@media(min-width:900px){.board{columns:4}}
+.tile{position:relative;break-inside:avoid;margin:0 0 12px;border-radius:10px;overflow:hidden;box-shadow:0 6px 16px #3a0b1416}
+.tile.ph .img{background-size:cover;background-position:center;filter:sepia(.16)}
+.tile.tx{padding:22px 16px;text-align:center}
+.tile .big{font:400 italic 30px/1.1 'Cormorant Garamond'}
+.tile .scr{font:400 38px/1 'Great Vibes'}
+.board-h{grid-column:1/-1;text-align:center;margin:30px 0 14px}
+.board-h .scr{font:400 44px/1 'Great Vibes';color:var(--bur)}
+.chip{display:inline-block;font:500 10px 'Jost';letter-spacing:.16em;text-transform:uppercase;padding:6px 9px;border-radius:20px;margin:3px}
+
+/* ---------- OPTION C : journey ---------- */
+.journey{max-width:1000px;margin:0 auto;position:relative}
+.journey svg.map{width:100%;height:auto;display:block}
+.route{stroke-dasharray:2 7;stroke-linecap:round}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:-10px}
+.mini .m{padding:18px 14px;text-align:center;border-radius:8px}
+.mini .m .d{font:500 40px/1 'Cormorant Garamond'}
+.mini .m .n{font:400 italic 24px 'Cormorant Garamond'}
+.mini .k{background:#fbf5e6;border:1px solid var(--gold);color:var(--bur)}
+.mini .t{background:linear-gradient(115deg,#5a0f2a,#7a1236,#4a0a24);color:var(--champ)}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 1.4s var(--ease),transform 1.4s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.kl.reveal.in{transform:rotate(-1.2deg)}.tn.reveal.in{transform:rotate(1.1deg)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+footer{text-align:center;padding:40px 16px 70px;font-style:italic;opacity:.7}
+</style></head><body>
+
+<!-- ============ SVG SPRITE ============ -->
+<svg class="sprite" aria-hidden="true">
+<defs>
+ <pattern id="npdots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.4" fill="#f6e2a0" stroke="#8a6a22" stroke-width=".5"/></pattern>
+ <symbol id="nettipattam" viewBox="0 0 60 96"><path d="M4 4h52v18c0 30-12 52-26 70C16 74 4 52 4 22z" fill="#c19a3d" stroke="#7a5a18" stroke-width="1.4"/><path d="M9 9h42v14c0 26-10 44-21 60C19 67 9 49 9 23z" fill="url(#npdots)"/><circle cx="30" cy="30" r="6" fill="#a3122a" stroke="#f0d68e" stroke-width="1.5"/><circle cx="30" cy="50" r="4" fill="#a3122a" stroke="#f0d68e"/><path d="M4 6h52" stroke="#a3122a" stroke-width="3"/><g fill="#c19a3d" stroke="#7a5a18" stroke-width=".6"><circle cx="30" cy="93" r="3"/><circle cx="20" cy="82" r="2.4"/><circle cx="40" cy="82" r="2.4"/></g></symbol>
+ <symbol id="vilakku" viewBox="0 0 60 130"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 126h40M14 126l4-10h24l4 10"/><path d="M22 116c0-6 6-8 6-14V64M38 116c0-6-6-8-6-14V64"/><ellipse cx="30" cy="96" rx="9" ry="3"/><ellipse cx="30" cy="78" rx="6" ry="2.4"/><path d="M8 58q22 14 44 0"/><path d="M8 58q22-6 44 0"/><path d="M30 52V38"/><path d="M26 38h8l-4-10z"/><circle cx="30" cy="25" r="3"/></g><g fill="#f3a32a"><path class="flame" d="M10 56c-3-5 0-10 1-13 2 4 3 9-1 13z"/><path class="flame" d="M20 55c-3-5 0-10 1-13 2 4 3 9-1 13z"/><path class="flame" d="M30 54c-3-5 0-10 1-13 2 4 3 9-1 13z"/><path class="flame" d="M40 55c-3-5 0-10 1-13 2 4 3 9-1 13z"/><path class="flame" d="M50 56c-3-5 0-10 1-13 2 4 3 9-1 13z"/></g></symbol>
+ <symbol id="nirapara" viewBox="0 0 70 100"><g stroke="#d9c38a" stroke-width="1.1" fill="none" stroke-linecap="round"><path d="M35 40 C30 24 18 14 8 10"/><path d="M35 40 C33 22 28 10 22 2"/><path d="M35 40 C36 22 40 10 46 2"/><path d="M35 40 C40 24 52 14 62 10"/><path d="M35 40 C28 30 16 26 6 26"/><path d="M35 40 C42 30 54 26 64 26"/></g><g fill="#efe1b0"><circle cx="8" cy="10" r="1.6"/><circle cx="22" cy="2" r="1.6"/><circle cx="46" cy="2" r="1.6"/><circle cx="62" cy="10" r="1.6"/><circle cx="6" cy="26" r="1.6"/><circle cx="64" cy="26" r="1.6"/></g><path d="M12 50 Q35 30 58 50Z" fill="#d9a83e"/><g fill="#a8781e"><circle cx="24" cy="46" r="1"/><circle cx="32" cy="42" r="1"/><circle cx="40" cy="44" r="1"/><circle cx="47" cy="47" r="1"/><circle cx="35" cy="47" r="1"/></g><path d="M12 50h46l-5 18 5 18v10H12V86l5-18z" fill="#c19a3d" stroke="#7a5a18" stroke-width="1.3"/><path d="M15 58h40M17 68h36M15 78h40" stroke="#7a5a18" stroke-width="1"/><path d="M18 86h34" stroke="#f0d68e" stroke-width="2"/></symbol>
+ <symbol id="pookkalam" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#e8731a" stroke-width="7" stroke-dasharray="5 2.2" /><circle cx="50" cy="50" r="39" fill="none" stroke="#f2c230" stroke-width="6" stroke-dasharray="3 1.6"/><circle cx="50" cy="50" r="33.5" fill="none" stroke="#fff8e6" stroke-width="4"/><circle cx="50" cy="50" r="29" fill="none" stroke="#b8202e" stroke-width="4.5" stroke-dasharray="2.5 1.2"/><circle cx="50" cy="50" r="25" fill="none" stroke="#3f6b3a" stroke-width="2.5"/><circle cx="50" cy="50" r="23" fill="#fbf5e6"/></symbol>
+ <symbol id="gopuram" viewBox="0 0 80 110"><path fill="currentColor" d="M8 110h64V94H8zM12 94h56l-3-15H15zM17 79h46l-3-14H20zM22 65h36l-3-13H25zM27 52h26l-3-12H30zM31 40h18q-1-9-9-13q-8 4-9 13z"/><path fill="currentColor" d="M38 27h4v-7h-4zM40 20a3 3 0 1 1 .1 0"/><path d="M34 110v-9a6 6 0 0 1 12 0v9z" fill="#00000055"/></symbol>
+ <symbol id="kuthu" viewBox="0 0 50 140"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 136h38M10 136l3-9h24l3 9"/><path d="M23 127V66M27 127V66"/><ellipse cx="25" cy="106" rx="7" ry="2.5"/><ellipse cx="25" cy="86" rx="5" ry="2"/><path d="M5 62l5-4h30l5 4q-20 10-40 0z"/><path d="M25 58V46"/><path d="M25 46c-6-2-8-8-4-12 3-3 8-1 7 3l5-3c-2 6-4 10-8 12z"/></g><g fill="#f3a32a"><path class="flame" d="M7 58c-3-5 0-9 1-12 2 4 3 8-1 12z"/><path class="flame" d="M25 56c-3-5 0-9 1-12 2 4 3 8-1 12z"/><path class="flame" d="M43 58c-3-5 0-9 1-12 2 4 3 8-1 12z"/></g></symbol>
+ <symbol id="banana" viewBox="0 0 60 130"><path d="M27 130h6l-1-70h-4z" fill="#7d8f3a"/><g stroke="#2f5a22" stroke-width=".7"><path d="M30 62C14 52 2 32 0 16c14 10 24 26 30 46z" fill="#4f8a34"/><path d="M30 60C46 50 58 30 60 14 46 24 36 40 30 60z" fill="#5c9a3c"/><path d="M30 58C22 40 20 18 24 0c8 16 9 38 6 58z" fill="#6aa848"/><path d="M30 66C14 66 4 58 0 50c12 2 22 6 30 16z" fill="#3f7a2c"/><path d="M30 64C46 66 56 60 60 52c-12 0-22 4-30 12z" fill="#4f8a34"/></g></symbol>
+ <symbol id="jasmine" viewBox="0 0 150 30"><path d="M2 14 Q75 26 148 10" fill="none" stroke="#6f8f4a" stroke-width="1.2"/><g fill="#fffdf6" stroke="#e7dcc0" stroke-width=".6"><circle cx="12" cy="16" r="4"/><circle cx="26" cy="18" r="4.4"/><circle cx="40" cy="19" r="4"/><circle cx="54" cy="20" r="4.6"/><circle cx="68" cy="20" r="4"/><circle cx="82" cy="19" r="4.4"/><circle cx="96" cy="17" r="4"/><circle cx="110" cy="15" r="4.4"/><circle cx="124" cy="13" r="4"/><circle cx="138" cy="11" r="4.2"/></g><g fill="#7a9a52"><ellipse cx="19" cy="20" rx="3" ry="1.3"/><ellipse cx="61" cy="23" rx="3" ry="1.3"/><ellipse cx="103" cy="19" rx="3" ry="1.3"/></g></symbol>
+ <symbol id="palm" viewBox="0 0 70 120"><path d="M34 120 C36 90 30 60 38 34" fill="none" stroke="#7a5a2c" stroke-width="4" stroke-linecap="round"/><g fill="none" stroke="#3f7a2c" stroke-width="3" stroke-linecap="round"><path d="M38 34 C26 22 12 24 2 32"/><path d="M38 34 C30 16 20 8 10 6"/><path d="M38 34 C42 14 52 6 62 6"/><path d="M38 34 C52 22 62 26 68 36"/><path d="M38 34 C44 40 48 52 46 62"/></g><circle cx="38" cy="38" r="3" fill="#8a6a2c"/><circle cx="34" cy="37" r="3" fill="#8a6a2c"/></symbol>
+</defs></svg>
+
+<header class="top">
+  <div class="eyebrow" style="color:var(--bur)">Mockup · Our Events</div>
+  <h1>Keralam &amp; Tamil Nadu</h1>
+  <div class="rule">✿</div>
+  <p style="max-width:44ch;margin:14px auto 0;font-style:italic;opacity:.75">Three layouts (A, B, C) plus every cultural element, numbered in blue, so you can mix and match. Tap a card in A to hear its sound.</p>
+</header>
+
+<nav class="toolbar"><a href="#A">A · Cards</a><a href="#B">B · Moodboard</a><a href="#C">C · Journey</a><button id="bt" class="on">Numbers on</button></nav>
+
+<!-- ============ OPTION A ============ -->
+<section class="opt" id="A">
+  <div class="eyebrow">Option A</div><h2>Two stationery cards</h2><div class="rule">✿</div>
+  <p class="desc">Letterpress-style cards laid on the table, slightly tilted, each with a jasmine sprig. All elements are switched on so you can see each one.</p>
+  <div class="legend">
+    <div><b>K1</b>Kasavu edge</div><div><b>K2</b>Nilavilakku &amp; nirapara</div><div><b>K3</b>Kerala mural frame</div><div><b>K4</b>Nettipattam crest</div><div><b>K5</b>Kuruthola strings</div><div><b>K6</b>Pookkalam date</div><div><b>K7</b>Kerala tags</div>
+    <div><b>T1</b>Kanjeevaram temple border</div><div><b>T2</b>Mango-leaf thoranam</div><div><b>T3</b>Kolam that draws itself</div><div><b>T4</b>Tanjore arch frame</div><div><b>T5</b>Gopuram &amp; kuthuvilakku</div><div><b>T6</b>Chettinad tile texture</div><div><b>T7</b>Banana trees</div><div><b>T8</b>Tamil tags</div>
+    <div><b>D1</b>Dress-code swatches</div><div><b>D2</b>Tap sound (chenda / nadaswaram)</div><div><b>D3</b>Native-script blessing</div><div><b>D4</b>Hand-drawn map stamp</div><div><b>D5</b>Jasmine sprig</div>
+  </div>
+
+  <div class="pair">
+    <!-- KERALA -->
+    <article class="card kl reveal" data-snd="chenda">
+      <i class="b" style="top:-14px;left:-14px">K1</i><i class="b" style="top:-14px;right:30px">D2</i>
+      <svg class="jasmine"><use href="#jasmine"/></svg><i class="b" style="top:40px;right:-14px">D5</i>
+      <div class="kuruthola"></div><i class="b" style="top:6px;left:14px">K5</i>
+      <div class="crest"><svg viewBox="0 0 60 96"><use href="#nettipattam"/></svg><i class="b" style="top:10px;left:52px">K4</i></div>
+      <div style="height:62px"></div>
+      <p class="bless ml" style="position:relative">ശുഭ മുഹൂർത്തം<i class="b" style="top:2px;right:8px">D3</i></p>
+      <div class="eyebrow">Muhurtham</div>
+      <h3>The Wedding</h3>
+      <div class="photo mural"><div class="img" style="background-image:url(../../public/images/venues/wedding-venue-central-auditorium.jpg),linear-gradient(135deg,#d8c39a,#a8832e)"></div><i class="b" style="top:-8px;left:-8px">K3</i></div>
+      <div class="datewrap"><svg class="ring" viewBox="0 0 100 100"><use href="#pookkalam"/></svg><span class="num" style="color:var(--bur)">29</span><i class="b" style="top:4px;right:4px">K6</i></div>
+      <div class="when" style="color:var(--bur)">Sunday · November 2026</div>
+      <div class="rows"><small>Time</small><span>8:00 – 9:20 AM</span><small>Venue</small><span>Central Auditorium<br><em>North Paravur, Kerala</em></span></div>
+      <div class="illus"><svg viewBox="0 0 60 130" width="52"><use href="#vilakku"/></svg><svg viewBox="0 0 70 100" width="58"><use href="#nirapara"/></svg><i class="b" style="top:0;left:calc(50% + 50px)">K2</i></div>
+      <div class="tags" style="position:relative"><span>Thalikettu</span><span>Sadya on banana leaf</span><span>Kasavu attire</span><i class="b" style="top:-14px;left:0">K7</i></div>
+      <div class="sw" style="color:var(--bur);position:relative">Dress code <i style="background:#f8efdc"></i><i style="background:#c19a3d"></i><i style="background:#3f6b3a"></i><i style="background:#5a1420"></i><b class="b" style="top:-12px;right:0;position:absolute">D1</b></div>
+      <div class="foot">
+        <div class="links" style="color:var(--bur)"><a href="#" onclick="return false">Directions</a><a href="#" onclick="return false">Add to calendar</a></div>
+        <div class="stamp"><svg viewBox="0 0 80 60"><rect width="80" height="60" fill="#f6ead0"/><path d="M0 40 C20 30 30 50 50 38 S70 30 80 34" stroke="#7fb0c9" stroke-width="5" fill="none" opacity=".7"/><path d="M8 52 C22 44 34 30 48 26 S62 18 66 14" stroke="#5a1420" stroke-width="1.4" stroke-dasharray="2 3" fill="none"/><path d="M60 8h12v8H60z M58 8l8-5 8 5z" fill="#a8832e"/><path d="M66 22c-4-4-4-8 0-9 4 1 4 5 0 9z" fill="#a3122a"/><g transform="translate(6 6) scale(.22)"><use href="#palm"/></g></svg><div>North Paravur</div><i class="b" style="top:-12px;left:-12px">D4</i></div>
+      </div>
+    </article>
+
+    <!-- TAMIL -->
+    <article class="card tn reveal" data-snd="nadaswaram">
+      <div class="temple t"></div><div class="temple bt"></div><div class="side l"></div><div class="side r"></div>
+      <i class="b" style="top:4px;left:12px">T1</i><i class="b" style="top:30px;right:16px">D2</i><i class="b" style="top:120px;left:14px">T6</i>
+      <div class="thoranam"></div><i class="b" style="top:40px;left:46%">T2</i>
+      <svg class="gopuram-bg" viewBox="0 0 80 110"><use href="#gopuram"/></svg>
+      <p class="bless ta" style="position:relative">வாழ்க வளமுடன்<i class="b" style="top:2px;right:8px">D3</i></p>
+      <div class="eyebrow">Evening Celebration</div>
+      <h3>The Reception</h3>
+      <div class="photo tanjore"><div class="in"><div class="img" style="background-image:url(../../public/images/venues/reception-venue-annalakshmi.jpg),linear-gradient(135deg,#8f1a42,#3a0b14)"></div></div>
+        <span class="gem" style="top:4px;left:50%;margin-left:-6px"></span><span class="gem" style="top:30%;left:-3px;background:radial-gradient(circle at 35% 35%,#ff8a9a,#b3122e)"></span><span class="gem" style="top:30%;right:-3px;background:radial-gradient(circle at 35% 35%,#ff8a9a,#b3122e)"></span>
+        <i class="b" style="top:-8px;left:-8px">T4</i></div>
+      <div class="datewrap" id="kolamwrap"><svg class="ring kolam" viewBox="0 0 120 120"><path pathLength="1" d="M60 6 C80 26 94 40 114 60 C94 80 80 94 60 114 C40 94 26 80 6 60 C26 40 40 26 60 6Z"/><path class="p2" pathLength="1" d="M22 22 Q60 -2 98 22 Q122 60 98 98 Q60 122 22 98 Q-2 60 22 22Z"/><g><circle cx="60" cy="16" r="2"/><circle cx="104" cy="60" r="2"/><circle cx="60" cy="104" r="2"/><circle cx="16" cy="60" r="2"/><circle cx="30" cy="30" r="1.6"/><circle cx="90" cy="30" r="1.6"/><circle cx="90" cy="90" r="1.6"/><circle cx="30" cy="90" r="1.6"/></g></svg><span class="num" style="color:#fff3d6">06</span><i class="b" style="top:4px;right:4px">T3</i></div>
+      <div class="when" style="color:var(--gold-l)">Sunday · December 2026</div>
+      <div class="rows"><small>Time</small><span>6:00 – 10:30 PM</span><small>Venue</small><span>Annalakshmi Restaurant<br><em>Mayor Ramanathan Salai, Chennai</em></span></div>
+      <div class="lampnext" style="position:relative"><svg viewBox="0 0 50 140" width="34"><use href="#kuthu"/></svg><svg viewBox="0 0 80 110" width="58" style="color:#d6b25a"><use href="#gopuram"/></svg><svg viewBox="0 0 50 140" width="34"><use href="#kuthu"/></svg><i class="b" style="top:0;left:calc(50% + 70px)">T5</i></div>
+      <div class="tags" style="position:relative"><span>Nadaswaram</span><span>Malli &amp; roses</span><span>Silk &amp; sparkle</span><i class="b" style="top:-14px;left:0">T8</i></div>
+      <div class="sw" style="color:var(--gold-l)">Dress code <i style="background:#7a1236"></i><i style="background:#0f5e4a"></i><i style="background:#1f3a8a"></i><i style="background:#d6b25a"></i></div>
+      <div class="foot">
+        <div class="links"><a href="#" onclick="return false">Directions</a><a href="#" onclick="return false">Add to calendar</a></div>
+        <div class="stamp"><svg viewBox="0 0 80 60"><rect width="80" height="60" fill="#f6ead0"/><path d="M0 50 H80 M0 30 H80 M24 0 V60 M56 0 V60" stroke="#d9c7a0" stroke-width="3"/><path d="M8 54 C20 46 30 40 40 34 S60 22 68 14" stroke="#7a1236" stroke-width="1.4" stroke-dasharray="2 3" fill="none"/><path d="M68 18c-4-4-4-8 0-9 4 1 4 5 0 9z" fill="#a3122a"/><g transform="translate(4 12) scale(.26)" style="color:#c19a3d"><use href="#gopuram"/></g></svg><div>Chennai</div></div>
+      </div>
+      <svg class="banana l" viewBox="0 0 60 130"><use href="#banana"/></svg><svg class="banana r" viewBox="0 0 60 130"><use href="#banana"/></svg><i class="b" style="bottom:40px;left:10px">T7</i>
+    </article>
+  </div>
+</section>
+
+<!-- ============ OPTION B ============ -->
+<section class="opt" id="B" style="background:#f3e7cf">
+  <div class="eyebrow">Option B</div><h2>A Pinterest moodboard per event</h2><div class="rule">✿</div>
+  <p class="desc">A collage of tiles around each event: photo, illustration, swatches, tags and the details. Feels like a saved board.</p>
+  <div class="board-h"><div class="scr">The Wedding · Keralam</div></div>
+  <div class="board">
+    <div class="tile ph reveal"><div class="img" style="aspect-ratio:3/4;background-image:url(../../public/images/venues/wedding-venue-central-auditorium.jpg),linear-gradient(135deg,#d8c39a,#a8832e)"></div></div>
+    <div class="tile tx reveal" style="background:#fbf5e6;border:6px solid #c19a3d;color:var(--bur)"><div class="eyebrow">Muhurtham</div><div class="big" style="font-size:54px;font-style:normal">29</div><div class="eyebrow">Nov · Sunday</div><div style="margin-top:8px">8:00 – 9:20 AM</div></div>
+    <div class="tile tx reveal" style="background:#5a1420;color:#a8832e"><svg viewBox="0 0 60 130" width="64"><use href="#vilakku"/></svg><p class="ml" style="color:var(--gold-l);margin:8px 0 0">ശുഭ മുഹൂർത്തം</p></div>
+    <div class="tile tx reveal" style="background:#e9f0dc;color:#2f5a22"><svg viewBox="0 0 120 50" width="100%"><path d="M4 40 C30 4 90 4 116 30 C90 48 30 50 4 40Z" fill="#4f8a34"/><path d="M4 40 C40 28 80 26 116 30" stroke="#a9d38c" fill="none"/><circle cx="40" cy="30" r="6" fill="#fffdf6"/><circle cx="58" cy="28" r="5" fill="#e8b33a"/><circle cx="74" cy="30" r="5" fill="#b8202e"/></svg><div class="big">Sadya on a banana leaf</div></div>
+    <div class="tile tx reveal" style="background:#fbf5e6"><svg viewBox="0 0 100 100" width="120"><use href="#pookkalam"/></svg><div class="eyebrow" style="color:var(--bur);margin-top:6px">Pookkalam</div></div>
+    <div class="tile tx reveal" style="background:#fbf5e6;color:var(--bur)"><div class="eyebrow">Wear</div><div style="display:flex;gap:6px;justify-content:center;margin:10px 0"><i style="width:30px;height:46px;border-radius:4px;background:linear-gradient(#f8efdc 70%,#c19a3d 70%)"></i><i style="width:30px;height:46px;border-radius:4px;background:#c19a3d"></i><i style="width:30px;height:46px;border-radius:4px;background:#3f6b3a"></i></div><div>Kasavu, ivory &amp; gold</div></div>
+    <div class="tile tx reveal" style="background:var(--ochre)"><svg viewBox="0 0 60 96" width="56"><use href="#nettipattam"/></svg></div>
+    <div class="tile tx reveal" style="background:#fbf5e6;color:var(--bur)"><div class="eyebrow">Venue</div><div class="big" style="font-size:24px">Central Auditorium</div><div><em>North Paravur, Kerala</em></div><a href="#" onclick="return false" style="color:inherit;display:inline-block;margin-top:8px">Directions</a></div>
+    <div class="tile tx reveal" style="background:#efe0bb"><span class="chip" style="background:#fbf5e6;color:var(--bur)">Thalikettu</span><span class="chip" style="background:#fbf5e6;color:var(--bur)">Chenda melam</span><span class="chip" style="background:#fbf5e6;color:var(--bur)">Mullapoo</span></div>
+  </div>
+
+  <div class="board-h"><div class="scr">The Reception · Tamil Nadu</div></div>
+  <div class="board">
+    <div class="tile tx reveal" style="background:linear-gradient(115deg,#5a0f2a,#8f1a42,#4a0a24);color:#d6b25a"><svg viewBox="0 0 80 110" width="90"><use href="#gopuram"/></svg><p class="ta" style="color:var(--gold-l);margin:8px 0 0">வாழ்க வளமுடன்</p></div>
+    <div class="tile ph reveal"><div class="img" style="aspect-ratio:4/5;background-image:url(../../public/images/venues/reception-venue-annalakshmi.jpg),linear-gradient(135deg,#8f1a42,#3a0b14)"></div></div>
+    <div class="tile tx reveal drawn" style="background:#2a0a16;color:#fff3d6"><svg class="kolam" viewBox="0 0 120 120" width="130"><path pathLength="1" d="M60 6 C80 26 94 40 114 60 C94 80 80 94 60 114 C40 94 26 80 6 60 C26 40 40 26 60 6Z"/><path pathLength="1" d="M22 22 Q60 -2 98 22 Q122 60 98 98 Q60 122 22 98 Q-2 60 22 22Z"/><circle cx="60" cy="60" r="3"/></svg><div class="eyebrow" style="margin-top:6px">Kolam</div></div>
+    <div class="tile tx reveal" style="background:#4a0a24;color:var(--gold-l)"><div class="eyebrow">Evening</div><div class="big" style="font-size:54px;font-style:normal">06</div><div class="eyebrow">Dec · Sunday</div><div style="margin-top:8px;color:#f8efdc">6:00 – 10:30 PM</div></div>
+    <div class="tile tx reveal" style="background:#f3e3c3;position:relative;overflow:hidden"><div style="position:absolute;inset:0;opacity:.35;background:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='9' fill='%23b8452c'/%3E%3Cpath d='M20 13 L27 20 L20 27 L13 20Z' fill='%23f3e3c3'/%3E%3Ccircle cx='0' cy='0' r='9' fill='%23d8a33a'/%3E%3Ccircle cx='40' cy='0' r='9' fill='%23d8a33a'/%3E%3Ccircle cx='0' cy='40' r='9' fill='%23d8a33a'/%3E%3Ccircle cx='40' cy='40' r='9' fill='%23d8a33a'/%3E%3C/svg%3E&quot;)"></div><div class="big" style="position:relative;color:var(--mag)">Malli &amp; roses</div></div>
+    <div class="tile tx reveal" style="background:#fbf5e6;color:var(--mag)"><div class="eyebrow">Wear</div><div style="display:flex;gap:6px;justify-content:center;margin:10px 0"><i style="width:30px;height:46px;border-radius:4px;background:linear-gradient(#7a1236 75%,#d6b25a 75%)"></i><i style="width:30px;height:46px;border-radius:4px;background:linear-gradient(#0f5e4a 75%,#d6b25a 75%)"></i><i style="width:30px;height:46px;border-radius:4px;background:linear-gradient(#1f3a8a 75%,#d6b25a 75%)"></i></div><div>Silk &amp; jewel tones</div></div>
+    <div class="tile tx reveal" style="background:#e9f0dc"><svg viewBox="0 0 60 130" width="60"><use href="#banana"/></svg></div>
+    <div class="tile tx reveal" style="background:#fbf5e6;color:var(--mag)"><div class="eyebrow">Venue</div><div class="big" style="font-size:24px">Annalakshmi Restaurant</div><div><em>Chennai</em></div><a href="#" onclick="return false" style="color:inherit;display:inline-block;margin-top:8px">Directions</a></div>
+    <div class="tile tx reveal" style="background:#5a0f2a;color:#d6b25a"><svg viewBox="0 0 50 140" width="40"><use href="#kuthu"/></svg><div style="margin-top:4px"><span class="chip" style="background:#ffffff14;color:var(--gold-l)">Nadaswaram</span><span class="chip" style="background:#ffffff14;color:var(--gold-l)">Thavil</span></div></div>
+  </div>
+</section>
+
+<!-- ============ OPTION C ============ -->
+<section class="opt" id="C">
+  <div class="eyebrow">Option C</div><h2>From Keralam to Tamil Nadu</h2><div class="rule">✿</div>
+  <p class="desc">A gold dotted path travels from the coconut palms to the gopuram, linking the two events into one story. Can sit above A or B.</p>
+  <div class="journey reveal">
+    <svg class="map" viewBox="0 0 400 210">
+      <path d="M0 190 C40 170 60 200 100 186 S150 196 170 180" stroke="#7fb0c9" stroke-width="6" fill="none" opacity=".35"/>
+      <g transform="translate(18 70) scale(.95)"><use href="#palm"/></g>
+      <g transform="translate(62 104) scale(.65)"><use href="#palm"/></g>
+      <text x="60" y="205" text-anchor="middle" font-family="Great Vibes" font-size="24" fill="#5a1420">Keralam</text>
+      <g transform="translate(300 64) scale(.9)" style="color:#7a1236"><use href="#gopuram"/></g>
+      <text x="336" y="205" text-anchor="middle" font-family="Great Vibes" font-size="24" fill="#7a1236">Tamil Nadu</text>
+      <path id="rt" class="route" d="M92 112 C150 20 230 30 296 120" stroke="#c19a3d" stroke-width="2.6" fill="none"/>
+      <circle r="5" fill="#c19a3d"><animateMotion dur="5s" repeatCount="indefinite" rotate="auto"><mpath href="#rt"/></animateMotion></circle>
+      <text x="194" y="40" text-anchor="middle" font-family="Jost" font-size="9" letter-spacing="3" fill="#5a1420">29 NOV  →  06 DEC</text>
+    </svg>
+    <div class="mini">
+      <div class="m k"><div class="eyebrow">The Wedding</div><div class="d">29</div><div class="n">North Paravur</div><div class="eyebrow" style="opacity:.7">8:00 AM</div></div>
+      <div class="m t"><div class="eyebrow">The Reception</div><div class="d">06</div><div class="n">Chennai</div><div class="eyebrow" style="opacity:.7">6:00 PM</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>Pick a layout (A / B / C or a combination) and the numbered elements you'd like to keep.</footer>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4)*110+'ms';io.observe(el)});
+const kio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('drawn');kio.unobserve(e.target)}}),{threshold:.6});
+kio.observe(document.getElementById('kolamwrap'));
+const bt=document.getElementById('bt');bt.onclick=()=>{const off=document.body.classList.toggle('nobadge');bt.classList.toggle('on',!off);bt.textContent=off?'Numbers off':'Numbers on'};
+
+// D2 synthesized sounds
+let ac;
+function chenda(){const t=ac.currentTime;[0,.13,.22,.36].forEach((d,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(i==3?110:170,t+d);o.frequency.exponentialRampToValueAtTime(60,t+d+.2);g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.5,t+d+.005);g.gain.exponentialRampToValueAtTime(.0001,t+d+.25);o.connect(g).connect(ac.destination);o.start(t+d);o.stop(t+d+.3);
+ const b=ac.createBuffer(1,ac.sampleRate*.08,ac.sampleRate),c=b.getChannelData(0);for(let k=0;k<c.length;k++)c[k]=(Math.random()*2-1)*(1-k/c.length);const s=ac.createBufferSource(),f=ac.createBiquadFilter(),gn=ac.createGain();s.buffer=b;f.type='bandpass';f.frequency.value=900;gn.gain.value=.25;s.connect(f).connect(gn).connect(ac.destination);s.start(t+d)})}
+function nadaswaram(){const t=ac.currentTime,o=ac.createOscillator(),l=ac.createOscillator(),lg=ac.createGain(),f=ac.createBiquadFilter(),g=ac.createGain();o.type='sawtooth';o.frequency.setValueAtTime(415,t);o.frequency.linearRampToValueAtTime(466,t+.25);o.frequency.setValueAtTime(466,t+.7);o.frequency.linearRampToValueAtTime(523,t+.9);l.frequency.value=5.5;lg.gain.value=7;l.connect(lg).connect(o.frequency);f.type='bandpass';f.frequency.value=1300;f.Q.value=1.8;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.22,t+.08);g.gain.setValueAtTime(.22,t+1.2);g.gain.exponentialRampToValueAtTime(.0001,t+1.7);o.connect(f).connect(g).connect(ac.destination);o.start(t);l.start(t);o.stop(t+1.8);l.stop(t+1.8)}
+document.querySelectorAll('[data-snd]').forEach(c=>c.addEventListener('click',()=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume();c.dataset.snd==='chenda'?chenda():nadaswaram();navigator.vibrate&&navigator.vibrate(12)}catch(e){}}));
+</script>
+</body></html>
