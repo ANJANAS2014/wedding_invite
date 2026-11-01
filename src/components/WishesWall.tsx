@@ -35,7 +35,10 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
   const [userLikedMap, setUserLikedMap] = useState<Record<string, boolean>>({});
   const [failedPhotos, setFailedPhotos] = useState<Record<string, boolean>>({});
   const [selectedWish, setSelectedWish] = useState<WishRecord | null>(null);
-  const [viewportWidth, setViewportWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
+  // Initialize with a sane desktop default so the marquee distance isn't 0 on
+  // the first paint (SSR and the very first client render both lack window
+  // dimensions until the resize listener fires).
+  const [viewportWidth, setViewportWidth] = useState<number>(1024);
 
   const fetchWishes = useCallback(async () => {
     setIsLoading(true);
@@ -207,9 +210,19 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
   // Track viewport width so card sizing and marquee trigger adapt to device width
   useEffect(() => {
     const handleResize = () => setViewportWidth(window.innerWidth);
+    setViewportWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Lock body scroll while the enlarged wish modal is open
+  useEffect(() => {
+    if (!selectedWish) return;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedWish]);
 
   // Close modal on Escape key
   useEffect(() => {
@@ -267,31 +280,64 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
     );
   };
 
-  // Only auto-scroll when cards actually overflow the viewport width.
-  // Desktop cards are ~304px wide (+20px gap); mobile cards go full width.
-  const cardWidth = viewportWidth > 480 ? 304 : viewportWidth;
-  const gap = 20;
-  const originalWidth = wishes.length * (cardWidth + gap) - gap;
-  const shouldAutoScroll = wishes.length > 1 && originalWidth > viewportWidth - 40;
+  // Card sizing: desktop keeps ~304px cards; mobile fits at least three cards
+  // across the carousel by deriving width from available space, gaps and padding.
+  const GAP = 20;
+  const H_PADDING = 40; // 20px left + 20px right on .wishes-rail-viewport
+  const DESKTOP_CARD_WIDTH = 304;
+  const MOBILE_CARD_COUNT = 3;
+  const MOBILE_MIN_CARD_WIDTH = 90;
+
+  let cardWidth: number;
+  if (viewportWidth > 480) {
+    cardWidth = DESKTOP_CARD_WIDTH;
+  } else {
+    cardWidth = Math.max(
+      MOBILE_MIN_CARD_WIDTH,
+      (viewportWidth - H_PADDING - (MOBILE_CARD_COUNT - 1) * GAP) / MOBILE_CARD_COUNT
+    );
+  }
+
+  const originalWidth = wishes.length * (cardWidth + GAP) - GAP;
+  const shouldAutoScroll =
+    wishes.length > 3 && originalWidth > viewportWidth - 40;
 
   // Clone enough leading items so that, when the track has scrolled left by
   // `originalWidth` (all originals off-screen), the clones still cover the
   // full viewport width. This gives a seamless infinite loop without showing
   // duplicate cards in a single view.
-  const cloneCount = shouldAutoScroll ? Math.ceil(viewportWidth / (cardWidth + gap)) + 1 : 0;
+  const cloneCount = shouldAutoScroll ? Math.ceil(viewportWidth / (cardWidth + GAP)) + 1 : 0;
   const clones = wishes.slice(0, cloneCount);
   const displayItems = shouldAutoScroll ? [...wishes, ...clones] : wishes;
   // Positive distance; the CSS negates it to move left.
   const marqueeDistance = shouldAutoScroll ? originalWidth : 0;
 
-  const renderPostcard = (item: WishRecord, index: number) => {
+  // Pause auto-scroll when the wishes section leaves the viewport
+  useEffect(() => {
+    if (!shouldAutoScroll) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          setIsPaused(!entry.isIntersecting);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    const el = document.querySelector('.wishes-rail-viewport');
+    if (el) observer.observe(el);
+    return () => observer.disconnect();
+  }, [shouldAutoScroll]);
+
+  const renderPostcard = (item: WishRecord, index: number, cardWidth?: number) => {
     const isLiked = !!userLikedMap[item.id];
     const showPhoto = Boolean(item.photoUrl && !failedPhotos[item.id]);
+    const cardStyle = cardWidth ? { width: `${cardWidth}px`, maxWidth: `${cardWidth}px` } : {};
 
     return (
       <article
         key={`${item.id}_${index}`}
         className="postcard-card carousel-card"
+        style={cardStyle}
         onClick={() => setSelectedWish(item)}
         tabIndex={0}
         role="button"
@@ -470,15 +516,17 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
           aria-label="Wedding wishes carousel"
         >
           <div
+            key={`wishes-track-${viewportWidth}`}
             className={`wishes-rail-track ${isPaused ? 'is-paused' : ''}`}
             style={
               {
                 '--wishes-duration': `${Math.max(28, wishes.length * 8)}s`,
-                '--marquee-distance': `${marqueeDistance}px`
+                '--marquee-distance': `${marqueeDistance}px`,
+                '--card-width': `${cardWidth}px`
               } as React.CSSProperties
             }
           >
-            {displayItems.map((item, index) => renderPostcard(item, index))}
+            {displayItems.map((item, index) => renderPostcard(item, index, cardWidth))}
           </div>
         </div>
       )}
@@ -488,7 +536,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
           className="wishes-static-row"
           aria-label="Wedding wishes collection"
         >
-          {wishes.map((item, index) => renderPostcard(item, index))}
+          {wishes.map((item, index) => renderPostcard(item, index, cardWidth))}
         </div>
       )}
 
