@@ -14,8 +14,14 @@ export default async function handler(req, res) {
     const requireApproval = String(process.env.WISHES_REQUIRE_APPROVAL || "").trim().toLowerCase() === "true";
     const approvalFilter = requireApproval ? "wish_approved=eq.true&" : "";
     try {
-      const rows = await supabaseRequest(cfg, `/rest/v1/rsvp_responses?${approvalFilter}or=(wishes=not.is.null,rsvp_photos.storage_path=not.is.null)&select=id,submitted_name,wishes,created_at,updated_at,rsvp_photos(storage_path),rsvp_event_responses(attending,event_code)&order=updated_at.desc&limit=200`);
-      const all = Array.isArray(rows) ? rows : [];
+      // No server-side `or=(...)` filter: PostgREST's logic-tree syntax is easy to get wrong
+      // (it was the cause of the 502), so fetch recent rows and keep the ones with a wish or a photo here.
+      const rows = await supabaseRequest(cfg, `/rest/v1/rsvp_responses?${approvalFilter}select=id,submitted_name,wishes,created_at,updated_at,rsvp_photos(storage_path),rsvp_event_responses(attending,event_code)&order=updated_at.desc&limit=500`);
+      const hasPhoto = (row) => {
+        const p = Array.isArray(row.rsvp_photos) ? row.rsvp_photos[0] : row.rsvp_photos;
+        return Boolean(p && p.storage_path);
+      };
+      const all = (Array.isArray(rows) ? rows : []).filter((row) => String(row.wishes || "").trim() || hasPhoto(row));
       // A guest who re-sends the same wish from the general link creates a new row each time; keep only the newest copy.
       const seen = new Set();
       const list = all.filter((row) => {
@@ -39,7 +45,11 @@ export default async function handler(req, res) {
         };
       }).filter((item) => item.id && item.displayName && (item.wish || item.photoUrl));
       return res.status(200).json({ ok: true, wishes });
-    } catch { return res.status(502).json({ ok: false, wishes: [] }); }
+    } catch (error) {
+      // shows up in the Vercel function logs (no secrets: the message is PostgREST's error text)
+      console.error("GET /api/wishes failed:", error && error.message ? error.message : error);
+      return res.status(502).json({ ok: false, wishes: [] });
+    }
   }
 
   return res.status(503).json({ ok: false, wishes: [] });
