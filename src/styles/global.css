@@ -6,6 +6,7 @@
 html {
   scroll-behavior: smooth;
   background: #eae1d8;
+  background: color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt));
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -16,6 +17,7 @@ html {
 html {
   scrollbar-gutter: stable;
   background: #ece4dc;
+  background: color-mix(in oklab, #ece4dc, var(--wash-l) var(--wash-l-amt));
 }
 
 * {
@@ -142,8 +144,11 @@ h2 {
   justify-content: center;
   gap: 8px;
   background: linear-gradient(180deg, #f8e8b2 0%, var(--gold) 48%, #9a7022 100%);
+  background: linear-gradient(180deg, color-mix(in oklab, #f8e8b2, var(--wash-l) var(--wash-l-amt)) 0%, var(--gold) 48%, color-mix(in oklab, #9a7022, var(--wash-g) var(--wash-g-amt)) 100%);
   color: #2b0d12;
+  color: color-mix(in oklab, #2b0d12, var(--wash-d) var(--wash-d-amt));
   border: 1px solid #f3dc8e;
+  border: 1px solid color-mix(in oklab, #f3dc8e, var(--wash-g) var(--wash-g-amt));
   border-radius: 999px;
   padding: 14px 34px;
   font: 500 12px var(--fb);
@@ -180,6 +185,7 @@ h2 {
   font-family: var(--fs);
   font-weight: 400;
   background: linear-gradient(100deg, #8f6a22 0%, #c19a3d 30%, #f0d68e 44%, #fff6d6 50%, #f0d68e 56%, #c19a3d 70%, #8f6a22 100%);
+  background: linear-gradient(100deg, color-mix(in oklab, #8f6a22, var(--wash-g) var(--wash-g-amt)) 0%, var(--gold) 30%, var(--gold-l) 44%, color-mix(in oklab, #fff6d6, var(--wash-l) var(--wash-l-amt)) 50%, var(--gold-l) 56%, var(--gold) 70%, color-mix(in oklab, #8f6a22, var(--wash-g) var(--wash-g-amt)) 100%);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -201,6 +207,7 @@ h2 {
   padding: 20px 0;
   box-sizing: content-box;
   background-color: #f3e8d6;
+  background-color: color-mix(in oklab, #f3e8d6, var(--wash-l) var(--wash-l-amt));
 }
 
 .kasavu::before {

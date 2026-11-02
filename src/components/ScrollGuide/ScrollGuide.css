@@ -18,6 +18,7 @@
 
 .next-teaser--dark {
   color: #9a7022;
+  color: color-mix(in oklab, #9a7022, var(--wash-g) var(--wash-g-amt));
 }
 
 .next-teaser--light {
@@ -57,6 +58,7 @@ body.opened .scroll-progress {
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg, #9a7022, #c19a3d 40%, #f0d68e);
+  background: linear-gradient(90deg, color-mix(in oklab, #9a7022, var(--wash-g) var(--wash-g-amt)), var(--gold) 40%, var(--gold-l));
   transform-origin: 0 50%;
   transform: scaleX(var(--p));
 }
@@ -68,8 +70,8 @@ body.opened .scroll-progress {
   width: 7px;
   height: 7px;
   margin: -3.5px 0 0 -3.5px;
-  background: #f0d68e;
-  box-shadow: 0 0 6px rgba(240, 214, 142, 0.9);
+  background: var(--gold-l);
+  box-shadow: 0 0 6px rgb(var(--gold-l-rgb) / 0.9);
   transform: translateX(calc(var(--p) * 100vw)) rotate(45deg);
 }
 
@@ -82,8 +84,9 @@ body.opened .scroll-progress {
   padding: 0 4px;
   background: none;
   border: 0;
-  border-bottom: 1px solid rgba(183, 137, 46, 0.5);
+  border-bottom: 1px solid rgb(var(--gold-d-rgb) / 0.5);
   color: #8a6219;
+  color: color-mix(in oklab, #8a6219, var(--wash-g) var(--wash-g-amt));
   font: 500 10px / 1 var(--fb);
   letter-spacing: 0.26em;
   text-transform: uppercase;
@@ -101,9 +104,10 @@ body.opened .scroll-progress {
   min-height: 44px;
   padding: 0 20px;
   transform: translateX(-50%);
-  border: 1px solid rgba(240, 214, 142, 0.6);
+  border: 1px solid rgb(var(--gold-l-rgb) / 0.6);
   border-radius: 999px;
   background: rgba(42, 10, 16, 0.88);
+  background: color-mix(in oklab, rgba(42, 10, 16, 0.88), rgb(var(--wash-d-rgb) / 0.88) var(--wash-d-amt));
   color: var(--gold-l);
   font: 500 11px / 1 var(--fb);
   letter-spacing: 0.22em;

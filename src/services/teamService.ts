@@ -13,6 +13,19 @@ export interface TeamTotals {
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+/** Fired on window whenever the guest's side changes (picker or couple section), so both stay in sync. */
+export const TEAM_CHANGE_EVENT = 'team:change';
+
+export interface TeamChangeDetail {
+  side: TeamSide;
+  totals: TeamTotals | null;
+  source: 'picker' | 'couple';
+}
+
+export const announceTeamSide = (detail: TeamChangeDetail): void => {
+  window.dispatchEvent(new CustomEvent<TeamChangeDetail>(TEAM_CHANGE_EVENT, { detail }));
+};
+
 export const isTeamSide = (value: unknown): value is TeamSide => value === 'bride' || value === 'groom';
 
 /** v4 UUID; falls back to getRandomValues on older iPhones (iOS < 15.4). */

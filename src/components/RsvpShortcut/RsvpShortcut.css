@@ -9,10 +9,13 @@
   min-height: 46px;
   padding: 0 22px;
   border: 1px solid #f3dc8e;
+  border: 1px solid color-mix(in oklab, #f3dc8e, var(--wash-g) var(--wash-g-amt));
   border-radius: 999px;
   background: linear-gradient(180deg, #f8e8b2, var(--gold) 55%, #9a7022);
+  background: linear-gradient(180deg, color-mix(in oklab, #f8e8b2, var(--wash-l) var(--wash-l-amt)), var(--gold) 55%, color-mix(in oklab, #9a7022, var(--wash-g) var(--wash-g-amt)));
   box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.45);
   color: #2b0d12;
+  color: color-mix(in oklab, #2b0d12, var(--wash-d) var(--wash-d-amt));
   font: 500 12px / 1 var(--fb);
   letter-spacing: 0.22em;
   text-decoration: none;

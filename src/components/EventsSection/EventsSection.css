@@ -1,7 +1,7 @@
 /* ==========================================================================
    OUR EVENTS — editorial chapters (approved: our-events-mockup.html)
    ========================================================================== */
-#s2.ev { --gold: #c19a3d; }
+#s2.ev { --gold: var(--gold); }
 .ev .ev-head h2 { margin: 14px 0 18px; }
 .ev .hrule { color: var(--gold); }
 .ev-bless {
@@ -9,6 +9,7 @@
   font: italic 500 clamp(20px, 2.4vw, 26px) / 1 var(--fh);
   letter-spacing: 0.06em;
   background: linear-gradient(100deg, #b8892e, #f0d68e 45%, #fff3c4 50%, #f0d68e 55%, #b8892e);
+  background: linear-gradient(100deg, var(--gold-d), var(--gold-l) 45%, color-mix(in oklab, #fff3c4, var(--wash-l) var(--wash-l-amt)) 50%, var(--gold-l) 55%, var(--gold-d));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -20,7 +21,7 @@
 .ev { font: 300 16px/1.6 var(--fb); color: var(--ivory); }
 /* ===== Our Events (proposed) — maps onto EventsSection.tsx: section#s2 > .sec#date ===== */
 .ev {position:relative;padding:clamp(52px,7vw,100px) clamp(18px,5vw,72px) clamp(28px,4vw,52px);
-  background:radial-gradient(1100px 520px at 50% -10%,#7a2232 0%,var(--burg) 46%,var(--burg-d) 100%);overflow:hidden}
+  background:radial-gradient(1100px 520px at 50% -10%,#7a2232 0%,var(--burg) 46%,var(--burg-d) 100%);  background:radial-gradient(1100px 520px at 50% -10%,color-mix(in oklab, #7a2232, var(--wash-d) var(--wash-d-amt)) 0%,var(--burg) 46%,var(--burg-d) 100%);overflow:hidden}
 .ev::before{content:"";position:absolute;inset:0;opacity:.05;pointer-events:none;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .ev-head{text-align:center;max-width:640px;margin:0 auto clamp(40px,6vw,72px)}
 .ev .eyebrow{font:500 11px/1 var(--fb);letter-spacing:.38em;text-transform:uppercase;color:var(--gold)}
@@ -32,40 +33,40 @@
 .ev-ph{position:relative;aspect-ratio:4/5;border-radius:999px 999px 6px 6px;overflow:hidden;
   box-shadow:0 30px 60px -30px rgba(0,0,0,.7)}
 .ev-ph img{width:100%;height:100%;object-fit:cover;display:block}
-.ev-ph::after{content:"";position:absolute;inset:10px;border-radius:999px 999px 4px 4px;border:1px solid rgba(240,214,142,.55);pointer-events:none}
+.ev-ph::after{content:"";position:absolute;inset:10px;border-radius:999px 999px 4px 4px;border:1px solid rgb(var(--gold-l-rgb) / .55);pointer-events:none}
 .ev-ph--grade img{filter:sepia(.45) saturate(.8) contrast(1.06) brightness(.86)}       /* warm grade for the daylight venue photo */
-.ev-ph--grade::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(90,20,32,0) 35%,rgba(58,11,20,.85) 100%)}
+.ev-ph--grade::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgb(var(--burg-rgb) / 0) 35%,rgb(var(--burg-d-rgb) / .85) 100%)}
 .ev-tx{position:relative}
-.ev-next{display:inline-block;margin-bottom:18px;padding:6px 12px;border:1px solid rgba(240,214,142,.5);border-radius:999px;font:500 10px/1 var(--fb);letter-spacing:.28em;text-transform:uppercase;color:var(--gold-l)}
+.ev-next{display:inline-block;margin-bottom:18px;padding:6px 12px;border:1px solid rgb(var(--gold-l-rgb) / .5);border-radius:999px;font:500 10px/1 var(--fb);letter-spacing:.28em;text-transform:uppercase;color:var(--gold-l)}
 .ev-date{display:flex;align-items:flex-end;gap:16px}
 .ev-date b{font:400 clamp(84px,10vw,128px)/.8 var(--fh);color:var(--champ);letter-spacing:-.02em}
 .ev-date span{padding-bottom:8px;font:500 11px/1.7 var(--fb);letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
 .ev-tx h3{margin:22px 0 4px;font:italic 400 clamp(40px,4.6vw,56px)/1 var(--fh);color:var(--ivory)}
 .ev-tx .ev-sub{font:500 11px/1 var(--fb);letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
-.ev-det{list-style:none;margin:26px 0 0;border-top:1px solid rgba(240,214,142,.28)}
-.ev-det li{display:grid;grid-template-columns:88px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid rgba(240,214,142,.16)}
-.ev-det small{font:500 10px/1.9 var(--fb);letter-spacing:.3em;text-transform:uppercase;color:rgba(233,211,164,.7)}
+.ev-det{list-style:none;margin:26px 0 0;border-top:1px solid rgb(var(--gold-l-rgb) / .28)}
+.ev-det li{display:grid;grid-template-columns:88px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid rgb(var(--gold-l-rgb) / .16)}
+.ev-det small{font:500 10px/1.9 var(--fb);letter-spacing:.3em;text-transform:uppercase;color:rgb(var(--champ-rgb) / .7)}
 .ev-det b{font:500 clamp(19px,1.7vw,22px)/1.35 var(--fh);color:var(--ivory)}
-.ev-det em{display:block;font:300 14px/1.5 var(--fb);font-style:normal;color:rgba(248,239,220,.72)}
+.ev-det em{display:block;font:300 14px/1.5 var(--fb);font-style:normal;color:rgb(var(--ivory-rgb) / .72)}
 .ev-acts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:24px}
 .ev-acts a{display:inline-flex;align-items:center;gap:9px;min-height:44px;color:var(--gold-l);text-decoration:none;font:500 12px/1 var(--fb);letter-spacing:.22em;text-transform:uppercase;
-  border-bottom:1px solid rgba(240,214,142,.45);transition:border-color .3s,color .3s}
+  border-bottom:1px solid rgb(var(--gold-l-rgb) / .45);transition:border-color .3s,color .3s}
 .ev-acts a:hover{color:#fff3c4;border-color:var(--gold-l)}
 .ev-acts svg{width:15px;height:15px}
 /* countdown: one refined line */
 .ev-cd-wrap{max-width:760px;margin:clamp(64px,8vw,104px) auto 0;text-align:center}
-.ev-cd{display:grid;grid-template-columns:repeat(4,1fr);margin-top:18px;border-top:1px solid rgba(240,214,142,.25);border-bottom:1px solid rgba(240,214,142,.25)}
+.ev-cd{display:grid;grid-template-columns:repeat(4,1fr);margin-top:18px;border-top:1px solid rgb(var(--gold-l-rgb) / .25);border-bottom:1px solid rgb(var(--gold-l-rgb) / .25)}
 .ev-cd div{padding:18px 0 16px}
-.ev-cd div+div{border-left:1px solid rgba(240,214,142,.18)}
+.ev-cd div+div{border-left:1px solid rgb(var(--gold-l-rgb) / .18)}
 .ev-cd b{display:block;font:400 clamp(36px,4.4vw,52px)/1 var(--fh);color:var(--champ);font-variant-numeric:lining-nums tabular-nums}
-.ev-cd span{display:block;margin-top:8px;font:500 9.5px/1 var(--fb);letter-spacing:.3em;text-transform:uppercase;color:rgba(233,211,164,.7)}
+.ev-cd span{display:block;margin-top:8px;font:500 9.5px/1 var(--fb);letter-spacing:.3em;text-transform:uppercase;color:rgb(var(--champ-rgb) / .7)}
 /* subtle entrance */
 /* ===== mobile ===== */
 @media (max-width:720px){
   .ev-ch{grid-template-columns:1fr;gap:0}
   .ev-ch:nth-of-type(even) .ev-ph{order:0}
   .ev-ph{aspect-ratio:4/3.4;border-radius:200px 200px 4px 4px;margin:0 6px}
-  .ev-tx{margin:-46px 12px 0;padding:22px 20px 8px;background:linear-gradient(180deg,rgba(58,11,20,.92),rgba(58,11,20,.98));border:1px solid rgba(240,214,142,.22);border-radius:4px;backdrop-filter:blur(6px)}
+  .ev-tx{margin:-46px 12px 0;padding:22px 20px 8px;background:linear-gradient(180deg,rgb(var(--burg-d-rgb) / .92),rgb(var(--burg-d-rgb) / .98));border:1px solid rgb(var(--gold-l-rgb) / .22);border-radius:4px;backdrop-filter:blur(6px)}
   .ev-next{position:absolute;top:-14px;left:50%;transform:translateX(-50%);margin:0;background:var(--burg-d);white-space:nowrap}
   .ev-date{justify-content:center;text-align:left}
   .ev-date b{font-size:76px}
@@ -96,7 +97,7 @@
   max-width: none;
   margin: 0;
   overflow: hidden;
-  border: 1px solid rgba(240, 214, 142, 0.25);
+  border: 1px solid rgb(var(--gold-l-rgb) / 0.25);
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.12);
 }
@@ -171,5 +172,30 @@
 
   .ev .ev-acts {
     gap: 4px 20px;
+  }
+}
+
+/* ---------- Wedding card (WeddingCard.tsx) on top, reception card below ---------- */
+.ev .ev-chs {
+  grid-template-columns: 1fr;
+  max-width: 1120px;
+  gap: clamp(40px, 6vw, 72px);
+}
+
+/* Reception sits alone until its own redesign: photo left, details right */
+@media (min-width: 721px) {
+  .ev .ev-ch.ev-ch--solo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: stretch;
+  }
+
+  .ev .ev-ch.ev-ch--solo .ev-ph {
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+
+  .ev .ev-ch.ev-ch--solo .ev-tx {
+    padding: clamp(24px, 3vw, 40px);
   }
 }

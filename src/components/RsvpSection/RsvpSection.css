@@ -51,6 +51,7 @@
   padding: 22px 20px 20px;
   border-radius: 12px;
   background: linear-gradient(180deg, rgba(46, 12, 19, 0.94), rgba(26, 6, 10, 0.96));
+  background: linear-gradient(180deg, color-mix(in oklab, rgba(46, 12, 19, 0.94), rgb(var(--wash-d-rgb) / 0.94) var(--wash-d-amt)), color-mix(in oklab, rgba(26, 6, 10, 0.96), rgb(var(--wash-d-rgb) / 0.96) var(--wash-d-amt)));
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   box-shadow: 0 16px 36px -18px rgba(0, 0, 0, 0.7);
   transition: border-color .3s, box-shadow .3s, transform .25s;
@@ -59,8 +60,9 @@
 
 .rsvp-card.is-attending {
   border-color: var(--gold);
-  box-shadow: 0 0 0 1px var(--gold), 0 0 28px rgba(193, 154, 61, 0.28), 0 18px 40px -18px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 28px rgb(var(--gold-rgb) / 0.28), 0 18px 40px -18px rgba(0, 0, 0, 0.8);
   background: linear-gradient(180deg, rgba(62, 18, 28, 0.97), rgba(35, 9, 15, 0.98));
+  background: linear-gradient(180deg, color-mix(in oklab, rgba(62, 18, 28, 0.97), rgb(var(--wash-d-rgb) / 0.97) var(--wash-d-amt)), color-mix(in oklab, rgba(35, 9, 15, 0.98), rgb(var(--wash-d-rgb) / 0.98) var(--wash-d-amt)));
 }
 
 .rsvp-card-tag {
@@ -68,6 +70,7 @@
   letter-spacing: .32em;
   text-transform: uppercase;
   color: #f6df96;
+  color: color-mix(in oklab, #f6df96, var(--wash-g) var(--wash-g-amt));
   margin-bottom: 4px;
 }
 
@@ -81,6 +84,7 @@
 .rsvp-card-prompt {
   font: 400 13px/1.3 var(--fb);
   color: #e4cfab;
+  color: color-mix(in oklab, #e4cfab, var(--wash-g) var(--wash-g-amt));
   margin-bottom: 14px;
 }
 
@@ -110,10 +114,13 @@
 
 .rsvp-attend-toggle.active {
   background: linear-gradient(180deg, #f7e5a6 0%, #c39a3a 56%, #9a7023 100%);
+  background: linear-gradient(180deg, color-mix(in oklab, #f7e5a6, var(--wash-l) var(--wash-l-amt)) 0%, color-mix(in oklab, #c39a3a, var(--wash-g) var(--wash-g-amt)) 56%, color-mix(in oklab, #9a7023, var(--wash-g) var(--wash-g-amt)) 100%);
   color: #351219;
+  color: color-mix(in oklab, #351219, var(--wash-d) var(--wash-d-amt));
   border-color: #f3dc8e;
+  border-color: color-mix(in oklab, #f3dc8e, var(--wash-g) var(--wash-g-amt));
   font-weight: 600;
-  box-shadow: inset 0 1px 0 #fff9, 0 6px 18px -4px rgba(193, 154, 61, 0.6);
+  box-shadow: inset 0 1px 0 #fff9, 0 6px 18px -4px rgb(var(--gold-rgb) / 0.6);
 }
 
 /* Stepper revealed immediately below when attending */
@@ -133,6 +140,7 @@
   display: block;
   font-size: 12px;
   color: #e5d1b1;
+  color: color-mix(in oklab, #e5d1b1, var(--wash-g) var(--wash-g-amt));
   margin-bottom: 8px;
   letter-spacing: .04em;
 }
@@ -157,6 +165,7 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
   color: #f7e6ab;
+  color: color-mix(in oklab, #f7e6ab, var(--wash-g) var(--wash-g-amt));
   font: 500 18px/1 var(--fb);
   cursor: pointer;
   transition: all .2s;
@@ -165,6 +174,7 @@
 .rsvp-step-btn:hover:not(:disabled) {
   background: var(--gold);
   color: #2a0a0f;
+  color: color-mix(in oklab, #2a0a0f, var(--wash-d) var(--wash-d-amt));
 }
 
 .rsvp-step-btn:disabled {
@@ -177,6 +187,7 @@
   text-align: center;
   font: 500 20px/1 var(--fh);
   color: #f5df9b;
+  color: color-mix(in oklab, #f5df9b, var(--wash-g) var(--wash-g-amt));
 }
 
 /* Guest name & Personalized banner */
@@ -191,6 +202,7 @@
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   border-radius: 999px;
   background: rgba(42, 10, 15, 0.7);
+  background: color-mix(in oklab, rgba(42, 10, 15, 0.7), rgb(var(--wash-d-rgb) / 0.7) var(--wash-d-amt));
   color: var(--cream);
   font: 400 13px/1.4 var(--fb);
   text-align: center;
@@ -198,6 +210,7 @@
 
 .rsvp-guest-chip b {
   color: #f3dc8e;
+  color: color-mix(in oklab, #f3dc8e, var(--wash-g) var(--wash-g-amt));
   font-weight: 500;
 }
 
@@ -207,6 +220,7 @@
   border: 1px solid color-mix(in srgb, var(--gold) 65%, transparent);
   border-radius: 6px;
   background: rgba(30, 7, 11, 0.72);
+  background: color-mix(in oklab, rgba(30, 7, 11, 0.72), rgb(var(--wash-d-rgb) / 0.72) var(--wash-d-amt));
   color: var(--cream);
   font: 400 15px var(--fb);
   outline: none;
@@ -215,7 +229,7 @@
 
 .rsvp-input:focus {
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(193, 154, 61, 0.25);
+  box-shadow: 0 0 0 3px rgb(var(--gold-rgb) / 0.25);
 }
 
 .rsvp-input::placeholder {
@@ -276,6 +290,7 @@
 
 .char-counter {
   color: #d6b25a;
+  color: color-mix(in oklab, #d6b25a, var(--wash-g) var(--wash-g-amt));
   font-size: 11px;
   letter-spacing: .05em;
 }
@@ -287,6 +302,7 @@
 .rsvp-wishes-heading {
   font: 500 16px/1.3 var(--fb);
   color: #f7dfa4;
+  color: color-mix(in oklab, #f7dfa4, var(--wash-g) var(--wash-g-amt));
   margin-bottom: 8px;
   display: flex;
   align-items: center;
@@ -300,6 +316,7 @@
   border: 1px solid color-mix(in srgb, var(--gold) 65%, transparent);
   border-radius: 8px;
   background: rgba(30, 7, 11, 0.72);
+  background: color-mix(in oklab, rgba(30, 7, 11, 0.72), rgb(var(--wash-d-rgb) / 0.72) var(--wash-d-amt));
   color: var(--cream);
   font: 400 15px/1.5 var(--fb);
   resize: vertical;
@@ -309,7 +326,7 @@
 
 .rsvp-textarea:focus {
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(193, 154, 61, 0.25);
+  box-shadow: 0 0 0 3px rgb(var(--gold-rgb) / 0.25);
 }
 
 .rsvp-textarea::placeholder {
@@ -325,6 +342,7 @@
 .rsvp-submit-hint {
   font-size: 12.5px;
   color: #e5d1b1;
+  color: color-mix(in oklab, #e5d1b1, var(--wash-g) var(--wash-g-amt));
   opacity: .92;
   margin-bottom: 12px;
   letter-spacing: .02em;
@@ -343,6 +361,7 @@
   padding: 10px 16px;
   border-radius: 8px;
   background: rgba(120, 24, 34, 0.85);
+  background: color-mix(in oklab, rgba(120, 24, 34, 0.85), rgb(var(--wash-d-rgb) / 0.85) var(--wash-d-amt));
   border: 1px solid #e06070;
   color: #ffdde0;
   font-size: 13.5px;
@@ -358,7 +377,8 @@
   border: 1px solid var(--gold);
   border-radius: 18px;
   background: linear-gradient(180deg, rgba(46, 12, 19, 0.94), rgba(24, 5, 9, 0.98));
-  box-shadow: 0 24px 50px -20px rgba(0, 0, 0, 0.8), 0 0 36px rgba(193, 154, 61, 0.2);
+  background: linear-gradient(180deg, color-mix(in oklab, rgba(46, 12, 19, 0.94), rgb(var(--wash-d-rgb) / 0.94) var(--wash-d-amt)), color-mix(in oklab, rgba(24, 5, 9, 0.98), rgb(var(--wash-d-rgb) / 0.98) var(--wash-d-amt)));
+  box-shadow: 0 24px 50px -20px rgba(0, 0, 0, 0.8), 0 0 36px rgb(var(--gold-rgb) / 0.2);
   text-align: center;
   animation: invitation-arrive .5s ease-out;
 }
@@ -371,12 +391,14 @@
   border: 1px solid var(--gold);
   border-radius: 50%;
   color: #f6df96;
+  color: color-mix(in oklab, #f6df96, var(--wash-g) var(--wash-g-amt));
   font-size: 22px;
   margin-bottom: 12px;
 }
 
 .rsvp-confirmation-panel h3 {
   color: #f7e6ab;
+  color: color-mix(in oklab, #f7e6ab, var(--wash-g) var(--wash-g-amt));
   font: 500 36px/1.1 var(--fh);
   margin-bottom: 8px;
 }
@@ -408,6 +430,7 @@
 
 .rsvp-summary-list li b {
   color: #f6df96;
+  color: color-mix(in oklab, #f6df96, var(--wash-g) var(--wash-g-amt));
   font-weight: 500;
 }
 
@@ -432,6 +455,7 @@
 .rsvp-conf-signoff {
   font: italic 500 18px/1.3 var(--fh);
   color: #e9c978;
+  color: color-mix(in oklab, #e9c978, var(--wash-g) var(--wash-g-amt));
   margin: 20px 0 16px;
 }
 
@@ -441,11 +465,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, rgba(193, 154, 61, 0.22), rgba(193, 154, 61, 0.12));
+  background: linear-gradient(135deg, rgb(var(--gold-rgb) / 0.22), rgb(var(--gold-rgb) / 0.12));
   border: 1px solid var(--gold);
   border-radius: 999px;
   padding: 7px 16px;
   color: #f7dfa4;
+  color: color-mix(in oklab, #f7dfa4, var(--wash-g) var(--wash-g-amt));
   cursor: pointer;
   font: 500 12px/1 var(--fb);
   letter-spacing: .08em;
@@ -454,7 +479,7 @@
 }
 
 .modern-photo-btn:hover {
-  background: linear-gradient(135deg, rgba(193, 154, 61, 0.35), rgba(193, 154, 61, 0.2));
+  background: linear-gradient(135deg, rgb(var(--gold-rgb) / 0.35), rgb(var(--gold-rgb) / 0.2));
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.25);
   border-color: #fcebc5;
@@ -473,10 +498,11 @@
   align-items: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(193, 154, 61, 0.4);
+  border: 1px solid rgb(var(--gold-rgb) / 0.4);
   border-radius: 999px;
   padding: 6px 14px;
   color: #f6df96;
+  color: color-mix(in oklab, #f6df96, var(--wash-g) var(--wash-g-amt));
   font: 500 12px var(--fb);
   cursor: pointer;
   transition: all .2s;
@@ -487,7 +513,7 @@
 }
 
 .emoji-trigger-btn:hover {
-  background: rgba(193, 154, 61, 0.2);
+  background: rgb(var(--gold-rgb) / 0.2);
   border-color: var(--gold);
 }
 
@@ -497,6 +523,7 @@
   left: 0;
   width: 260px;
   background: #340c13;
+  background: color-mix(in oklab, #340c13, var(--wash-d) var(--wash-d-amt));
   border: 1px solid var(--gold);
   border-radius: 12px;
   padding: 12px;
@@ -508,11 +535,12 @@
 .emoji-grid-header {
   font: 500 11px var(--fb);
   color: #c5a882;
+  color: color-mix(in oklab, #c5a882, var(--wash-g) var(--wash-g-amt));
   text-transform: uppercase;
   letter-spacing: .12em;
   margin-bottom: 8px;
   text-align: center;
-  border-bottom: 1px solid rgba(193, 154, 61, 0.2);
+  border-bottom: 1px solid rgb(var(--gold-rgb) / 0.2);
   padding-bottom: 6px;
 }
 
@@ -536,7 +564,7 @@
 }
 
 .emoji-grid-item:hover {
-  background: rgba(193, 154, 61, 0.3);
+  background: rgb(var(--gold-rgb) / 0.3);
   border-color: var(--gold);
   transform: scale(1.15);
 }
@@ -546,10 +574,11 @@
    wax-seal envelope on success. Scoped to #s5.rs so it overrides the base.
    ========================================================================== */
 #s5.rs {
-  --line: rgba(240, 214, 142, 0.28);
+  --line: rgb(var(--gold-l-rgb) / 0.28);
   padding: clamp(44px, 6vw, 90px) clamp(18px, 5vw, 72px) clamp(28px, 4vw, 52px);
   /* flows on from the burgundy Events section above (no divider between them) */
   background: linear-gradient(180deg, var(--burg-d) 0, rgba(58, 11, 20, 0) 140px), radial-gradient(1000px 520px at 50% 20%, #7a2232, var(--burg) 46%, var(--burg-d));
+  background: linear-gradient(180deg, var(--burg-d) 0, rgb(var(--burg-d-rgb) / 0) 140px), radial-gradient(1000px 520px at 50% 20%, color-mix(in oklab, #7a2232, var(--wash-d) var(--wash-d-amt)), var(--burg) 46%, var(--burg-d));
   overflow: hidden;
 }
 
@@ -592,7 +621,7 @@
 #s5.rs .rsvp-seat {
   margin: 0 auto 22px;
   text-align: center;
-  color: rgba(248, 239, 220, 0.85);
+  color: rgb(var(--ivory-rgb) / 0.85);
   font: italic 400 clamp(20px, 2.2vw, 24px) / 1.4 var(--fh);
 }
 
@@ -613,7 +642,7 @@
   padding: 22px 0 10px;
   background: none;
   border: 0;
-  border-bottom: 1px solid rgba(240, 214, 142, 0.45);
+  border-bottom: 1px solid rgb(var(--gold-l-rgb) / 0.45);
   border-radius: 0;
   box-shadow: none;
   color: var(--ivory);
@@ -636,7 +665,7 @@
   right: 0;
   bottom: 12px;
   text-align: center;
-  color: rgba(248, 239, 220, 0.55);
+  color: rgb(var(--ivory-rgb) / 0.55);
   font: 400 22px var(--fh);
   pointer-events: none;
   transition: all 0.25s var(--ease);
@@ -675,7 +704,7 @@
 }
 
 #s5.rs .rsvp-card.is-attending {
-  background: linear-gradient(180deg, rgba(240, 214, 142, 0.07), rgba(240, 214, 142, 0.02));
+  background: linear-gradient(180deg, rgb(var(--gold-l-rgb) / 0.07), rgb(var(--gold-l-rgb) / 0.02));
 }
 
 #s5.rs .rsvp-card.is-attending::before {
@@ -701,7 +730,7 @@
 }
 
 #s5.rs .rsvp-card-prompt {
-  color: rgba(248, 239, 220, 0.75);
+  color: rgb(var(--ivory-rgb) / 0.75);
   font: italic 400 17px var(--fh);
 }
 
@@ -727,7 +756,7 @@
   flex: none;
   width: 44px;
   height: 26px;
-  border: 1px solid rgba(240, 214, 142, 0.55);
+  border: 1px solid rgb(var(--gold-l-rgb) / 0.55);
   border-radius: 999px;
   transition: background 0.3s var(--ease);
 }
@@ -751,6 +780,7 @@
 #s5.rs .rsvp-attend-toggle.active .rsvp-switch::after {
   transform: translateX(18px);
   background: #fff8e6;
+  background: color-mix(in oklab, #fff8e6, var(--wash-l) var(--wash-l-amt));
 }
 
 #s5.rs .rsvp-stepper-box {
@@ -772,7 +802,7 @@
 }
 
 #s5.rs .rsvp-stepper-label {
-  color: rgba(233, 211, 164, 0.75);
+  color: rgb(var(--champ-rgb) / 0.75);
   font: 500 10.5px / 1.4 var(--fb);
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -789,7 +819,7 @@
 #s5.rs .rsvp-step-btn {
   width: 40px;
   height: 40px;
-  border: 1px solid rgba(240, 214, 142, 0.55);
+  border: 1px solid rgb(var(--gold-l-rgb) / 0.55);
   border-radius: 50%;
   background: none;
   color: var(--gold-l);
@@ -821,7 +851,7 @@
 
 #s5.rs .rsvp-wishes-heading small {
   margin-left: 8px;
-  color: rgba(233, 211, 164, 0.6);
+  color: rgb(var(--champ-rgb) / 0.6);
   font: 500 10px var(--fb);
   font-style: normal;
   letter-spacing: 0.24em;
@@ -833,7 +863,7 @@
   padding: 0;
   background: none;
   border: 0;
-  border-bottom: 1px solid rgba(240, 214, 142, 0.45);
+  border-bottom: 1px solid rgb(var(--gold-l-rgb) / 0.45);
   border-radius: 0;
   box-shadow: none;
   color: var(--gold-l);
@@ -854,7 +884,7 @@
 }
 
 #s5.rs .rsvp-textarea::placeholder {
-  color: rgba(248, 239, 220, 0.45);
+  color: rgb(var(--ivory-rgb) / 0.45);
   font-style: italic;
 }
 
@@ -865,7 +895,7 @@
 
 #s5.rs .rsvp-submit-hint {
   margin-bottom: 14px;
-  color: rgba(248, 239, 220, 0.65);
+  color: rgb(var(--ivory-rgb) / 0.65);
   font: 400 13px var(--fb);
 }
 
@@ -887,7 +917,9 @@
   width: 16px;
   height: 16px;
   border: 2px solid rgba(43, 13, 18, 0.25);
+  border: 2px solid color-mix(in oklab, rgba(43, 13, 18, 0.25), rgb(var(--wash-d-rgb) / 0.25) var(--wash-d-amt));
   border-top-color: #2b0d12;
+  border-top-color: color-mix(in oklab, #2b0d12, var(--wash-d) var(--wash-d-amt));
   border-radius: 50%;
   animation: rs-spin 1s linear infinite;
 }
@@ -903,6 +935,7 @@
   border: 1px solid rgba(240, 163, 163, 0.55);
   border-radius: 6px;
   background: rgba(120, 20, 30, 0.35);
+  background: color-mix(in oklab, rgba(120, 20, 30, 0.35), rgb(var(--wash-d-rgb) / 0.35) var(--wash-d-amt));
   color: #ffd9d9;
   font: 400 14px / 1.5 var(--fb);
   text-align: left;
@@ -936,7 +969,7 @@
 }
 
 #s5.rs .conf-sub {
-  color: rgba(248, 239, 220, 0.82);
+  color: rgb(var(--ivory-rgb) / 0.82);
   font: 400 19px / 1.55 var(--fh);
 }
 
@@ -955,11 +988,11 @@
   padding: 14px 0;
   background: none;
   border: 0;
-  border-bottom: 1px solid rgba(240, 214, 142, 0.16);
+  border-bottom: 1px solid rgb(var(--gold-l-rgb) / 0.16);
 }
 
 #s5.rs .rsvp-summary-list span {
-  color: rgba(233, 211, 164, 0.75);
+  color: rgb(var(--champ-rgb) / 0.75);
   font: 500 10.5px / 1.8 var(--fb);
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -980,7 +1013,7 @@
   padding: 0;
   background: none;
   border: 0;
-  border-bottom: 1px solid rgba(240, 214, 142, 0.5);
+  border-bottom: 1px solid rgb(var(--gold-l-rgb) / 0.5);
   border-radius: 0;
   box-shadow: none;
   color: var(--gold-l);
@@ -1015,6 +1048,7 @@
   inset: 0;
   border-radius: 4px;
   background: linear-gradient(#e9dcc2, #dccaa7);
+  background: linear-gradient(color-mix(in oklab, #e9dcc2, var(--wash-l) var(--wash-l-amt)), color-mix(in oklab, #dccaa7, var(--wash-g) var(--wash-g-amt)));
 }
 
 #s5.rs .rs-env-letter {
@@ -1023,9 +1057,9 @@
   right: 7%;
   top: 8%;
   height: 70%;
-  border: 1px solid rgba(193, 154, 61, 0.5);
+  border: 1px solid rgb(var(--gold-rgb) / 0.5);
   border-radius: 3px;
-  background: #fffaf0;
+  background: var(--card);
 }
 
 #s5.rs .rs-env-pocket {
@@ -1033,8 +1067,9 @@
   inset: 0;
   border-radius: 0 0 4px 4px;
   background: linear-gradient(160deg, #fbf3e2, #efe2c6);
+  background: linear-gradient(160deg, color-mix(in oklab, #fbf3e2, var(--wash-l) var(--wash-l-amt)), color-mix(in oklab, #efe2c6, var(--wash-l) var(--wash-l-amt)));
   clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
-  box-shadow: inset 0 0 0 1px rgba(193, 154, 61, 0.45);
+  box-shadow: inset 0 0 0 1px rgb(var(--gold-rgb) / 0.45);
 }
 
 #s5.rs .rs-env-flap {
@@ -1044,6 +1079,7 @@
   top: 0;
   height: 60%;
   background: linear-gradient(#f6ead2, #e7d5b2);
+  background: linear-gradient(color-mix(in oklab, #f6ead2, var(--wash-l) var(--wash-l-amt)), color-mix(in oklab, #e7d5b2, var(--wash-l) var(--wash-l-amt)));
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   transform: rotateX(180deg);
   transform-origin: top;
@@ -1067,8 +1103,10 @@
   margin: -31px 0 0 -31px;
   border-radius: 50%;
   background: radial-gradient(circle at 36% 30%, #b23246, #7d1424 55%, #5a0d19);
+  background: radial-gradient(circle at 36% 30%, color-mix(in oklab, #b23246, var(--wash-d) var(--wash-d-amt)), color-mix(in oklab, #7d1424, var(--wash-d) var(--wash-d-amt)) 55%, color-mix(in oklab, #5a0d19, var(--wash-d) var(--wash-d-amt)));
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 0 0 5px rgba(0, 0, 0, 0.14);
   color: #f3d79a;
+  color: color-mix(in oklab, #f3d79a, var(--wash-g) var(--wash-g-amt));
   font: italic 500 19px var(--fh);
   opacity: 0;
   transform: scale(2.4);
@@ -1146,14 +1184,14 @@
   place-items: center;
   width: 24px;
   height: 24px;
-  border: 1px solid rgba(240, 214, 142, 0.6);
+  border: 1px solid rgb(var(--gold-l-rgb) / 0.6);
   border-radius: 50%;
   font: 500 12px var(--fh);
   letter-spacing: 0;
 }
 
 #s5.rs .rsvp-step em {
-  color: rgba(248, 239, 220, 0.6);
+  color: rgb(var(--ivory-rgb) / 0.6);
   font: italic 400 15px var(--fh);
   letter-spacing: 0;
   text-transform: none;
@@ -1192,7 +1230,7 @@
   min-height: 48px;
   margin: 0;
   padding: 0 10px;
-  border: 1px solid rgba(240, 214, 142, 0.45);
+  border: 1px solid rgb(var(--gold-l-rgb) / 0.45);
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.12);
   color: var(--ivory);
@@ -1219,14 +1257,17 @@
 
 #s5.rs .rsvp-attend-toggle.active {
   border-color: #f3dc8e;
+  border-color: color-mix(in oklab, #f3dc8e, var(--wash-g) var(--wash-g-amt));
   background: linear-gradient(180deg, #f8e8b2, var(--gold) 55%, #9a7022);
+  background: linear-gradient(180deg, color-mix(in oklab, #f8e8b2, var(--wash-l) var(--wash-l-amt)), var(--gold) 55%, color-mix(in oklab, #9a7022, var(--wash-g) var(--wash-g-amt)));
   color: #2b0d12;
+  color: color-mix(in oklab, #2b0d12, var(--wash-d) var(--wash-d-amt));
   font-weight: 500;
 }
 
 #s5.rs .rsvp-decline-toggle.active {
-  border-color: rgba(248, 239, 220, 0.7);
-  background: rgba(248, 239, 220, 0.12);
+  border-color: rgb(var(--ivory-rgb) / 0.7);
+  background: rgb(var(--ivory-rgb) / 0.12);
 }
 
 #s5.rs .rsvp-card.is-declined {

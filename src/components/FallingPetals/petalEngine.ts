@@ -6,6 +6,7 @@ export interface PetalShowerApi {
   stop(): void;
   shower(n: number): void;
   burst(x: number, y: number, n: number): void;
+  setPalette(key: 'rose' | 'blush' | 'temple'): void;
 }
 
 export function createPetalShower(cv: HTMLCanvasElement): PetalShowerApi {
@@ -38,38 +39,38 @@ export function createPetalShower(cv: HTMLCanvasElement): PetalShowerApi {
     const P=()=>shapes[kind](c,col.seed);
     P();
     let g=c.createRadialGradient(50,112,4,50,70,104);g.addColorStop(0,col.base);g.addColorStop(.55,col.mid);g.addColorStop(1,col.tip);
-    c.save();c.shadowColor='rgba(90,20,35,.32)';c.shadowBlur=10;c.shadowOffsetX=back?-2:2;c.shadowOffsetY=5;c.fillStyle=g;c.fill();c.restore();
+    c.save();c.shadowColor=`rgba(${col.shade||'90,20,35'},.32)`;c.shadowBlur=10;c.shadowOffsetX=back?-2:2;c.shadowOffsetY=5;c.fillStyle=g;c.fill();c.restore();
     c.save();P();c.clip();
     if(!back){
       // cylindrical cup shading across the width (light from upper-left)
       let x=c.createLinearGradient(4,0,96,0);
-      x.addColorStop(0,'rgba(255,230,236,.30)');x.addColorStop(.18,'rgba(255,255,255,0)');
-      x.addColorStop(.5,'rgba(70,0,22,.24)');x.addColorStop(.82,'rgba(70,0,22,.10)');x.addColorStop(1,'rgba(255,215,225,.22)');
+      x.addColorStop(0,`rgba(${col.light||'255,230,236'},.30)`);x.addColorStop(.18,'rgba(255,255,255,0)');
+      x.addColorStop(.5,`rgba(${col.shade||'70,0,22'},.24)`);x.addColorStop(.82,`rgba(${col.shade||'70,0,22'},.10)`);x.addColorStop(1,`rgba(${col.light||'255,215,225'},.22)`);
       c.fillStyle=x;c.fillRect(0,0,100,120);
       // deep pinch at the base where the petal curves most
-      let b=c.createRadialGradient(50,116,0,50,108,46);b.addColorStop(0,'rgba(60,0,20,.45)');b.addColorStop(1,'rgba(60,0,20,0)');
+      let b=c.createRadialGradient(50,116,0,50,108,46);b.addColorStop(0,`rgba(${col.shade||'60,0,20'},.45)`);b.addColorStop(1,`rgba(${col.shade||'60,0,20'},0)`);
       c.fillStyle=b;c.fillRect(0,0,100,120);
       // light caught on the raised inner wall
-      let h=c.createRadialGradient(30,46,0,30,46,30);h.addColorStop(0,'rgba(255,238,242,.30)');h.addColorStop(1,'rgba(255,238,242,0)');
+      let h=c.createRadialGradient(30,46,0,30,46,30);h.addColorStop(0,`rgba(${col.light||'255,238,242'},.30)`);h.addColorStop(1,`rgba(${col.light||'255,238,242'},0)`);
       c.fillStyle=h;c.fillRect(0,0,100,120);
       // veins, fanning and bending with the cup
-      c.strokeStyle='rgba(255,235,240,.08)';c.lineWidth=.7;
+      c.strokeStyle=`rgba(${col.light||'255,235,240'},.08)`;c.lineWidth=.7;
       for(let i=-3;i<=3;i++){c.beginPath();c.moveTo(50,114);c.bezierCurveTo(50+i*3,84,50+i*9,46,50+i*13.5,12);c.stroke();}
       // centre crease: thin shadow with a highlight beside it
-      c.lineWidth=1.6;c.strokeStyle='rgba(80,0,25,.22)';c.beginPath();c.moveTo(50,112);c.quadraticCurveTo(49,80,51,48);c.stroke();
-      c.lineWidth=1.2;c.strokeStyle='rgba(255,240,244,.25)';c.beginPath();c.moveTo(52.5,110);c.quadraticCurveTo(52,80,54,50);c.stroke();
+      c.lineWidth=1.6;c.strokeStyle=`rgba(${col.shade||'80,0,25'},.22)`;c.beginPath();c.moveTo(50,112);c.quadraticCurveTo(49,80,51,48);c.stroke();
+      c.lineWidth=1.2;c.strokeStyle=`rgba(${col.light||'255,240,244'},.25)`;c.beginPath();c.moveTo(52.5,110);c.quadraticCurveTo(52,80,54,50);c.stroke();
       // rolled lip along the outer (top) edge: soft shadow inside, light band on the rim
       c.save();c.beginPath();c.rect(0,0,100,78);c.clip();
-      P();c.lineWidth=16;c.strokeStyle='rgba(75,0,24,.16)';c.stroke();
-      P();c.lineWidth=4.5;c.strokeStyle='rgba(255,228,236,.32)';c.stroke();c.restore();
+      P();c.lineWidth=16;c.strokeStyle=`rgba(${col.shade||'75,0,24'},.16)`;c.stroke();
+      P();c.lineWidth=4.5;c.strokeStyle=`rgba(${col.light||'255,228,236'},.32)`;c.stroke();c.restore();
     }else{
       // convex outer face: lit central ridge, edges falling into shade, more matte
       let x=c.createLinearGradient(4,0,96,0);
-      x.addColorStop(0,'rgba(55,0,18,.34)');x.addColorStop(.42,'rgba(255,236,240,.22)');
-      x.addColorStop(.55,'rgba(255,236,240,.10)');x.addColorStop(1,'rgba(55,0,18,.38)');
+      x.addColorStop(0,`rgba(${col.shade||'55,0,18'},.34)`);x.addColorStop(.42,`rgba(${col.light||'255,236,240'},.22)`);
+      x.addColorStop(.55,`rgba(${col.light||'255,236,240'},.10)`);x.addColorStop(1,`rgba(${col.shade||'55,0,18'},.38)`);
       c.fillStyle=x;c.fillRect(0,0,100,120);
-      c.fillStyle='rgba(60,10,25,.10)';c.fillRect(0,0,100,120);
-      c.strokeStyle='rgba(60,0,20,.08)';c.lineWidth=.8;
+      c.fillStyle=`rgba(${col.shade||'60,10,25'},.10)`;c.fillRect(0,0,100,120);
+      c.strokeStyle=`rgba(${col.shade||'60,0,20'},.08)`;c.lineWidth=.8;
       for(let i=-2;i<=2;i++){c.beginPath();c.moveTo(50,114);c.bezierCurveTo(50+i*3,84,50+i*9,46,50+i*14,14);c.stroke();}
     }
     c.restore();
@@ -80,8 +81,8 @@ export function createPetalShower(cv: HTMLCanvasElement): PetalShowerApi {
     c.beginPath();c.moveTo(50,116);c.bezierCurveTo(26,92,24,40,46,6);c.bezierCurveTo(48,6,49,7,49,8);
     c.bezierCurveTo(36,42,38,88,50,116);c.closePath();
     let g=c.createLinearGradient(0,116,0,6);g.addColorStop(0,col.base);g.addColorStop(.6,col.mid);g.addColorStop(1,col.tip);
-    c.save();c.shadowColor='rgba(90,20,35,.3)';c.shadowBlur=8;c.shadowOffsetY=4;c.fillStyle=g;c.fill();c.restore();
-    c.beginPath();c.moveTo(48,112);c.bezierCurveTo(28,90,27,42,45,10);c.strokeStyle='rgba(255,230,238,.55)';c.lineWidth=2;c.stroke();
+    c.save();c.shadowColor=`rgba(${col.shade||'90,20,35'},.3)`;c.shadowBlur=8;c.shadowOffsetY=4;c.fillStyle=g;c.fill();c.restore();
+    c.beginPath();c.moveTo(48,112);c.bezierCurveTo(28,90,27,42,45,10);c.strokeStyle=`rgba(${col.light||'255,230,238'},.55)`;c.lineWidth=2;c.stroke();
   }
   // moving specular: an elongated glint along the curve, faded in by the flip angle
   function paintSpec(c){
@@ -112,7 +113,20 @@ export function createPetalShower(cv: HTMLCanvasElement): PetalShowerApi {
       {k:'rose',w:3,c:{base:'#8e1834',mid:'#d04d69',tip:'#f7b9c7',rim:'rgba(110,15,40,.30)'}},
       {k:'rose',w:3,c:{base:'#b8304f',mid:'#ea84a0',tip:'#fde3ea',rim:'rgba(140,35,65,.24)'}},
       {k:'rose',w:2,c:{base:'#6e0f2a',mid:'#ad2848',tip:'#e5768f',rim:'rgba(70,8,28,.32)'}},
-      {k:'gold',w:1.3,c:{seed:7}},{k:'gold',w:1,c:{seed:91}}]}
+      {k:'gold',w:1.3,c:{seed:7}},{k:'gold',w:1,c:{seed:91}}]},
+    // Team Bride: softer blush roses with gold flakes
+    blush:{name:'Blush & Rose gold',items:[
+      {k:'rose',w:3,c:{base:'#c4506d',mid:'#f0a3b5',tip:'#fde6ec',rim:'rgba(150,50,80,.22)',shade:'110,30,55'}},
+      {k:'rose',w:3,c:{base:'#d77a8c',mid:'#f7c4cc',tip:'#fff1f3',rim:'rgba(160,70,90,.2)',shade:'120,40,60'}},
+      {k:'rose',w:2,c:{base:'#9e2a4a',mid:'#d9667f',tip:'#f6b8c6',rim:'rgba(90,15,38,.28)'}},
+      {k:'gold',w:1.2,c:{seed:7}},{k:'gold',w:.9,c:{seed:91}}]},
+    // Team Groom: jasmine buds and marigold petals, as at a Tamil temple wedding
+    temple:{name:'Jasmine & Marigold',items:[
+      {k:'jasmine',w:2.4,c:{base:'#cdbf95',mid:'#f4eedb',tip:'#ffffff',rim:'rgba(120,100,60,.5)',shade:'90,75,40',light:'255,255,248'}},
+      {k:'jasmine',w:1.8,c:{base:'#c2b285',mid:'#efe6cc',tip:'#fffdf4',rim:'rgba(110,90,50,.5)',shade:'90,75,40',light:'255,255,245'}},
+      {k:'marigold',w:2.6,c:{base:'#b53a08',mid:'#ec7d16',tip:'#ffb93f',rim:'rgba(130,45,0,.38)',shade:'110,40,0',light:'255,236,200'}},
+      {k:'marigold',w:2,c:{base:'#c97c04',mid:'#f6b11c',tip:'#ffdd6e',rim:'rgba(130,80,0,.38)',shade:'120,70,0',light:'255,244,210'}},
+      {k:'gold',w:.8,c:{seed:7}}]}
   };
   const BLUR=[1.6,0,3.2];           // far, mid, near
   let palKey='rose',kinds=[],glint;
@@ -141,7 +155,7 @@ export function createPetalShower(cv: HTMLCanvasElement): PetalShowerApi {
     const z=layer===0?rnd(0,.35):layer===1?rnd(.4,.75):rnd(.85,1);
     const size=(layer===0?rnd(10,14):layer===1?rnd(18,26):rnd(36,48))*(gold?.62:1);
     return Object.assign({
-      ki,layer,z,size,
+      ki,gold,layer,z,size,
       x:rnd(-40,W+40),y:opts.y!=null?opts.y:rnd(-H,H),
       vy:(layer===0?rnd(26,38):layer===1?rnd(42,62):rnd(78,104)),
       sway:rnd(10,26)*(.6+z),swf:rnd(.5,1.1),ph:rnd(0,6.28),
@@ -248,10 +262,14 @@ export function createPetalShower(cv: HTMLCanvasElement): PetalShowerApi {
 
   function start(){if(running||reduce)return;running=true;last=performance.now();raf=requestAnimationFrame(loop);}
   function stop(){running=false;cancelAnimationFrame(raf);}
-  function setPalette(k){palKey=k;buildSprites();ps=[];fill();if(!running)draw();}
+  function setPalette(k){if(!PAL[k]||k===palKey)return;palKey=k;buildSprites();
+    for(const p of ps){const ki=pickKind(),g=kinds[ki].gold,was=p.size;p.ki=ki;
+      // keep size consistent when a petal becomes a gold flake (or the other way round)
+      if(g!==p.gold){p.size=g?was*.62:was/.62;p.gold=g;}}
+    if(!running)draw();}
   function setDensity(d){density=d;fill();}
 
   buildSprites();resize();
   if(reduce){ps=ps.filter(p=>p.y>0&&p.y<H).slice(0,10);draw();}
-  return {start,stop,shower,burst};
+  return {start,stop,shower,burst,setPalette};
 }

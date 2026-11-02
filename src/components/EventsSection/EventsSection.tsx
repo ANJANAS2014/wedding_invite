@@ -5,6 +5,8 @@ import { useNow } from '../../hooks/useNow';
 import { makeGoogleCalendarUrl } from '../../utils/calendar';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
 import { NextTeaser } from '../ScrollGuide/NextTeaser';
+import { WeddingCard } from './WeddingCard';
+import { TrainJourney } from './TrainJourney';
 
 /** Index of the next celebration: the reception once the wedding has ended. */
 const nextEventIndex = (now: number): number =>
@@ -35,9 +37,17 @@ export const EventsSection: React.FC = () => {
         {WEDDING_EVENTS.map((ev, index) => {
           const isNext = index === activeEventIndex;
           const d = splitDate(ev.dateStr);
+          if (ev.id === 'wedding') {
+            return (
+              <React.Fragment key={ev.id}>
+                <WeddingCard ev={ev} isNext={isNext} date={d} />
+                <TrainJourney />
+              </React.Fragment>
+            );
+          }
           return (
-            <article key={ev.id} className={`ev-ch ec reveal ${isNext ? 'on' : ''}`}>
-              <figure className={`ev-ph bu ${ev.id === 'wedding' ? 'ev-ph--grade' : ''}`}>
+            <article key={ev.id} className={`ev-ch ev-ch--solo ec reveal ${isNext ? 'on' : ''}`}>
+              <figure className="ev-ph bu">
                 <img className="vi" src={ev.image} alt={ev.venue} width={900} height={720} loading="lazy" decoding="async" />
               </figure>
               <div className="ev-tx">

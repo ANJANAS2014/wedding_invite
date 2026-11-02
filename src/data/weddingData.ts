@@ -6,6 +6,8 @@ export const WEDDING_IMAGES = {
   p4: "/images/gallery/gallery-couple-lotus-closeup-portrait.jpg",
   p7: "/images/gallery/gallery-couple-water-lotus-landscape.jpg",
   p10: "/images/couple/bride-office-portrait.jpg",
+  /** p10 pre-cropped to face + flower (no office ceiling / monitor) for the round portrait */
+  bride_portrait: "/images/couple/bride-portrait-crop.jpg",
   p12: "/images/couple/groom-park-portrait.jpg",
   w1: "/images/venues/wedding-venue-central-auditorium.jpg",
   r1: "/images/venues/reception-venue-annalakshmi.jpg",
@@ -37,6 +39,32 @@ export const STORY_MOMENTS: StoryMoment[] = [
   { title: 'The checklist', text: 'Hers: respect, reassurance, someone who makes life lighter. His: none. He just knew.', image: 'story_photo_three', objectPosition: '50% 25%', zoom: 1.3 },
   { title: 'Fate’s sense of humour', text: 'He learned almost every South Indian language except Malayalam… then fell for a Malayali girl.', image: 'p4', objectPosition: '50% 30%' },
   { title: 'Home', text: 'His keyboard, her ukulele, endless conversations. Now, with their families’ blessings, a lifetime of choosing each other.', image: 'p7', objectPosition: '50% 50%' }
+];
+
+/** Bride & Groom: where each of them is from (shown under the portraits, joined by a jasmine garland). */
+export const COUPLE_HOMETOWNS = {
+  groom: { town: 'Chennai', region: 'Tamil Nadu' },
+  bride: { town: 'North Paravur', region: 'Keralam' },
+} as const;
+
+/**
+ * "Who's more likely to…?" flip cards in the Bride & Groom section.
+ * Taken from the story — swap in your own questions/answers any time.
+ * answer: 'groom' | 'bride' | 'both'
+ */
+export interface CoupleQuizItem {
+  q: string;
+  answer: 'groom' | 'bride' | 'both';
+  note: string;
+}
+
+export const COUPLE_QUIZ: CoupleQuizItem[] = [
+  { q: 'Who speaks more languages?', answer: 'groom', note: 'Almost every South Indian language… except Malayalam. Fate noticed.' },
+  { q: 'Who came with a checklist for love?', answer: 'bride', note: 'Respect, reassurance, and someone who makes life lighter. All ticked.' },
+  { q: 'Who brings the music?', answer: 'both', note: 'His keyboard, her ukulele. The duet is still in rehearsal.' },
+  { q: 'Who turns any ordinary moment into fun?', answer: 'groom', note: 'Sometimes even on purpose.' },
+  { q: 'Who notices the little things first?', answer: 'bride', note: 'Quiet, observant, and happiest in life’s little moments.' },
+  { q: 'Who sings off-key on road trips?', answer: 'both', note: 'Ask anyone who was on the Wayanad trip.' },
 ];
 
 // Filmstrip + lightbox photos are loaded automatically from src/assets/filmstrip/.

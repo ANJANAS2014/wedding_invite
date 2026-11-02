@@ -5,6 +5,7 @@
   position: fixed;
   inset: 0;
   background: rgba(14, 4, 6, 0.95);
+  background: color-mix(in oklab, rgba(14, 4, 6, 0.95), rgb(var(--wash-d-rgb) / 0.95) var(--wash-d-amt));
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr) 48px;
   place-items: center;
@@ -23,7 +24,7 @@
   max-height: calc(100svh - 100px); /* iOS Safari: exclude the dynamic toolbar */
   object-fit: contain;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(193, 154, 61, 0.4);
+  border: 1px solid rgb(var(--gold-rgb) / 0.4);
 }
 
 #lb .lb-prev, #lb .lb-next {
@@ -34,7 +35,8 @@
   border: 1px solid var(--gold);
   border-radius: 50%;
   background: #2b0d12;
-  color: #f8efdc;
+  background: color-mix(in oklab, #2b0d12, var(--wash-d) var(--wash-d-amt));
+  color: var(--ivory);
   font: 400 30px/1 var(--fh);
   cursor: pointer;
   transition: background .2s;
@@ -49,13 +51,15 @@
   border: 1px solid var(--gold);
   border-radius: 50%;
   background: #2b0d12;
-  color: #f8efdc;
+  background: color-mix(in oklab, #2b0d12, var(--wash-d) var(--wash-d-amt));
+  color: var(--ivory);
   font: 400 28px/1 var(--fb);
   cursor: pointer;
 }
 
 #lb .lb-prev:hover, #lb .lb-next:hover, #lb .lb-close:hover {
   background: #46141d;
+  background: color-mix(in oklab, #46141d, var(--wash-d) var(--wash-d-amt));
 }
 
 

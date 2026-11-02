@@ -4,7 +4,7 @@ import { haptic, hapticSoft } from '../../utils/haptics';
 import { glideTo, reducedMotion, tick, TOUR_START_EVENT } from '../../utils/motion';
 
 // Section ids visited in order; the tour ends at the RSVP.
-const STOPS = ['team', 'couple', 'story-filmstrip-section', 's2', 's5'];
+const STOPS = ['couple', 'story-filmstrip-section', 's2', 's5'];
 const PAUSE_MS = 6000;
 const GLIDE_MS = 1100;
 

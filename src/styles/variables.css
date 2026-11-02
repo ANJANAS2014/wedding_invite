@@ -18,6 +18,28 @@
   --champ: #e9d3a4;
   --gold-l: #f0d68e;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --gold-d: #b8892e;
+  --card: #fffaf0;
+  --paper-2: #fbf6ec;
+
+  /* Same colours as "R G B" triples, for rgb(var(--x) / alpha) */
+  --gold-rgb: 193 154 61;
+  --gold-l-rgb: 240 214 142;
+  --gold-d-rgb: 184 137 46;
+  --burg-rgb: 90 20 32;
+  --burg-d-rgb: 58 11 20;
+  --champ-rgb: 233 211 164;
+  --ivory-rgb: 248 239 220;
+
+  /* Team theme washes: every other hard-coded colour is mixed toward these.
+     0% = the original look (no team picked). */
+  --wash-l: #ffffff;  /* light backgrounds */
+  --wash-l-amt: 0%;
+  --wash-d: #000000;  /* deep burgundy text / surfaces */
+  --wash-d-amt: 0%;
+  --wash-d-rgb: 0 0 0;
+  --wash-g: #c19a3d;  /* other golds */
+  --wash-g-amt: 0%;
   color-scheme: only light;
   box-sizing: border-box;
 
@@ -29,4 +51,76 @@
   --cover-altar: url('/images/cover/hero-decoration-bottom-right.jpg');
   --cover-procession: url('/images/cover/wedding-procession.png');
   --cover-cutout: url('/images/cover/wedding-couple-cutout-refined.webp');
+}
+
+
+/* ==========================================================================
+   TEAM THEMES — set on <html data-team="…"> by utils/teamTheme.ts
+   ========================================================================== */
+
+/* Team Bride: "Blush & rose gold" — softer, warmer, romantic */
+:root[data-team="bride"] {
+  --maroon: #8a3350;
+  --burg: #7d2a45;
+  --burg-d: #521a2e;
+  --ink: #4a1f2b;
+  --gold: #c8916c;
+  --gold-d: #b07858;
+  --gold-l: #f3cdb6;
+  --champ: #edcdc1;
+  --ivory: #fbede8;
+  --cream: #fbede8;
+  --card: #fff7f4;
+  --paper-2: #fcf1ed;
+  --gold-rgb: 200 145 108;
+  --gold-l-rgb: 243 205 182;
+  --gold-d-rgb: 176 120 88;
+  --burg-rgb: 125 42 69;
+  --burg-d-rgb: 82 26 46;
+  --champ-rgb: 237 205 193;
+  --ivory-rgb: 251 237 232;
+  --wash-l: #f9d4d8;
+  --wash-l-amt: 26%;
+  --wash-d: #8d3352;
+  --wash-d-amt: 45%;
+  --wash-d-rgb: 141 51 82;
+  --wash-g: #c98a6e;
+  --wash-g-amt: 55%;
+}
+
+/* Team Groom: "Kanjeevaram peacock" — deep peacock teal with temple brass */
+:root[data-team="groom"] {
+  --maroon: #1b5a60;
+  --burg: #144b52;
+  --burg-d: #0c2f35;
+  --ink: #18302f;
+  --gold: #bf9638;
+  --gold-d: #a7802b;
+  --gold-l: #ecd38a;
+  --champ: #ddd5b2;
+  --ivory: #f4efe0;
+  --cream: #f4efe0;
+  --card: #fdfbf3;
+  --paper-2: #f6f2e6;
+  --gold-rgb: 191 150 56;
+  --gold-l-rgb: 236 211 138;
+  --gold-d-rgb: 167 128 43;
+  --burg-rgb: 20 75 82;
+  --burg-d-rgb: 12 47 53;
+  --champ-rgb: 221 213 178;
+  --ivory-rgb: 244 239 224;
+  --wash-l: #dcebe4;
+  --wash-l-amt: 18%;
+  --wash-d: #134a50;
+  --wash-d-amt: 82%;
+  --wash-d-rgb: 19 74 80;
+  --wash-g: #bf9638;
+  --wash-g-amt: 0%;
+}
+
+/* Soft cross-fade when the theme changes (View Transitions, where supported) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.9s;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
 }

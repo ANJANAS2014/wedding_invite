@@ -23,7 +23,9 @@
   place-items: center;
   text-align: center;
   color: #5c1926;
+  color: color-mix(in oklab, #5c1926, var(--wash-d) var(--wash-d-amt));
   background-color: #eae1d8;
+  background-color: color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt));
   overflow: hidden;
   padding: 0;
   isolation: isolate;
@@ -36,13 +38,16 @@
   overflow: hidden;
   z-index: 1;
   background-color: #eae1d8;
+  background-color: color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt));
   background-image: radial-gradient(ellipse 52% 46% at 50% 42%, #f6efe6 0%, #eee6dd 46%, #eae1d8 76%);
+  background-image: radial-gradient(ellipse 52% 46% at 50% 42%, color-mix(in oklab, #f6efe6, var(--wash-l) var(--wash-l-amt)) 0%, color-mix(in oklab, #eee6dd, var(--wash-l) var(--wash-l-amt)) 46%, color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt)) 76%);
 }
 
 .cover-light {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 62% 52% at 50% 38%, rgba(255, 251, 242, 0.5) 0%, rgba(193, 154, 61, 0.05) 55%, rgba(90, 26, 38, 0.03) 100%);
+  background: radial-gradient(ellipse 62% 52% at 50% 38%, rgba(255, 251, 242, 0.5) 0%, rgb(var(--gold-rgb) / 0.05) 55%, rgba(90, 26, 38, 0.03) 100%);
+  background: radial-gradient(ellipse 62% 52% at 50% 38%, rgba(255, 251, 242, 0.5) 0%, rgb(var(--gold-rgb) / 0.05) 55%, color-mix(in oklab, rgba(90, 26, 38, 0.03), rgb(var(--wash-d-rgb) / 0.03) var(--wash-d-amt)) 100%);
 }
 
 /* Upper floral & jasmine garland stage + brass lamps (media-gated so only 1 garland loads) */
@@ -301,6 +306,7 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(ellipse 80% 76% at 50% 48%, transparent 56%, rgba(88, 34, 24, 0.08) 100%);
+  background: radial-gradient(ellipse 80% 76% at 50% 48%, transparent 56%, color-mix(in oklab, rgba(88, 34, 24, 0.08), rgb(var(--wash-d-rgb) / 0.08) var(--wash-d-amt)) 100%);
   z-index: 4;
 }
 
@@ -319,7 +325,9 @@
   height: var(--s, 3.5px);
   border-radius: 50%;
   background: #f9eab8;
+  background: color-mix(in oklab, #f9eab8, var(--wash-l) var(--wash-l-amt));
   box-shadow: 0 0 7px #efd079;
+  box-shadow: 0 0 7px color-mix(in oklab, #efd079, var(--wash-g) var(--wash-g-amt));
   animation: float-sparkle var(--d, 11s) linear var(--dl, 0s) infinite;
   opacity: 0;
   z-index: 4;
@@ -375,6 +383,7 @@
 .cover-halo .cover-lotus-mandala * {
   fill: none;
   stroke: #b5882c;
+  stroke: color-mix(in oklab, #b5882c, var(--wash-g) var(--wash-g-amt));
   stroke-width: 0.55;
 }
 
@@ -392,6 +401,7 @@
   transform: translateX(-50%);
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(72, 23, 29, 0.16) 0%, rgba(72, 23, 29, 0) 72%);
+  background: radial-gradient(ellipse at center, color-mix(in oklab, rgba(72, 23, 29, 0.16), rgb(var(--wash-d-rgb) / 0.16) var(--wash-d-amt)) 0%, color-mix(in oklab, rgba(72, 23, 29, 0), rgb(var(--wash-d-rgb) / 0) var(--wash-d-amt)) 72%);
   pointer-events: none;
   z-index: 0;
 }
@@ -427,6 +437,7 @@
   margin: clamp(6px, 1.1svh, 12px) 0 0;
   max-width: 34ch;
   color: #6b4e31;
+  color: color-mix(in oklab, #6b4e31, var(--wash-g) var(--wash-g-amt));
   font: italic 400 clamp(15px, 1.6vw, 20px) / 1.32 var(--fh);
   letter-spacing: 0.02em;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 16px #f6efe6;
@@ -436,6 +447,7 @@
   font-weight: 600;
   font-style: italic;
   color: #5c1926;
+  color: color-mix(in oklab, #5c1926, var(--wash-d) var(--wash-d-amt));
 }
 
 #hero .names {
@@ -443,6 +455,7 @@
   z-index: 2;
   margin: clamp(4px, 0.9svh, 10px) 0 0;
   color: #5e1623;
+  color: color-mix(in oklab, #5e1623, var(--wash-d) var(--wash-d-amt));
   font: 500 clamp(44px, 6.4vw, 80px) / 0.98 var(--fh);
   letter-spacing: 0.02em;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65), 0 6px 22px rgba(246, 239, 230, 0.85);
@@ -459,7 +472,9 @@
   vertical-align: -0.02em;
   text-shadow: none;
   color: #b8892b;
+  color: color-mix(in oklab, #b8892b, var(--wash-g) var(--wash-g-amt));
   background: linear-gradient(180deg, #d7ab4e 0%, #996b17 100%);
+  background: linear-gradient(180deg, color-mix(in oklab, #d7ab4e, var(--wash-g) var(--wash-g-amt)) 0%, color-mix(in oklab, #996b17, var(--wash-g) var(--wash-g-amt)) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -480,11 +495,11 @@
 .cover-ornament-line {
   width: clamp(44px, 5vw, 72px);
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(183, 137, 46, 0.8));
+  background: linear-gradient(90deg, transparent, rgb(var(--gold-d-rgb) / 0.8));
 }
 
 .cover-ornament-line:last-child {
-  background: linear-gradient(270deg, transparent, rgba(183, 137, 46, 0.8));
+  background: linear-gradient(270deg, transparent, rgb(var(--gold-d-rgb) / 0.8));
 }
 
 .cover-ornament-floret {
@@ -496,11 +511,13 @@
 .cover-ornament-floret path {
   fill: none;
   stroke: #b7892e;
+  stroke: color-mix(in oklab, #b7892e, var(--wash-g) var(--wash-g-amt));
   stroke-width: 1.05;
 }
 
 .cover-ornament-floret circle {
   fill: #b7892e;
+  fill: color-mix(in oklab, #b7892e, var(--wash-g) var(--wash-g-amt));
 }
 
 .cover-date {
@@ -508,6 +525,7 @@
   z-index: 2;
   margin: clamp(6px, 0.9svh, 10px) 0 0;
   color: #4f2a1f;
+  color: color-mix(in oklab, #4f2a1f, var(--wash-d) var(--wash-d-amt));
   font: 500 clamp(11px, 1.08vw, 13px) / 1.45 var(--fb);
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -533,7 +551,9 @@
 .ccd-unit b {
   font: 500 clamp(22px, 2.3vw, 30px) / 1 var(--fh);
   color: #9b7124;
+  color: color-mix(in oklab, #9b7124, var(--wash-g) var(--wash-g-amt));
   background: linear-gradient(180deg, #c59b43 0%, #865f1a 100%);
+  background: linear-gradient(180deg, color-mix(in oklab, #c59b43, var(--wash-g) var(--wash-g-amt)) 0%, color-mix(in oklab, #865f1a, var(--wash-g) var(--wash-g-amt)) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -546,12 +566,13 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #6d5030;
+  color: color-mix(in oklab, #6d5030, var(--wash-g) var(--wash-g-amt));
 }
 
 .ccd-sep {
   width: 1px;
   height: 28px;
-  background: linear-gradient(180deg, rgba(183, 137, 46, 0.08), rgba(183, 137, 46, 0.65), rgba(183, 137, 46, 0.08));
+  background: linear-gradient(180deg, rgb(var(--gold-d-rgb) / 0.08), rgb(var(--gold-d-rgb) / 0.65), rgb(var(--gold-d-rgb) / 0.08));
 }
 
 
@@ -821,6 +842,7 @@
   max-width: 32ch;
   margin: clamp(8px, 1.4svh, 14px) auto 0;
   color: #5c1926;
+  color: color-mix(in oklab, #5c1926, var(--wash-d) var(--wash-d-amt));
   font: italic 400 clamp(17px, 1.9vw, 21px) / 1.45 var(--fh);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 16px #f6efe6;
 }
@@ -831,6 +853,7 @@
   max-width: 36ch;
   margin: 6px auto 0;
   color: #6b4e31;
+  color: color-mix(in oklab, #6b4e31, var(--wash-g) var(--wash-g-amt));
   font: 400 clamp(13px, 1.2vw, 15px) / 1.55 var(--fb);
   letter-spacing: 0.01em;
   text-shadow: 0 0 12px #f6efe6;
@@ -848,6 +871,7 @@
   justify-content: center;
   padding: 0 16px;
   color: #8a6219;
+  color: color-mix(in oklab, #8a6219, var(--wash-g) var(--wash-g-amt));
   font: 500 9px / 1 var(--fb);
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -1034,6 +1058,7 @@ body.revealed .cv > :nth-child(9) { transition-delay: 1.15s; }
   height: clamp(380px, 72svh, 760px);
   overflow: hidden;
   background: #2a0a10;
+  background: color-mix(in oklab, #2a0a10, var(--wash-d) var(--wash-d-amt));
 }
 
 .cover-band img {
@@ -1049,6 +1074,8 @@ body.revealed .cv > :nth-child(9) { transition-delay: 1.15s; }
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, #eae1d8 0%, rgba(234, 225, 216, 0) 14%, rgba(42, 10, 16, 0) 55%, rgba(42, 10, 16, 0.82) 100%);
+  background: linear-gradient(180deg, #eae1d8 0%, rgba(234, 225, 216, 0) 14%, color-mix(in oklab, rgba(42, 10, 16, 0), rgb(var(--wash-d-rgb) / 0) var(--wash-d-amt)) 55%, color-mix(in oklab, rgba(42, 10, 16, 0.82), rgb(var(--wash-d-rgb) / 0.82) var(--wash-d-amt)) 100%);
+  background: linear-gradient(180deg, color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt)) 0%, rgba(234, 225, 216, 0) 14%, rgba(42, 10, 16, 0) 55%, rgba(42, 10, 16, 0.82) 100%);
 }
 
 .cover-band figcaption {
@@ -1059,7 +1086,7 @@ body.revealed .cv > :nth-child(9) { transition-delay: 1.15s; }
   z-index: 2;
   padding: 0 24px;
   text-align: center;
-  color: #f8efdc;
+  color: var(--ivory);
 }
 
 .cover-band-quote {
@@ -1074,6 +1101,7 @@ body.revealed .cv > :nth-child(9) { transition-delay: 1.15s; }
   display: block;
   margin-top: 10px;
   color: #f3dc8e;
+  color: color-mix(in oklab, #f3dc8e, var(--wash-g) var(--wash-g-amt));
   font: 500 10px / 1.4 var(--fb);
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -1105,6 +1133,7 @@ body.revealed .cv > :nth-child(9) { transition-delay: 1.15s; }
   z-index: 2;
   margin: clamp(10px, 1.6svh, 16px) 0 -2px;
   color: #9a7022;
+  color: color-mix(in oklab, #9a7022, var(--wash-g) var(--wash-g-amt));
   font: 400 clamp(26px, 6vw, 34px) / 1 var(--fs);
 }
 

@@ -5,6 +5,7 @@
   text-align: center;
   /* soft hand-over from the champagne Wishes Wall above */
   background: linear-gradient(180deg, #efe3cf 0, rgba(239, 227, 207, 0) 70px), radial-gradient(900px 420px at 50% 20%, #7a2232, var(--burg) 50%, var(--burg-d));
+  background: linear-gradient(180deg, color-mix(in oklab, #efe3cf, var(--wash-l) var(--wash-l-amt)) 0, rgba(239, 227, 207, 0) 70px), radial-gradient(900px 420px at 50% 20%, color-mix(in oklab, #7a2232, var(--wash-d) var(--wash-d-amt)), var(--burg) 50%, var(--burg-d));
   color: var(--cream);
 }
 

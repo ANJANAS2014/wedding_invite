@@ -1,10 +1,14 @@
 /* ==========================================================================
-   BRIDE & GROOM — compact: round portraits side by side, vows underneath
-   (approved: full-site-mockup-v2.html)
+   BRIDE & GROOM — heritage-framed round portraits (Kanjeevaram / kasavu),
+   a gold thali chain + hand-drawn "&" between them, Team glow,
+   the "Who's more likely to…?" flip cards, then the vows.
    ========================================================================== */
 .cp {
+  --pic: 220px;
+  --gh: 78px; /* garland height (sag) */
   padding: clamp(52px, 7vw, 96px) clamp(16px, 5vw, 64px) clamp(28px, 4vw, 52px);
   background: radial-gradient(900px 500px at 50% 0, #fffaf1, #fbf6ec 60%, #f3e9d8);
+  background: radial-gradient(900px 500px at 50% 0, color-mix(in oklab, #fffaf1, var(--wash-l) var(--wash-l-amt)), var(--paper-2) 60%, color-mix(in oklab, #f3e9d8, var(--wash-l) var(--wash-l-amt)));
   color: var(--ink);
   text-align: center;
 }
@@ -20,32 +24,55 @@
   font: 400 clamp(38px, 5.4vw, 60px) / 1 var(--fh);
 }
 
+/* ---------- the pair ---------- */
 .cp-pair {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   gap: clamp(10px, 3vw, 40px);
   align-items: start;
   max-width: 880px;
-  margin: clamp(30px, 5vw, 52px) auto 0;
+  margin: clamp(34px, 5vw, 56px) auto 0;
 }
 
-.cp-amp {
-  align-self: center;
-  margin-top: -30%;
-  color: #d9b45f;
-  font: italic 400 clamp(40px, 6vw, 80px) / 1 var(--fh);
+.cp-person {
+  position: relative;
+  z-index: 1;
 }
 
 .cp-pic {
-  width: min(100%, 220px);
+  position: relative;
+  z-index: 1;
+  width: min(100%, var(--pic));
   aspect-ratio: 1;
   margin: 0 auto;
   padding: 6px;
-  border: 1px solid rgba(184, 137, 46, 0.55);
+  border: 0;
   border-radius: 50%;
+  background: var(--paper-2);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.6s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cp-pic:hover {
+  transform: translateY(-3px);
+}
+
+.cp-pic:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 16px;
+}
+
+/* the side not picked softens a little */
+.cp-pair:has(.is-team) .cp-person:not(.is-team) .cp-img img {
+  filter: sepia(0.32) saturate(0.72) brightness(1.03);
 }
 
 .cp-img {
+  position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -53,6 +80,7 @@
 }
 
 .cp-img img {
+  transition: filter 0.8s var(--ease);
   display: block;
   width: 100%;
   height: 100%;
@@ -60,17 +88,63 @@
   filter: sepia(0.18) saturate(0.92);
 }
 
-/* office background: zoom in so only her face and shoulders show */
-.cp-img img.cp-img--bride {
-  object-position: 50% 20%;
-  transform: scale(1.45);
-  transform-origin: 52% 26%;
+/* soft warm vignette so any leftover background melts into the frame */
+.cp-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 22px rgba(120, 70, 30, 0.22);
+  pointer-events: none;
 }
 
+/* ---------- heritage rings ---------- */
+.cp-ring {
+  position: absolute;
+  inset: -12px;
+  width: calc(100% + 24px);
+  height: calc(100% + 24px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.cp-ring-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.8s var(--ease) 0.2s;
+}
+
+.cp-ring-band,
+.cp-ring-motif {
+  opacity: 0;
+  transform: rotate(-24deg);
+  transform-origin: 100px 100px;
+  transition: opacity 1.2s var(--ease) 0.6s, transform 1.8s var(--ease) 0.6s;
+}
+
+.cp-pair.in .cp-ring-draw {
+  stroke-dashoffset: 0;
+}
+
+.cp-pair.in .cp-ring-band,
+.cp-pair.in .cp-ring-motif {
+  opacity: 1;
+  transform: none;
+}
+
+.cp-ring--kasavu .cp-ring-band {
+  opacity: 0;
+}
+
+.cp-pair.in .cp-ring--kasavu .cp-ring-band {
+  opacity: 0.85;
+}
+
+/* ---------- labels ---------- */
 .cp-role {
   display: block;
-  margin: 18px 0 2px;
-  color: #b8892e;
+  margin: 28px 0 2px;
+  color: var(--gold-d);
   font: 500 10px / 1 var(--fb);
   letter-spacing: 0.34em;
   text-transform: uppercase;
@@ -82,13 +156,533 @@
   font: italic 400 clamp(34px, 4vw, 50px) / 1 var(--fh);
 }
 
+.cp-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: rgb(var(--burg-rgb) / 0.62);
+  font: 500 10px / 1 var(--fb);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.cp-home svg {
+  width: 9px;
+  height: 12px;
+  color: var(--gold-d);
+}
+
 .cp-story {
   max-width: 30ch;
   margin: 10px auto 0;
   color: #4a2a2c;
+  color: color-mix(in oklab, #4a2a2c, var(--wash-d) var(--wash-d-amt));
   font: 400 clamp(15.5px, 1.4vw, 18px) / 1.5 var(--fh);
 }
 
+/* ---------- gold thali chain (ThaliChain.tsx) ---------- */
+.cp-chain {
+  position: absolute;
+  z-index: 0;
+  top: calc(var(--pic) / 2 + 8px);
+  left: 25%;
+  right: 25%;
+  height: var(--gh);
+  pointer-events: none;
+}
+
+.cp-chain-line {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  overflow: visible;
+  transition: clip-path 1.5s var(--ease) 0.4s;
+}
+
+.cp-chain-line--l {
+  left: 0;
+  clip-path: inset(-10px 100% -10px 0);
+}
+
+.cp-chain-line--r {
+  right: 0;
+  clip-path: inset(-10px 0 -10px 100%);
+}
+
+.cp-chain-half {
+  fill: none;
+  stroke: url(#cpChainGold);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  filter: drop-shadow(0 1px 0.6px rgba(90, 60, 10, 0.35));
+}
+
+.cp-bead {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, #fff6d2, #e2b850 48%, #8a6219);
+  box-shadow: 0 1px 1.5px rgba(70, 45, 5, 0.35);
+  transform: scale(0);
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) var(--bd, 1s);
+}
+
+.cp-bead--s {
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+}
+
+/* the thali hangs from the lowest point of the chain */
+.cp-thali {
+  position: absolute;
+  left: 50%;
+  width: clamp(26px, 3.4vw, 36px);
+  margin: -4px 0 0 calc(clamp(26px, 3.4vw, 36px) / -2);
+  opacity: 0;
+  transform: translateY(-26px);
+  transition: opacity 0.6s var(--ease) 1.9s, transform 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) 1.9s;
+}
+
+.cp-thali-swing {
+  display: block;
+  transform-origin: 50% 4%;
+}
+
+.cp-thali svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 3px 4px rgba(90, 60, 10, 0.35));
+}
+
+.cp-thali-glint {
+  opacity: 0;
+}
+
+.cp-pair.in .cp-chain-line {
+  clip-path: inset(-10px 0 -10px 0);
+}
+
+.cp-pair.in .cp-bead {
+  transform: scale(1);
+}
+
+.cp-pair.in .cp-thali {
+  opacity: 1;
+  transform: none;
+}
+
+.cp-pair.in .cp-thali-swing {
+  animation: cp-thali-swing 3.2s ease-out 2.2s both;
+}
+
+.cp-pair.in .cp-thali-glint {
+  animation: cp-thali-glint 5s ease-in-out 3.4s infinite;
+}
+
+@keyframes cp-thali-swing {
+  0% { transform: rotate(0); }
+  14% { transform: rotate(9deg); }
+  32% { transform: rotate(-6deg); }
+  50% { transform: rotate(3.5deg); }
+  68% { transform: rotate(-1.8deg); }
+  84% { transform: rotate(0.8deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes cp-thali-glint {
+  0%, 70%, 100% { opacity: 0; transform: translate(0, 0) rotate(-24deg); }
+  80% { opacity: 0.85; }
+  92% { opacity: 0; transform: translate(10px, 14px) rotate(-24deg); }
+}
+
+/* a light touch sets it swinging again */
+.cp-pair:hover .cp-thali-swing {
+  animation: cp-thali-swing 2.6s ease-out both;
+}
+
+/* ---------- hand-drawn "&" ---------- */
+.cp-amp {
+  position: relative;
+  z-index: 1;
+  align-self: start;
+  width: clamp(56px, 7vw, 86px);
+  margin-top: calc(var(--pic) / 2 - 46px);
+}
+
+.cp-amp svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.cp-amp text {
+  fill: transparent;
+  stroke: var(--gold);
+  stroke-width: 0.9;
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  font: italic 400 84px / 1 var(--fh);
+  transition: stroke-dashoffset 2.4s var(--ease) 0.5s, fill 1s var(--ease) 2.3s;
+}
+
+.cp-pair.in .cp-amp text {
+  stroke-dashoffset: 0;
+  fill: #d9b45f;
+  fill: color-mix(in oklab, #d9b45f, var(--wash-g) var(--wash-g-amt));
+}
+
+/* ---------- Team tie-in ---------- */
+.cp-pic::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -34px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(236, 200, 110, 0.95), rgb(var(--gold-l-rgb) / 0.45) 72%, transparent);
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
+}
+
+.cp-person.is-team .cp-pic::before {
+  opacity: 1;
+  transform: none;
+  animation: cp-halo 3.6s ease-in-out 1s infinite;
+}
+
+@keyframes cp-halo {
+  50% {
+    opacity: 0.55;
+    transform: scale(1.05);
+  }
+}
+
+.cp-badge {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: -12px;
+  padding: 5px 11px 4px;
+  border: 1px solid var(--gold);
+  border-radius: 99px;
+  background: var(--card);
+  color: var(--burg);
+  font: 500 9px / 1 var(--fb);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 10px rgb(var(--burg-rgb) / 0.12);
+  transition: background 0.6s var(--ease), color 0.6s var(--ease), box-shadow 0.6s var(--ease);
+}
+
+.cp-person.is-team .cp-badge {
+  background: linear-gradient(160deg, var(--burg), var(--burg-d));
+  color: var(--gold-l);
+  box-shadow: 0 6px 14px rgb(var(--burg-rgb) / 0.22);
+  animation: cp-badge-in 0.7s var(--ease) both;
+}
+
+@keyframes cp-badge-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+}
+
+/* ---------- Team picker (the portraits are the buttons) ---------- */
+.cp-ask {
+  margin: 14px auto 0;
+  color: var(--burg);
+  font: italic 400 clamp(19px, 2.4vw, 24px) / 1.3 var(--fh);
+}
+
+.cp-ask em {
+  color: var(--gold-d);
+}
+
+.cp-ask span {
+  display: block;
+  margin-top: 6px;
+  color: rgb(var(--burg-rgb) / 0.6);
+  font: 500 10px / 1.4 var(--fb);
+  font-style: normal;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.cp-tug {
+  max-width: 420px;
+  margin: clamp(30px, 4vw, 40px) auto 0;
+}
+
+.cp-bar {
+  display: flex;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--champ);
+}
+
+.cp-bar i {
+  display: block;
+  transition: width 1.2s var(--ease);
+}
+
+.cp-bar-g {
+  background: linear-gradient(90deg, var(--gold), #8a6a22);
+}
+
+.cp-bar-b {
+  background: linear-gradient(90deg, #c98a9a, #9a4a5a);
+}
+
+.cp-lbls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--burg);
+  font: 500 10px var(--fb);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.cp-note {
+  margin: 14px auto 0;
+  color: rgb(var(--burg-rgb) / 0.75);
+  font: italic 400 16px / 1.4 var(--fh);
+}
+
+.cp-note em {
+  color: var(--burg);
+}
+
+.cp-toast {
+  position: fixed;
+  z-index: 220;
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  padding: 10px 18px;
+  border-radius: 30px;
+  background: var(--burg);
+  color: var(--gold-l);
+  font: 500 12px var(--fb);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 30px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.7s var(--ease), opacity 0.7s var(--ease);
+}
+
+.cp-toast.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.cp-pin {
+  position: fixed;
+  z-index: 190;
+  left: calc(14px + env(safe-area-inset-left, 0px));
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  padding: 7px 11px;
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  background: var(--card);
+  color: var(--burg);
+  font: 500 10px var(--fb);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  box-shadow: 0 4px 12px rgb(var(--burg-d-rgb) / 0.12);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+
+.cp-pin.is-on {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+/* ---------- "Who's more likely to…?" ---------- */
+.cq {
+  max-width: 880px;
+  margin: clamp(30px, 5vw, 50px) auto 0;
+  padding-top: clamp(22px, 3vw, 32px);
+  border-top: 1px solid rgb(var(--gold-d-rgb) / 0.3);
+}
+
+.cq-eyebrow {
+  color: var(--gold-d);
+  font: 500 10px / 1 var(--fb);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.cq-title {
+  margin: 8px 0 4px;
+  color: var(--burg);
+  font: italic 400 clamp(26px, 3.4vw, 36px) / 1.1 var(--fh);
+}
+
+.cq-hint {
+  min-height: 1.4em;
+  margin: 0 0 18px;
+  color: rgba(74, 42, 44, 0.75);
+  color: color-mix(in oklab, rgba(74, 42, 44, 0.75), rgb(var(--wash-d-rgb) / 0.75) var(--wash-d-amt));
+  font: 400 15px / 1.4 var(--fh);
+}
+
+.cq-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cq-card {
+  perspective: 900px;
+}
+
+.cq-inner {
+  display: grid;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.75s var(--ease);
+}
+
+.cq-card.is-flipped .cq-inner {
+  transform: rotateY(180deg);
+}
+
+.cq-front,
+.cq-back {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 176px;
+  padding: 18px 16px 16px;
+  border-radius: 14px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.cq-front {
+  border: 1px solid var(--champ);
+  background: var(--card);
+  box-shadow: 0 6px 18px rgb(var(--burg-rgb) / 0.05);
+}
+
+.cq-num {
+  color: var(--gold-d);
+  font: 500 10px / 1 var(--fb);
+  letter-spacing: 0.24em;
+}
+
+.cq-q {
+  margin: 0;
+  color: var(--burg);
+  font: italic 400 20px / 1.25 var(--fh);
+}
+
+.cq-picks {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.cq-picks button {
+  min-width: 82px;
+  padding: 8px 12px 7px;
+  border: 1px solid rgb(var(--gold-d-rgb) / 0.7);
+  border-radius: 99px;
+  background: transparent;
+  color: var(--burg);
+  font: 500 11px / 1 var(--fb);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cq-picks button:hover,
+.cq-picks button:focus-visible {
+  background: var(--burg);
+  color: var(--gold-l);
+  outline: none;
+}
+
+.cq-back {
+  transform: rotateY(180deg);
+  border: 1px solid var(--gold);
+  background: linear-gradient(160deg, var(--burg), var(--burg-d));
+  color: var(--champ);
+}
+
+.cq-faces {
+  display: flex;
+}
+
+.cq-face {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 25%;
+  box-shadow: 0 0 0 2px var(--burg), 0 0 0 3px var(--gold);
+}
+
+.cq-faces--both .cq-face + .cq-face {
+  margin-left: -10px;
+}
+
+.cq-verdict {
+  color: var(--gold-l);
+  font: 500 10.5px / 1.2 var(--fb);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.cq-back:not(.is-right) .cq-verdict {
+  color: #f1b9b0;
+}
+
+.cq-note {
+  margin: 0;
+  font: italic 400 16px / 1.35 var(--fh);
+}
+
+.cq-again {
+  padding: 2px 0;
+  border: 0;
+  border-bottom: 1px solid rgb(var(--champ-rgb) / 0.4);
+  background: none;
+  color: var(--champ);
+  font: 500 9.5px / 1 var(--fb);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+/* ---------- vows ---------- */
 .cp-vows {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -96,7 +690,7 @@
   max-width: 880px;
   margin: clamp(26px, 4vw, 40px) auto 0;
   padding-top: clamp(20px, 3vw, 30px);
-  border-top: 1px solid rgba(184, 137, 46, 0.3);
+  border-top: 1px solid rgb(var(--gold-d-rgb) / 0.3);
 }
 
 .cp .vow {
@@ -104,7 +698,7 @@
 }
 
 .cp .vow-label {
-  color: #b8892e;
+  color: var(--gold-d);
   font: 500 10px / 1 var(--fb);
   letter-spacing: 0.32em;
   text-transform: uppercase;
@@ -116,25 +710,140 @@
   font: italic 400 clamp(16.5px, 1.8vw, 22px) / 1.4 var(--fh);
 }
 
+/* ---------- phones ---------- */
 @media (max-width: 520px) {
-  .cp-pair {
-    grid-template-columns: 1fr 1fr;
+  .cp {
+    --pic: 124px;
+    --gh: 92px;
   }
 
-  .cp-amp {
+  .cp-pair {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .cp-home-r {
     display: none;
   }
 
-  .cp-pic {
-    width: min(100%, 150px);
+  .cp-amp {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--pic) / 2 - 34px);
+    width: 36px;
+    margin: 0;
+    transform: translateX(-50%);
+  }
+
+  .cp-ring {
+    inset: -9px;
+    width: calc(100% + 18px);
+    height: calc(100% + 18px);
+  }
+
+  .cp-home {
+    letter-spacing: 0.12em;
+    font-size: 9px;
   }
 
   .cp-story {
     font-size: 15px;
   }
 
+  .cp-badge {
+    font-size: 8px;
+    letter-spacing: 0.16em;
+  }
+
+  /* swipeable row of cards */
+  .cq-cards {
+    display: flex;
+    gap: 12px;
+    margin: 0 -16px;
+    padding: 4px 16px 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .cq-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cq-card {
+    flex: 0 0 74%;
+    scroll-snap-align: center;
+  }
+
   .cp-vows {
     grid-template-columns: 1fr;
     gap: 18px;
+  }
+}
+
+@media (min-width: 521px) and (max-width: 760px) {
+  .cq-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-ring-draw,
+  .cp-ring-band,
+  .cp-ring-motif,
+  .cp-chain-line,
+  .cp-bead,
+  .cp-thali,
+  .cp-amp text,
+  .cq-inner {
+    transition: none;
+  }
+
+  .cp-ring-draw,
+  .cp-amp text {
+    stroke-dashoffset: 0;
+  }
+
+  .cp-amp text {
+    fill: #d9b45f;
+    fill: color-mix(in oklab, #d9b45f, var(--wash-g) var(--wash-g-amt));
+  }
+
+  .cp-ring-band,
+  .cp-ring-motif {
+    opacity: 1;
+    transform: none;
+  }
+
+  .cp-chain-line {
+    clip-path: none;
+  }
+
+  .cp-bead {
+    transform: scale(1);
+  }
+
+  .cp-thali {
+    opacity: 1;
+    transform: none;
+  }
+
+  .cp-pair.in .cp-thali-swing,
+  .cp-pair:hover .cp-thali-swing,
+  .cp-pair.in .cp-thali-glint {
+    animation: none;
+  }
+
+  .cp-person.is-team .cp-pic::before,
+  .cp-person.is-team .cp-badge {
+    animation: none;
+  }
+
+  .cp-pic,
+  .cp-img img,
+  .cp-bar i,
+  .cp-toast,
+  .cp-pin {
+    transition: none;
   }
 }

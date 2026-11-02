@@ -62,3 +62,37 @@ export const [WEDDING_EVENT, RECEPTION_EVENT] = WEDDING_EVENTS;
 
 /** Muhurtham start — target of the cover countdown. */
 export const WEDDING_START_MS = new Date(WEDDING_EVENT.targetIso).getTime();
+
+/** Illustrations for the wedding card scene (public/images/events/). */
+export const WEDDING_SCENE = {
+  mandapam: '/images/events/wedding-mandapam.webp',
+  couple: '/images/events/wedding-thalikettu-couple.webp',
+  homaKundam: '/images/events/wedding-homa-kundam.webp',
+  nadaswaram: '/images/events/wedding-nadaswaram-player.webp',
+  drummer: '/images/events/wedding-drummer.webp',
+  sadya: '/images/events/wedding-sadya.webp',
+  /** Aluva → MGR Chennai Central journey band between the two cards. */
+  train: '/images/events/journey-train.webp',
+} as const;
+
+export interface ScheduleItem {
+  icon: 'breakfast' | 'agni' | 'sadya';
+  time: string;
+  title: string;
+  note: string;
+  /** Badge next to the time (the Muhurtham). */
+  badge?: string;
+}
+
+/** Order of the day at Central Auditorium, North Paravur. */
+export const WEDDING_SCHEDULE: readonly ScheduleItem[] = [
+  { icon: 'breakfast', time: 'From 7:00 AM', title: 'Breakfast', note: 'Served at the auditorium as guests arrive.' },
+  {
+    icon: 'agni',
+    time: '8:00 – 9:20 AM',
+    badge: 'Muhurtham',
+    title: 'Thalikettu',
+    note: 'Under the mandapam, with Agni as witness, as the panchavadyam plays.',
+  },
+  { icon: 'sadya', time: 'After the Thalikettu', title: 'Sadya', note: 'A traditional feast, served on banana leaf.' },
+];

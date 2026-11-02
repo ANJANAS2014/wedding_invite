@@ -35,7 +35,6 @@ import {
   LightboxModal,
   OurStoryAndFilmstripSection,
   RsvpSection,
-  TeamPicker,
   WishesWall,
   prefetchSections,
 } from './lazySections';
@@ -94,11 +93,7 @@ export const App: React.FC = () => {
         <div className="kasavu" aria-hidden="true" />
 
         <Suspense fallback={null}>
-          <TeamPicker guestName={guestName} inviteToken={inviteToken} />
-        </Suspense>
-
-        <Suspense fallback={null}>
-          <CoupleSection />
+          <CoupleSection guestName={guestName} inviteToken={inviteToken} />
         </Suspense>
 
         <Suspense fallback={null}>

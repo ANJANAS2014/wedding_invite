@@ -7,7 +7,7 @@
 .tm-side {
   position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px;
   padding: 28px 10px 20px; border: 1px solid var(--champ); border-radius: 120px 120px 14px 14px;
-  background: #fffaf0; color: inherit; font: inherit; cursor: pointer;
+  background: var(--card); color: inherit; font: inherit; cursor: pointer;
   transition: transform 0.8s var(--ease), background 0.8s var(--ease), box-shadow 0.8s var(--ease), border-color 0.8s var(--ease);
   -webkit-tap-highlight-color: transparent;
 }
@@ -17,18 +17,19 @@
   width: 70px; height: 70px; margin-bottom: 10px; border-radius: 50%; display: grid; place-items: center;
   font: 400 40px/1 var(--fs); color: var(--gold-l);
   background: radial-gradient(circle at 35% 30%, #7a2030, var(--burg) 60%, var(--burg-d));
-  box-shadow: 0 0 0 3px #fffaf0, 0 0 0 4px var(--gold);
+  background: radial-gradient(circle at 35% 30%, color-mix(in oklab, #7a2030, var(--wash-d) var(--wash-d-amt)), var(--burg) 60%, var(--burg-d));
+  box-shadow: 0 0 0 3px var(--card), 0 0 0 4px var(--gold);
   transition: box-shadow 0.8s var(--ease);
 }
 .tm-side b { font: 500 italic 24px var(--fh); color: var(--burg); }
 .tm-side small { font: 500 10px var(--fb); letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.65; line-height: 1.6; }
 .tm-side.is-on {
   background: linear-gradient(160deg, var(--burg), var(--burg-d)); border-color: var(--gold);
-  box-shadow: 0 14px 30px rgba(90, 20, 32, 0.2); transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgb(var(--burg-rgb) / 0.2); transform: translateY(-4px);
 }
 .tm-side.is-on b { color: var(--gold-l); }
 .tm-side.is-on small { color: var(--champ); opacity: 0.9; }
-.tm-side.is-on .tm-mono { box-shadow: 0 0 0 3px var(--burg), 0 0 0 4px var(--gold-l), 0 0 24px rgba(240, 214, 142, 0.55); }
+.tm-side.is-on .tm-mono { box-shadow: 0 0 0 3px var(--burg), 0 0 0 4px var(--gold-l), 0 0 24px rgb(var(--gold-l-rgb) / 0.55); }
 .tm-tick {
   position: absolute; top: 10px; right: 14px; width: 22px; height: 22px; border-radius: 50%;
   background: var(--gold-l); color: var(--burg); font: 600 13px/22px var(--fb);
@@ -57,12 +58,27 @@
 .tm-pin {
   position: fixed; left: calc(14px + env(safe-area-inset-left, 0px)); top: calc(14px + env(safe-area-inset-top, 0px)); z-index: 190;
   font: 500 10px var(--fb); letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none;
-  background: #fffaf0; color: var(--burg); border: 1px solid var(--gold); padding: 7px 11px; border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(58, 11, 20, 0.12);
+  background: var(--card); color: var(--burg); border: 1px solid var(--gold); padding: 7px 11px; border-radius: 20px;
+  box-shadow: 0 4px 12px rgb(var(--burg-d-rgb) / 0.12);
   opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
 }
 .tm-pin.is-on { opacity: 1; transform: none; pointer-events: auto; }
 
 @media (prefers-reduced-motion: reduce) {
   .tm-side, .tm-mono, .tm-tick, .tm-bar i, .tm-toast, .tm-pin { transition: none; }
+}
+
+/* The couple's own photos as the choices (replaces the A / L monograms) */
+.tm-photo {
+  display: block; width: clamp(92px, 26vw, 120px); aspect-ratio: 1; margin-bottom: 12px; border-radius: 50%; overflow: hidden;
+  box-shadow: 0 0 0 3px var(--card), 0 0 0 4px var(--gold);
+  transition: box-shadow 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.tm-photo img { display: block; width: 100%; height: 100%; object-fit: cover; filter: sepia(0.18) saturate(0.92); transition: filter 0.8s var(--ease); }
+.tm-side:hover .tm-photo { transform: scale(1.04); }
+.tm-side.is-on .tm-photo { box-shadow: 0 0 0 3px var(--burg), 0 0 0 4.5px var(--gold-l), 0 0 26px rgb(var(--gold-l-rgb) / 0.6); }
+/* the side not chosen softens a little */
+.tm-sides:has(.is-on) .tm-side:not(.is-on) .tm-photo img { filter: sepia(0.35) saturate(0.7) brightness(1.03); }
+@media (prefers-reduced-motion: reduce) {
+  .tm-photo, .tm-photo img { transition: none; }
 }

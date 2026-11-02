@@ -6,6 +6,9 @@ import './styles/variables.css';
 import './styles/global.css';
 import './styles/animations.css';
 import { App } from './app/App';
+import { initTeamTheme } from './utils/teamTheme';
+
+initTeamTheme();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

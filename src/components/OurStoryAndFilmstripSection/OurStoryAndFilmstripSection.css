@@ -4,6 +4,7 @@
    ========================================================================== */
 .our-story-filmstrip-section {
   background: linear-gradient(180deg, #f1e5cf, #f4ead8 30%, #f6eddf);
+  background: linear-gradient(180deg, color-mix(in oklab, #f1e5cf, var(--wash-l) var(--wash-l-amt)), color-mix(in oklab, #f4ead8, var(--wash-l) var(--wash-l-amt)) 30%, color-mix(in oklab, #f6eddf, var(--wash-l) var(--wash-l-amt)));
 }
 
 /* ---------- Our Story ---------- */
@@ -59,9 +60,10 @@
   aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 2px;
-  outline: 1px solid rgba(184, 137, 46, 0.5);
+  outline: 1px solid rgb(var(--gold-d-rgb) / 0.5);
   outline-offset: 8px;
   box-shadow: 0 24px 44px -28px rgba(58, 18, 24, 0.55);
+  box-shadow: 0 24px 44px -28px color-mix(in oklab, rgba(58, 18, 24, 0.55), rgb(var(--wash-d-rgb) / 0.55) var(--wash-d-amt));
 }
 
 .st-img img {
@@ -82,7 +84,7 @@
 }
 
 .st-num {
-  color: #b8892e;
+  color: var(--gold-d);
   font: 500 11px / 1 var(--fb);
   letter-spacing: 0.36em;
   text-transform: uppercase;
@@ -98,6 +100,7 @@
   max-width: 58ch;
   margin: 0;
   color: #3f2224;
+  color: color-mix(in oklab, #3f2224, var(--wash-d) var(--wash-d-amt));
   font: 400 clamp(18px, 1.55vw, 20px) / 1.7 var(--fh);
 }
 
@@ -119,7 +122,7 @@
   padding: 12px 4px;
   background: none;
   border: 0;
-  border-bottom: 1px solid rgba(184, 137, 46, 0.55);
+  border-bottom: 1px solid rgb(var(--gold-d-rgb) / 0.55);
   color: var(--burg);
   font: 500 12px / 1 var(--fb);
   letter-spacing: 0.28em;
@@ -198,7 +201,7 @@
   padding: 0 4px;
   background: none;
   border: 0;
-  border-bottom: 1px solid rgba(184, 137, 46, 0.55);
+  border-bottom: 1px solid rgb(var(--gold-d-rgb) / 0.55);
   color: var(--burg);
   font: 500 11px / 1 var(--fb);
   letter-spacing: 0.26em;
@@ -212,6 +215,7 @@
   /* a static box-shadow instead of filter: drop-shadow, which re-rendered the
      whole moving strip on every frame */
   box-shadow: 0 18px 26px -8px rgba(40, 16, 8, 0.32);
+  box-shadow: 0 18px 26px -8px color-mix(in oklab, rgba(40, 16, 8, 0.32), rgb(var(--wash-d-rgb) / 0.32) var(--wash-d-amt));
 }
 
 .filmstrip-track {
@@ -252,6 +256,7 @@
   right: 0;
   height: calc(var(--rail) * 0.42);
   background: linear-gradient(90deg, transparent 0 22%, #fbf3e3 22% 78%, transparent 78%) 0 0 / calc(100% / 8) 100% repeat-x;
+  background: linear-gradient(90deg, transparent 0 22%, color-mix(in oklab, #fbf3e3, var(--wash-l) var(--wash-l-amt)) 22% 78%, transparent 78%) 0 0 / calc(100% / 8) 100% repeat-x;
   border-radius: 2px;
   opacity: 0.95;
 }
@@ -270,6 +275,7 @@
   overflow: hidden;
   border-radius: 3px;
   background: #120a06;
+  background: color-mix(in oklab, #120a06, var(--wash-d) var(--wash-d-amt));
 }
 
 .film-picture-box::after {
@@ -297,6 +303,7 @@
 
 .film-frame:focus-visible {
   outline: 2px solid #e9c46a;
+  outline: 2px solid color-mix(in oklab, #e9c46a, var(--wash-g) var(--wash-g-amt));
   outline-offset: -4px;
 }
 
@@ -309,6 +316,7 @@
   justify-content: space-between;
   padding: 0 12%;
   color: #e89a3c;
+  color: color-mix(in oklab, #e89a3c, var(--wash-g) var(--wash-g-amt));
   opacity: 0.85;
   font: 500 calc(var(--rail) * 0.24) / 1 'IBM Plex Mono', ui-monospace, monospace;
   letter-spacing: 0.12em;
@@ -366,7 +374,9 @@
   overflow: hidden;
   border-radius: 14px;
   background: #2a0a10;
-  box-shadow: 0 30px 60px -28px rgba(58, 18, 24, 0.65), 0 0 0 1px rgba(184, 137, 46, 0.45);
+  background: color-mix(in oklab, #2a0a10, var(--wash-d) var(--wash-d-amt));
+  box-shadow: 0 30px 60px -28px rgba(58, 18, 24, 0.65), 0 0 0 1px rgb(var(--gold-d-rgb) / 0.45);
+  box-shadow: 0 30px 60px -28px color-mix(in oklab, rgba(58, 18, 24, 0.65), rgb(var(--wash-d-rgb) / 0.65) var(--wash-d-amt)), 0 0 0 1px rgb(var(--gold-d-rgb) / 0.45);
   user-select: none;
   -webkit-user-select: none;
   touch-action: pan-y;
@@ -447,6 +457,7 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(42, 10, 16, 0.35) 0%, rgba(42, 10, 16, 0) 22%, rgba(42, 10, 16, 0) 45%, rgba(42, 10, 16, 0.88) 100%);
+  background: linear-gradient(180deg, color-mix(in oklab, rgba(42, 10, 16, 0.35), rgb(var(--wash-d-rgb) / 0.35) var(--wash-d-amt)) 0%, color-mix(in oklab, rgba(42, 10, 16, 0), rgb(var(--wash-d-rgb) / 0) var(--wash-d-amt)) 22%, color-mix(in oklab, rgba(42, 10, 16, 0), rgb(var(--wash-d-rgb) / 0) var(--wash-d-amt)) 45%, color-mix(in oklab, rgba(42, 10, 16, 0.88), rgb(var(--wash-d-rgb) / 0.88) var(--wash-d-amt)) 100%);
 }
 
 .story-card figcaption {
@@ -474,7 +485,7 @@
 
 .story-card p {
   margin: 0;
-  color: rgba(248, 239, 220, 0.92);
+  color: rgb(var(--ivory-rgb) / 0.92);
   font: 400 18px / 1.45 var(--fh);
 }
 
@@ -535,6 +546,7 @@
   max-width: 58ch;
   margin: 0 auto;
   color: #3f2224;
+  color: color-mix(in oklab, #3f2224, var(--wash-d) var(--wash-d-amt));
   font: 400 clamp(18px, 1.6vw, 20px) / 1.7 var(--fh);
 }
 

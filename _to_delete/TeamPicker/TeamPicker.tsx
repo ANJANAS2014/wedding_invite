@@ -1,11 +1,14 @@
 import './TeamPicker.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { WEDDING_CONTENT } from '../../data/weddingData';
+import { WEDDING_CONTENT, WEDDING_IMAGES } from '../../data/weddingData';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
 import { burstPetals } from '../FallingPetals/FallingPetals';
 import { hapticSoft } from '../../utils/haptics';
 import {
+  announceTeamSide,
   fetchTeamTotals,
+  TEAM_CHANGE_EVENT,
+  type TeamChangeDetail,
   loadTeamSide,
   saveTeamPick,
   type TeamSide,
@@ -20,7 +23,7 @@ interface TeamPickerProps {
 const LABEL: Record<TeamSide, string> = { bride: 'Team Bride', groom: 'Team Groom' };
 
 /**
- * "Are you Team Bride or Team Groom?" — two arched choice cards. The pick is
+ * "Are you Team Groom or Team Bride?" — two arched choice cards. The pick is
  * remembered on this device, saved to /api/team (linked to the personal
  * invitation when there is one), and shown as a small pinned badge.
  */
@@ -39,6 +42,18 @@ export const TeamPicker: React.FC<TeamPickerProps> = ({ guestName = '', inviteTo
       alive = false;
       window.clearTimeout(toastTimer.current);
     };
+  }, []);
+
+  // Keep in sync when the guest switches sides from the Bride & Groom section.
+  useEffect(() => {
+    const onChange = (e: Event) => {
+      const d = (e as CustomEvent<TeamChangeDetail>).detail;
+      if (!d || d.source === 'picker') return;
+      setSide(d.side);
+      if (d.totals) setTotals(d.totals);
+    };
+    window.addEventListener(TEAM_CHANGE_EVENT, onChange);
+    return () => window.removeEventListener(TEAM_CHANGE_EVENT, onChange);
   }, []);
 
   // The pinned badge appears once the guest has scrolled past the picker.
@@ -67,6 +82,7 @@ export const TeamPicker: React.FC<TeamPickerProps> = ({ guestName = '', inviteTo
       if (previous) n[previous] = Math.max(0, n[previous] - 1);
       return n;
     });
+    announceTeamSide({ side: next, totals: null, source: 'picker' });
     saveTeamPick(next, { inviteToken, guestName }).then((t) => t && setTotals(t));
   };
 
@@ -78,12 +94,13 @@ export const TeamPicker: React.FC<TeamPickerProps> = ({ guestName = '', inviteTo
     <section className="tm" id="team" ref={sectionRef} aria-labelledby="team-title">
       <header className="tm-head reveal">
         <div className="eyebrow">{firstName ? `${firstName}, before you scroll on` : 'Before you scroll on'}</div>
-        <h2 id="team-title">Are you Team Bride or Team Groom?</h2>
+        <h2 id="team-title">Are you Team Groom or Team Bride?</h2>
         <HeaderRule />
       </header>
 
       <div className="tm-sides reveal" role="group" aria-label="Choose your side">
-        {(['bride', 'groom'] as TeamSide[]).map((s) => (
+        {/* groom first, bride second — same order as the Bride & Groom portraits */}
+        {(['groom', 'bride'] as TeamSide[]).map((s) => (
           <button
             key={s}
             type="button"
@@ -92,26 +109,34 @@ export const TeamPicker: React.FC<TeamPickerProps> = ({ guestName = '', inviteTo
             onClick={(e) => choose(s, e.currentTarget)}
           >
             <span className="tm-tick" aria-hidden="true">✓</span>
-            <span className="tm-mono" aria-hidden="true">
-              {(s === 'bride' ? WEDDING_CONTENT.bride : WEDDING_CONTENT.groom).charAt(0)}
+            <span className="tm-photo" aria-hidden="true">
+              <img
+                src={s === 'bride' ? WEDDING_IMAGES.bride_portrait : WEDDING_IMAGES.p12}
+                alt=""
+                width={120}
+                height={120}
+                loading="lazy"
+                decoding="async"
+                style={{ objectPosition: s === 'bride' ? '50% 50%' : '50% 25%' }}
+              />
             </span>
             <b>{LABEL[s]}</b>
             <small>
-              {s === 'bride' ? `${WEDDING_CONTENT.bride}'s side · Keralam` : `${WEDDING_CONTENT.groom}'s side · Chennai`}
+              {s === 'bride' ? `${WEDDING_CONTENT.bride}'s side` : `${WEDDING_CONTENT.groom}'s side`}
             </small>
           </button>
         ))}
       </div>
 
       {totals && total > 0 && (
-        <div className="tm-tug reveal" aria-label={`Team Bride ${totals.bride}, Team Groom ${totals.groom}`}>
+        <div className="tm-tug reveal" aria-label={`Team Groom ${totals.groom}, Team Bride ${totals.bride}`}>
           <div className="tm-bar">
-            <i className="tm-bar-b" style={{ width: `${bridePct}%` }} />
             <i className="tm-bar-g" style={{ width: `${100 - bridePct}%` }} />
+            <i className="tm-bar-b" style={{ width: `${bridePct}%` }} />
           </div>
           <div className="tm-lbls" aria-hidden="true">
-            <span>Bride · {totals.bride}</span>
-            <span>{totals.groom} · Groom</span>
+            <span>Groom · {totals.groom}</span>
+            <span>{totals.bride} · Bride</span>
           </div>
         </div>
       )}
