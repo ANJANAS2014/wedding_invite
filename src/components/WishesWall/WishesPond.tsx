@@ -26,9 +26,9 @@ const lampPosition = (index: number, total: number, id: string) => {
   const row = Math.floor(index / cols);
   const col = index % cols;
   const x = ((col + 0.5) / cols) * 100 + (row % 2 ? 5 : -5) + (hash01(id, 1) * 8 - 4);
-  // lamps float in the sky band below the moon (the reading card sits under the band)
-  const y = 50 + (rows > 1 ? (row / (rows - 1)) * 32 : 14) + (hash01(id, 2) * 6 - 3);
-  return { left: Math.max(9, Math.min(91, x)), top: Math.max(44, Math.min(86, y)) };
+  // lamps float on the water between the moon and the reading card
+  const y = 28 + (rows > 1 ? (row / (rows - 1)) * 26 : 12) + (hash01(id, 2) * 6 - 3);
+  return { left: Math.max(9, Math.min(91, x)), top: Math.max(24, Math.min(56, y)) };
 };
 
 /**

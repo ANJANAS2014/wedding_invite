@@ -2,7 +2,6 @@ import './CoupleSection.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { COUPLE_HOMETOWNS, WEDDING_CONTENT, WEDDING_IMAGES } from '../../data/weddingData';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
-import { NextTeaser } from '../ScrollGuide/NextTeaser';
 import { burstPetals } from '../FallingPetals/FallingPetals';
 import { hapticSoft } from '../../utils/haptics';
 import {
@@ -31,11 +30,11 @@ const PERSON = {
   groom: {
     name: WEDDING_CONTENT.groom,
     story: WEDDING_CONTENT.groomStory,
-    img: WEDDING_IMAGES.p12,
-    w: 700,
-    h: 764,
-    pos: '50% 25%',
-    ring: 'temple' as const,
+    img: WEDDING_IMAGES.groom_portrait,
+    w: 720,
+    h: 720,
+    pos: '50% 50%',
+    ring: 'kasavu' as const, // both portraits share the kasavu ring; the picked side glows
     home: COUPLE_HOMETOWNS.groom,
   },
   bride: {
@@ -211,7 +210,7 @@ export const CoupleSection: React.FC<CoupleSectionProps> = ({ guestName = '', in
       )}
       {side && (
         <p className="cp-note" aria-live="polite">
-          You’re on <em>{TEAM_LABEL[side]}</em>. Changed your mind? Just tap the other photo.
+          You’re on <em>{TEAM_LABEL[side]}</em> · tap the other photo to switch.
         </p>
       )}
 
@@ -226,17 +225,28 @@ export const CoupleSection: React.FC<CoupleSectionProps> = ({ guestName = '', in
 
       <CoupleQuiz />
 
-      <div className="cp-vows reveal">
-        <blockquote className="vow">
-          <span className="rd-label">His vow</span>
-          <p>{WEDDING_CONTENT.groomVow}</p>
+      <div className="cp-vows reveal" role="group" aria-label="Our promises">
+          <figure className="cp-promise-photo">
+            <img
+              src={WEDDING_IMAGES.promise_hands}
+              alt={`${WEDDING_CONTENT.groom} and ${WEDDING_CONTENT.bride}’s hands making a heart against the sky`}
+              width={640}
+              height={800}
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        <blockquote className="vow vow--his">
+          <span className="vow-mark" aria-hidden="true">“</span>
+          <span className="vow-label">His promise</span>
+          <p>{WEDDING_CONTENT.groomVow.replace(/^[“"]|[”"]$/g, '')}</p>
         </blockquote>
-        <blockquote className="vow">
-          <span className="rd-label">Her vow</span>
-          <p>{WEDDING_CONTENT.brideVow}</p>
+        <blockquote className="vow vow--hers">
+          <span className="vow-mark" aria-hidden="true">“</span>
+          <span className="vow-label">Her promise</span>
+          <p>{WEDDING_CONTENT.brideVow.replace(/^[“"]|[”"]$/g, '')}</p>
         </blockquote>
       </div>
-      <NextTeaser label="Next: how a Malayali girl beat the language barrier" targetId="story-filmstrip-section" />
       </div>
     </section>
   );

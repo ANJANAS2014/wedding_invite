@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     const requireApproval = String(process.env.WISHES_REQUIRE_APPROVAL || "").trim().toLowerCase() === "true";
     const approvalFilter = requireApproval ? "wish_approved=eq.true&" : "";
     try {
-      const rows = await supabaseRequest(cfg, `/rest/v1/rsvp_responses?${approvalFilter}wishes=not.is.null&select=id,submitted_name,wishes,created_at,updated_at,rsvp_photos(storage_path),rsvp_event_responses(attending,event_code)&order=updated_at.desc&limit=200`);
+      const rows = await supabaseRequest(cfg, `/rest/v1/rsvp_responses?${approvalFilter}or=(wishes=not.is.null,rsvp_photos.storage_path=not.is.null)&select=id,submitted_name,wishes,created_at,updated_at,rsvp_photos(storage_path),rsvp_event_responses(attending,event_code)&order=updated_at.desc&limit=200`);
       const all = Array.isArray(rows) ? rows : [];
       // A guest who re-sends the same wish from the general link creates a new row each time; keep only the newest copy.
       const seen = new Set();
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
           weddingAttending: events.some((e) => e.event_code === 'wedding' && e.attending),
           receptionAttending: events.some((e) => e.event_code === 'reception' && e.attending)
         };
-      }).filter((item) => item.id && item.displayName && item.wish);
+      }).filter((item) => item.id && item.displayName && (item.wish || item.photoUrl));
       return res.status(200).json({ ok: true, wishes });
     } catch { return res.status(502).json({ ok: false, wishes: [] }); }
   }

@@ -896,3 +896,210 @@
 @keyframes diya-glow { to { opacity: 0.7; transform: scale(1.12); } }
 @media (prefers-reduced-motion: reduce) { .diya-glow { animation: none; } }
 .diya-flame, .diya-bowl { z-index: 1; }
+
+/* ---------- Pond (restored richness, Nov 2026) ----------
+   The earlier night pond (014d84c): tall water, violet moon-glow sky, slow
+   ripple lines, a soft moon with a blurred reflection, lamps that glow on the
+   water and a pulsing ring on the lit lamp. Kept from the redesign: the view
+   toggle, the dark glass reading card, 64px lamp tap targets and 44px buttons. */
+.pond {
+  height: clamp(440px, 62svh, 560px);
+  padding-bottom: 0;
+  border-radius: 200px 200px 12px 12px / 140px 140px 12px 12px;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 8%, #3b2a4a 0%, rgba(28, 18, 40, 0) 70%),
+    radial-gradient(ellipse 120% 30% at 50% 100%, rgba(255, 170, 70, 0.1), transparent 70%),
+    linear-gradient(180deg, #1c1530 0%, #101a2c 55%, #0b1322 100%);
+  box-shadow: 0 30px 60px -30px rgba(20, 10, 30, 0.7), inset 0 0 0 1px rgb(var(--gold-l-rgb) / 0.25);
+}
+/* slow ripple lines on the water */
+.pond::before {
+  content: "";
+  position: absolute;
+  inset: 34% 0 0;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 9px);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%);
+  mask-image: linear-gradient(180deg, transparent, #000 30%);
+  animation: pond-ripple 9s linear infinite;
+  pointer-events: none;
+}
+/* a scatter of faint stars in the sky */
+.pond::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 66%;
+  background:
+    radial-gradient(1.2px 1.2px at 14% 22%, rgba(255, 246, 220, 0.8), transparent),
+    radial-gradient(1px 1px at 28% 10%, rgba(255, 246, 220, 0.6), transparent),
+    radial-gradient(1.4px 1.4px at 71% 16%, rgba(255, 246, 220, 0.75), transparent),
+    radial-gradient(1px 1px at 84% 30%, rgba(255, 246, 220, 0.55), transparent),
+    radial-gradient(1px 1px at 38% 34%, rgba(255, 246, 220, 0.45), transparent),
+    radial-gradient(1.2px 1.2px at 60% 40%, rgba(255, 246, 220, 0.5), transparent);
+  pointer-events: none;
+}
+@keyframes pond-ripple { to { background-position: 0 90px; } }
+
+.pond-sky { position: absolute; inset: 0; height: auto; }
+.pond-moon {
+  top: 6%;
+  width: 70px;
+  height: 70px;
+  background: radial-gradient(circle, #fff6dc, var(--gold-l) 60%, rgb(var(--gold-l-rgb) / 0) 72%);
+  box-shadow: none;
+  opacity: 0.8;
+}
+.pond-moon::after {
+  top: 150%;
+  width: 24px;
+  height: 220px;
+  background: linear-gradient(180deg, rgb(var(--gold-l-rgb) / 0.35), rgb(var(--gold-l-rgb) / 0));
+  filter: blur(6px);
+}
+
+/* lamps: warm halo on the flame + their reflection on the water */
+.diya-flame { box-shadow: 0 0 18px 7px rgba(255, 180, 80, 0.45); }
+.diya-glow {
+  bottom: 2px;
+  width: 58px;
+  height: 14px;
+  margin-left: -29px;
+  background: radial-gradient(ellipse, rgba(255, 180, 80, 0.45), transparent 70%);
+  filter: blur(1px);
+}
+.diya.is-lit { box-shadow: none; }
+.diya.is-lit .diya-flame { transform: scale(1.3); box-shadow: 0 0 30px 14px rgba(255, 190, 90, 0.6); }
+.diya.is-lit::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 78px;
+  height: 78px;
+  margin: -39px 0 0 -39px;
+  border: 1px solid rgb(var(--gold-l-rgb) / 0.6);
+  border-radius: 50%;
+  animation: diya-ring 1.6s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes diya-ring { from { transform: scale(0.6); opacity: 1; } to { transform: scale(1.4); opacity: 0; } }
+
+/* the reading card floats on the water, below the lamps */
+.pond-card {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  z-index: 3;
+  width: min(calc(100% - 32px), 460px);
+  margin: 0;
+  transform: translateX(-50%);
+  animation: pond-card-in-x 0.8s var(--ease);
+}
+@keyframes pond-card-in-x { from { opacity: 0; transform: translate(-50%, 12px); } }
+
+@media (max-width: 599px) {
+  .pond { height: 460px; border-radius: 140px 140px 10px 10px / 100px 100px 10px 10px; }
+  .pond-sky { height: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pond::before, .diya.is-lit::after, .pond-card { animation: none; }
+}
+
+/* ---------- Wish photos: portrait-aware (Nov 2026) ----------
+   Frames keep a fixed size (no layout jump when a photo loads). WishPhoto tags
+   the frame .is-portrait / .is-landscape / .is-square from the image's real
+   shape. Landscape fills the frame; portrait and square photos are shown
+   whole, on a soft blurred copy of themselves instead of empty bars. */
+.postcard-photo-frame,
+.modal-photo-container { position: relative; isolation: isolate; }
+.wish-photo-backdrop {
+  position: absolute;
+  inset: -16px;
+  z-index: 0;
+  background-position: center;
+  background-size: cover;
+  filter: blur(16px) saturate(1.05) brightness(0.96);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.postcard-photo,
+.modal-photo { position: relative; z-index: 1; }
+.is-portrait > .wish-photo-backdrop,
+.is-square > .wish-photo-backdrop { opacity: 0.75; }
+.is-portrait > .postcard-photo,
+.is-square > .postcard-photo,
+.is-portrait > .modal-photo,
+.is-square > .modal-photo { object-fit: contain; filter: drop-shadow(0 4px 10px rgb(var(--burg-d-rgb) / 0.28)); }
+/* landscape: fill the card frame (small side crop at most) */
+.postcard-photo-frame.is-landscape .postcard-photo { object-fit: cover; }
+
+/* the enlarged view takes the photo's own shape, within the screen */
+.modal-photo-container.is-landscape { aspect-ratio: var(--photo-ar, 4 / 3); max-height: 320px; }
+.modal-photo-container.is-square { aspect-ratio: 1; max-height: min(52vh, 400px); }
+.modal-photo-container.is-portrait { aspect-ratio: 4 / 5; max-height: min(58vh, 480px); }
+@media (prefers-reduced-motion: reduce) { .wish-photo-backdrop { transition: none; } }
+
+/* close button: full 44px tap target */
+.modal-close-btn { width: 44px; height: 44px; top: 20px; right: 20px; }
+@media (max-width: 359px) {
+  .pond-card { width: calc(100% - 20px); padding-left: var(--s3); padding-right: var(--s3); }
+  .pond-card-nav button { padding: 0 var(--s2); font-size: 12px; white-space: nowrap; }
+}
+
+/* ---------- Postcards fit portrait photos (Nov 2026) ----------
+   Most wishes come with a portrait phone photo, so every postcard frame is
+   4:5 (same size on every card: no jumps, even rows). Portrait and square
+   photos fill it edge to edge (anchored near the top, where faces usually are);
+   landscape photos are shown whole on their blurred copy. */
+.postcard-photo-frame { aspect-ratio: 4 / 5; }
+.postcard-photo-frame .postcard-photo { object-fit: cover; object-position: 50% 22%; filter: none; }
+.postcard-photo-frame.is-landscape .postcard-photo { object-fit: contain; object-position: center; filter: drop-shadow(0 4px 10px rgb(var(--burg-d-rgb) / 0.28)); }
+.postcard-photo-frame > .wish-photo-backdrop { opacity: 0; }
+.postcard-photo-frame.is-landscape > .wish-photo-backdrop { opacity: 0.75; }
+
+/* enlarged view: a portrait photo gets a frame of its exact shape, so it fills it completely */
+.modal-photo-container.is-portrait {
+  aspect-ratio: var(--photo-ar, 3 / 4);
+  width: auto;
+  max-width: 100%;
+  height: min(60vh, 520px);
+  max-height: none;
+  margin: 0 auto;
+}
+.modal-photo-container.is-portrait > .modal-photo { object-fit: cover; filter: none; }
+.modal-photo-container.is-portrait > .wish-photo-backdrop { opacity: 0; }
+
+/* ---------- date stamp on top; empty photo holder when there's no photo (Nov 2026) ---------- */
+/* the date stamp floats over the top of the photo box, slightly see-through */
+.postcard-card > .postcard-stamp {
+  position: absolute;
+  top: calc(var(--s3) + 8px);
+  left: calc(var(--s3) + 8px);
+  z-index: 4;
+  max-width: calc(100% - 2 * var(--s3) - 16px);
+  margin: 0;
+  background: rgb(255 253 249 / 0.72);
+  border-color: rgb(154 112 34 / 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px -4px rgb(var(--burg-d-rgb) / 0.35);
+}
+@media (max-width: 480px) {
+  .postcard-card > .postcard-stamp { top: 18px; left: 18px; max-width: calc(100% - 36px); }
+}
+/* every postcard keeps the same photo box; without a photo it's an empty holder */
+.postcard-photo-frame:has(.postcard-monogram) { display: block; }
+.postcard-monogram {
+  position: relative;
+  background:
+    radial-gradient(circle at 50% 45%, rgb(255 252 245 / 0.9), rgb(242 228 206 / 0.75) 75%),
+    var(--paper-2);
+}
+.postcard-monogram::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px dashed rgb(var(--gold-rgb) / 0.45);
+  border-radius: 6px;
+}
+.postcard-monogram-ring { display: none; }

@@ -32,7 +32,7 @@ body.doors-busy {
   --lb:max(26svh,60vw);                   /* lintel bottom = doors top (clears the side garlands) */
   --lh:clamp(54px,8svh,90px);             /* lintel height */
   --sh:clamp(58px,9svh,86px);             /* step height */
-  --mh:clamp(52px,min(17vmin,8.4svh),100px); /* medallion radius */
+  --mh:clamp(68px,min(19vmin,10svh),100px); /* medallion radius (room for lotus, initials and date) */
   position:fixed;left:0;right:0;top:0;height:100vh;height:100lvh;z-index:200;overflow:hidden;
   background:#ece4dc;-webkit-tap-highlight-color:transparent;touch-action:none}
 .temple.is-done{display:none}
@@ -157,10 +157,12 @@ body.doors-busy {
 .tp-medal{position:relative;width:calc(var(--mh)*2);aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle closest-side,#fbf5ea 0 74%,#6b1a24 75% 78%,#f3dc8e 79% 80.5%,#c79a3e 81% 88%,#f6e2a0 89% 90%,#8a6219 91% 93%,transparent 94%);
   filter:drop-shadow(0 8px 16px rgba(0,0,0,.45));transition:opacity .5s ease .2s,transform .7s ease}
-.tp-medal .lotus{position:absolute;left:50%;top:12%;width:30%;transform:translateX(-50%)}
-.tp-mono{position:absolute;left:0;right:0;top:50%;transform:translateY(-40%);text-align:center;color:#5e1623;font:500 calc(var(--mh)*.6)/1 var(--fh);letter-spacing:.02em}
-.tp-mono i{font:italic 400 .8em/1 var(--fh);margin:0 .12em;color:#b8892b;background:linear-gradient(180deg,#d7ab4e,#996b17);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.tp-medal small{position:absolute;left:0;right:0;bottom:21%;text-align:center;color:#8a6219;font:500 max(7.5px,calc(var(--mh)*.08))/1 var(--fb);letter-spacing:.16em;white-space:nowrap}
+/* ivory disc spans 13%–87%; its content is one centred column */
+.tp-medal-in{position:absolute;inset:15%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--mh)*.03);padding-bottom:13%}
+.tp-medal .lotus{display:block;width:50%;height:auto;margin-bottom:calc(var(--mh)*-.02);filter:drop-shadow(0 1px 1px rgba(120,60,20,.25))}
+.tp-mono{display:flex;align-items:baseline;justify-content:center;color:#5e1623;font:500 calc(var(--mh)*.44)/.9 var(--fh);letter-spacing:0}
+.tp-mono i{font:italic 400 .78em/1 var(--fh);margin:0 .1em;color:#b8892b;background:linear-gradient(180deg,#d7ab4e,#996b17);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tp-medal small{display:block;max-width:64%;padding-top:calc(var(--mh)*.035);border-top:1px solid rgba(184,137,46,.45);color:#8a6219;font:500 max(11px,calc(var(--mh)*.12))/1 var(--fb);letter-spacing:.02em;white-space:nowrap;font-variant-numeric:lining-nums;text-align:center}
 .tp-medal::after{content:"";position:absolute;inset:-14%;border-radius:50%;opacity:0;background:radial-gradient(circle,rgba(255,236,170,.95),rgba(255,214,120,0) 65%);mix-blend-mode:screen}
 .temple.is-unlocking .tp-medal::after{animation:tp-mglow .5s ease-out forwards}
 @keyframes tp-mglow{0%{opacity:0;transform:scale(.7)}100%{opacity:1;transform:scale(1.1)}}
@@ -180,7 +182,7 @@ body.doors-busy {
 
 /* landscape (tablets, desktops) */
 @media (min-aspect-ratio:1/1){
-  .temple{--pc:clamp(46px,4.2vw,78px);--lb:max(30svh,22vw);--lh:clamp(56px,9svh,96px);--sh:clamp(56px,9svh,84px);--mh:clamp(46px,8svh,90px);
+  .temple{--pc:clamp(46px,4.2vw,78px);--lb:max(30svh,22vw);--lh:clamp(56px,9svh,96px);--sh:clamp(56px,9svh,84px);--mh:clamp(72px,9.5svh,96px);
     --pw:max(calc(var(--pc) + 3vw),calc((100vw - 1.35 * (100svh - var(--lb) - var(--sh))) / 2))}
   .tp-garland{top:calc(-100vw*.011);aspect-ratio:2160/760;background-image:var(--wT);
     -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 80%,transparent 100%),radial-gradient(ellipse 11% 52% at 50% 100%,transparent 0 70%,#000 100%);-webkit-mask-composite:source-in;

@@ -141,14 +141,14 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0, pendingW
         <span className="rd-kicker">Wishes Wall</span>
         <h2 id="wishes-title">With love, from our people</h2>
         <HeaderRule />
-        <p className="rd-lead">A little love from everyone celebrating with us</p>
+        <p className="rd-lead">Love from everyone celebrating with us</p>
 
         {!isLoading && wishes.length > 0 && (
           <p className="wishes-hint">
             <span>
               {wishes.length} {wishes.length === 1 ? 'wish' : 'wishes'} so far
             </span>{' '}
-            · Tap a glowing lamp to read a wish
+            · tap a lamp to read
           </p>
         )}
 

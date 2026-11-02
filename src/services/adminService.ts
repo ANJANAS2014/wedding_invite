@@ -63,3 +63,7 @@ export const deleteResponse = (key: string, id: string) => adminPost<object>(key
 
 /** Removes only the wish text and photo; the RSVP attendance stays. */
 export const clearWish = (key: string, id: string) => adminPost<object>(key, { action: 'clearWish', id });
+
+/** Sets the wish text (used to fill in or fix an empty/short wish). Empty clears it. */
+export const editWish = (key: string, id: string, wishes: string) =>
+  adminPost<object>(key, { action: 'editWish', id, wishes });

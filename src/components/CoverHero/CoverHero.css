@@ -346,10 +346,7 @@
 .ccd-unit b { display: block; font: 500 36px/1 var(--fh); color: var(--burg); font-variant-numeric: lining-nums tabular-nums; }
 .ccd-unit small { display: block; margin-top: var(--s1); font: 500 11px/1 var(--fb); letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-d); }
 
-.cover-acts { display: flex; justify-content: center; align-items: center; gap: var(--s3); margin-top: var(--s5); }
-.cover-acts .rd-btn { padding: 0 var(--s4); }
-.cover-scroll svg { animation: cover-scroll-cue 1.8s var(--ease) infinite; }
-@keyframes cover-scroll-cue { 50% { transform: translateY(3px); } }
+/* (cover buttons removed: the pinned ScrollCue is the only scroll hint) */
 
 /* staged reveal as the temple doors open */
 .cv > * { opacity: 0; transform: translateY(14px); transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
@@ -364,19 +361,27 @@ body.revealed .cv > :nth-child(8) { transition-delay: 0.8s; }
 body.revealed .cv > :nth-child(n+9) { transition-delay: 0.9s; }
 
 @media (max-width: 720px) {
-  .cv { padding-top: clamp(56px, 16vw, 72px); padding-bottom: var(--s5); }
-  .cover-couple { width: min(64vw, 240px); }
-  #hero .names { font-size: clamp(48px, 14vw, 60px); }
-  .cover-countdown { grid-template-columns: repeat(3, 80px); }
+  /* tighter first screen so the date + countdown peek above the fold */
+  .cv { padding-top: clamp(48px, 13vw, 60px); padding-bottom: var(--s5); }
+  .cover-couple { width: min(56vw, 220px); }
+  .cover-greeting { margin-top: var(--s2); font-size: 18px; }
+  #hero .names { font-size: clamp(48px, 14vw, 60px); margin-top: var(--s2); }
+  .cv > .hrule { margin-top: var(--s2); }
+  .cover-invite { margin-top: var(--s3); }
+  .cover-invite-note { margin-top: var(--s1); font-size: 15px; }
+  .cover-std { margin-top: var(--s4); }
+  .cover-countdown { grid-template-columns: repeat(3, 80px); margin-top: var(--s3); }
+  .ccd-unit { padding: var(--s2) 0; }
+}
+@media (max-width: 720px) and (max-height: 700px) {
+  .cover-couple { width: min(48vw, 190px); }
 }
 @media (max-width: 359px) {
   .cover-procrow .cover-procession-left,
   .cover-procrow .cover-procession-elephant { height: 76px; }
-  .cover-acts { flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cover-lamp-glow, .cover-lamp-flame { animation: none; }
   .cv > * { opacity: 1; transform: none; transition: none; }
-  .cover-scroll svg { animation: none; }
 }

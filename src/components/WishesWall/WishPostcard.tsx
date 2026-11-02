@@ -56,6 +56,7 @@ export const WishPostcard: React.FC<WishPostcardProps> = ({
   const messageRef = useRef<HTMLParagraphElement>(null);
   const isClamped = useIsClamped(messageRef, wish.wish);
   const authorName = shortenAuthorName(wish.displayName);
+  const hasMessage = wish.wish.trim().length > 0;
 
   // Clones are decorative copies for the seamless marquee loop: keep their
   // inner like button out of the tab order as well.
@@ -83,6 +84,7 @@ export const WishPostcard: React.FC<WishPostcardProps> = ({
         }
       }}
     >
+      <WishStamp weddingAttending={wish.weddingAttending} receptionAttending={wish.receptionAttending} />
       <div className="postcard-photo-frame">
         <WishPhoto
           name={wish.displayName}
@@ -99,11 +101,10 @@ export const WishPostcard: React.FC<WishPostcardProps> = ({
       </div>
 
       <div className="postcard-content">
-        <WishStamp weddingAttending={wish.weddingAttending} receptionAttending={wish.receptionAttending} />
         <p className="postcard-message" ref={messageRef}>
-          “{wish.wish}”
+          {hasMessage ? `“${wish.wish}”` : '❤'}
         </p>
-        {isClamped && (
+        {hasMessage && isClamped && (
           <span className="postcard-read-more" aria-hidden="true">
             Read more
           </span>

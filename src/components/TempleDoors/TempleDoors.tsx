@@ -32,35 +32,51 @@ const Mandala: React.FC = () => (
 );
 
 /** The pink lotus from the original curtain bloom, used as the medallion crest. */
+/**
+ * Side-view lotus for the medallion: a tall centre petal, two layers of side
+ * petals opening outward, paler back petals between them and a gilt base.
+ * Pink deepening toward the tips, with fine gold edges and veins.
+ */
+const LOTUS_PETAL = 'M0 0C-11 -14 -10 -38 0 -56C10 -38 11 -14 0 0Z';
+const LOTUS_LAYERS: readonly { a: number; s: number; back?: boolean }[] = [
+  { a: -62, s: 0.62 }, { a: 62, s: 0.62 },
+  { a: -40, s: 0.8, back: true }, { a: 40, s: 0.8, back: true },
+  { a: -24, s: 0.86 }, { a: 24, s: 0.86 },
+  { a: -10, s: 0.94, back: true }, { a: 10, s: 0.94, back: true },
+  { a: 0, s: 1 },
+];
 const Lotus: React.FC<{ id: string }> = ({ id }) => (
-  <svg className="lotus" viewBox="-70 -70 140 140" aria-hidden="true" focusable="false">
+  <svg className="lotus" viewBox="-60 -62 120 74" aria-hidden="true" focusable="false">
     <defs>
-      <linearGradient id={`${id}-p`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#ffe6ee" />
-        <stop offset="0.4" stopColor="#f3a7be" />
-        <stop offset="0.8" stopColor="#d86b8c" />
-        <stop offset="1" stopColor="#a93f5f" />
+      <linearGradient id={`${id}-p`} x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stopColor="#fff1f5" />
+        <stop offset="0.45" stopColor="#f6b8cb" />
+        <stop offset="0.85" stopColor="#e07597" />
+        <stop offset="1" stopColor="#c44d74" />
+      </linearGradient>
+      <linearGradient id={`${id}-b`} x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stopColor="#fff6f8" />
+        <stop offset="1" stopColor="#f1a9bf" />
       </linearGradient>
       <linearGradient id={`${id}-g`} x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stopColor="#f6e3a3" />
-        <stop offset="0.6" stopColor="#d9b45f" />
         <stop offset="1" stopColor="#b7953a" />
       </linearGradient>
     </defs>
-    {Array.from({ length: 12 }, (_, i) => (
-      <path key={`a${i}`} transform={`rotate(${i * 30}) translate(0 -10)`} d={PETAL} fill={`url(#${id}-p)`} stroke="#e6c477" strokeWidth="0.8" opacity={0.95} />
+    {LOTUS_LAYERS.map((l, i) => (
+      <g key={i} transform={`rotate(${l.a}) scale(${l.s})`}>
+        <path d={LOTUS_PETAL} fill={`url(#${id}-${l.back ? 'b' : 'p'})`} stroke="#d4ad5a" strokeWidth={1.1 / l.s * 0.7} />
+        {!l.back && <path d="M0 -4V-46" stroke="#fbe3ea" strokeWidth={0.9} strokeLinecap="round" opacity={0.8} />}
+      </g>
     ))}
-    {Array.from({ length: 12 }, (_, i) => (
-      <path key={`b${i}`} transform={`rotate(${i * 30 + 15}) translate(0 -6) scale(0.7)`} d={PETAL} fill={`url(#${id}-p)`} stroke="#f0d88a" strokeWidth="0.6" opacity={0.9} />
-    ))}
-    <ellipse cx="0" cy="8" rx="34" ry="9" fill={`url(#${id}-g)`} opacity={0.95} />
-    <ellipse cx="0" cy="6" rx="22" ry="5" fill="#f3dc8e" />
-    <circle cx="0" cy="4" r="9" fill="#f0d88a" stroke="#b7953a" strokeWidth="0.8" />
+    {/* gilt base and a ripple of water */}
+    <path d="M-30 1C-16 9 16 9 30 1C16 5 -16 5 -30 1Z" fill={`url(#${id}-g)`} />
+    <path d="M-44 9C-24 13 24 13 44 9" fill="none" stroke="#c9a24d" strokeWidth={1} strokeLinecap="round" opacity={0.7} />
   </svg>
 );
 
-// "2026-11-29" → "29 · 11 · 2026"
-const MEDALLION_DATE = WEDDING_EVENT.istDate.split('-').reverse().join(' · ');
+// "2026-11-29" → "29.11.2026"
+const MEDALLION_DATE = WEDDING_EVENT.istDate.split('-').reverse().join('.'); // compact so it always fits the disc
 const GROOM_INITIAL = WEDDING_CONTENT.groom.charAt(0).toUpperCase();
 const BRIDE_INITIAL = WEDDING_CONTENT.bride.charAt(0).toUpperCase();
 
@@ -161,13 +177,16 @@ export const TempleDoors: React.FC<TempleDoorsProps> = ({ status, language, onOp
 
         <div className="tp-ui">
           <div className="tp-medal" aria-hidden="true">
-            <Lotus id="tp-lotus" />
-            <div className="tp-mono">
-              {GROOM_INITIAL}
-              <i>&amp;</i>
-              {BRIDE_INITIAL}
+            {/* lotus, initials and date stacked and centred inside the ivory disc */}
+            <div className="tp-medal-in">
+              <Lotus id="tp-lotus" />
+              <div className="tp-mono">
+                {GROOM_INITIAL}
+                <i>&amp;</i>
+                {BRIDE_INITIAL}
+              </div>
+              <small>{MEDALLION_DATE}</small>
             </div>
-            <small>{MEDALLION_DATE}</small>
           </div>
           <button
             type="button"

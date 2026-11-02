@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { WEDDING_CONTENT, WEDDING_IMAGES, UNIFIED_MEMORIES, STORY_HOOK, STORY_MOMENTS } from '../../data/weddingData';
 import { prefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
-import { NextTeaser } from '../ScrollGuide/NextTeaser';
 import { haptic } from '../../utils/haptics';
 
 // Rendered twice back-to-back so the CSS marquee loops seamlessly.
@@ -302,7 +301,6 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
           </button>
         </div>
         <div className="rd-wrap">
-          <NextTeaser label="Next: where & when to celebrate" targetId="s2" />
         </div>
       </div>
     </section>

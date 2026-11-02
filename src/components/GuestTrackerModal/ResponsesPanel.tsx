@@ -5,6 +5,7 @@ import {
   clearAdminKey,
   clearWish,
   deleteResponse,
+  editWish,
   fetchResponses,
   loadAdminKey,
   saveAdminKey,
@@ -69,12 +70,34 @@ export const ResponsesPanel: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const runAction = async (r: AdminResponse, kind: 'delete' | 'clearWish') => {
+  const runAction = async (r: AdminResponse, kind: 'delete' | 'clearWish' | 'editWish') => {
     const prompt =
       kind === 'delete'
         ? `Delete ${r.name}'s whole RSVP (attendance, wish and photo)? This can't be undone.`
+        : kind === 'clearWish'
+          ? `Remove ${r.name}'s wish and photo from the wishes wall? Their RSVP attendance stays.`
+          : `Edit ${r.name}'s wish text:`;
+    if (kind === 'editWish') {
+      const next = window.prompt(`Wish text for ${r.name} (leave empty to clear):`, r.wishes || '');
+      if (next === null) return;
+      setBusyId(r.id);
+      setMessage('');
+      try {
+        await editWish(adminKey, r.id, next);
+        setResponses((prev) => prev.map((x) => (x.id === r.id ? { ...x, wishes: next.trim() } : x)));
+        setMessage(next.trim() ? `Updated ${r.name}'s wish.` : `Cleared ${r.name}'s wish text.`);
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setBusyId('');
+      }
+      return;
+    }
+    const confirmText =
+      kind === 'delete'
+        ? `Delete ${r.name}'s whole RSVP (attendance, wish and photo)? This can't be undone.`
         : `Remove ${r.name}'s wish and photo from the wishes wall? Their RSVP attendance stays.`;
-    if (!window.confirm(prompt)) return;
+    if (!window.confirm(confirmText)) return;
     setBusyId(r.id);
     setMessage('');
     try {
@@ -218,6 +241,14 @@ export const ResponsesPanel: React.FC = () => {
                 )}
               </div>
               <div className="gt-guest-actions">
+                <button
+                  type="button"
+                  className="btn gt-btn-sm"
+                  onClick={() => runAction(r, 'editWish')}
+                  disabled={!!busyId}
+                >
+                  Edit wish
+                </button>
                 {(r.wishes || r.photoUrl) && (
                   <button
                     type="button"

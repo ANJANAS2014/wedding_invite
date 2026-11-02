@@ -13,8 +13,11 @@ export const STORAGE_KEYS = {
   guestTracker: 'wedding_guest_tracker_v2',
   /** '1' when background music (and the chime) is muted. */
   musicMuted: 'inv-mute',
-  /** `{ name, token, lang }` from the last personal invite link opened on this device. */
-  invitedGuest: 'inv-guest-v1',
+  /**
+   * LEGACY — older builds remembered the last personal invite here, which made the
+   * general link greet that guest. Never read or written now; removed on load.
+   */
+  legacyInvitedGuest: 'inv-guest-v1',
   /** 'bride' | 'groom' — the guest's Team Bride / Team Groom pick on this device. */
   teamSide: 'inv-team-side-v1',
   /** Random UUID identifying this device for the team pick (no personal data). */
@@ -63,6 +66,14 @@ export function readString(key: string, which: StorageArea = 'local'): string | 
 export function writeString(key: string, value: string, which: StorageArea = 'local'): void {
   try {
     area(which).setItem(key, value);
+  } catch {
+    // ignore storage errors
+  }
+}
+
+export function removeKey(key: string, which: StorageArea = 'local'): void {
+  try {
+    area(which).removeItem(key);
   } catch {
     // ignore storage errors
   }

@@ -5,7 +5,6 @@ import { WEDDING_START_MS } from '../../data/events';
 import { useNow } from '../../hooks/useNow';
 import { getCountdown, pad2 } from '../../utils/countdown';
 import type { Language } from '../../types';
-import { TOUR_START_EVENT } from '../../utils/motion';
 import '../ScrollGuide/ScrollGuide.css';
 import { CoverGarland, CoverProcession } from './CoverArt';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
@@ -88,17 +87,6 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => 
           </div>
         )}
 
-        <div className="cover-acts">
-          <button type="button" className="rd-btn rd-btn--line tour-start" onClick={() => window.dispatchEvent(new Event(TOUR_START_EVENT))}>
-            ▶ Take the tour
-          </button>
-          <a className="rd-btn rd-btn--line cover-scroll" href="#couple" aria-label="Scroll to the invitation">
-            Scroll
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
-              <path d="M3 6l5 5 5-5" />
-            </svg>
-          </a>
-        </div>
         <div className="cover-procrow" aria-hidden="true">
           <CoverProcession />
         </div>

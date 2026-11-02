@@ -9,6 +9,10 @@ export const WEDDING_IMAGES = {
   /** p10 pre-cropped to face + flower (no office ceiling / monitor) for the round portrait */
   bride_portrait: "/images/couple/bride-portrait-crop.jpg",
   p12: "/images/couple/groom-park-portrait.jpg",
+  /** enhanced square portrait of Lalith (Nov 2026) for the round Bride & Groom photo and quiz faces */
+  groom_portrait: "/images/couple/groom-portrait.jpg",
+  /** our own photo: our two hands making a heart against the sky (above the promise cards) */
+  promise_hands: "/images/couple/our-hands-heart.jpg",
   w1: "/images/venues/wedding-venue-central-auditorium.jpg",
   r1: "/images/venues/reception-venue-annalakshmi.jpg",
   hero_cover: "/images/cover/wedding-couple-cutout-refined.webp",
@@ -35,7 +39,7 @@ export const STORY_HOOK = 'After learning almost every South Indian language exc
 export const STORY_MOMENTS: StoryMoment[] = [
   { title: 'Bangalore', text: 'Traffic moves slowly here, but somehow love found the express lane.', image: 'story_photo_one', objectPosition: '50% 20%' },
   { title: 'Two languages, one laugh', text: 'She’s from Keralam, he’s from Chennai. Different mother tongues, one shared language: laughter.', image: 'story_photo_four', objectPosition: '50% 30%' },
-  { title: 'The Wayanad trip', text: 'Long drives, off-key singing and jokes only they understood.', image: 'story_photo_two', objectPosition: '50% 40%' },
+  { title: 'The Wayanad trip', text: 'Long drives, singing and dancing in the car, and jokes only they understood.', image: 'story_photo_two', objectPosition: '50% 40%' },
   { title: 'The checklist', text: 'Hers: respect, reassurance, someone who makes life lighter. His: none. He just knew.', image: 'story_photo_three', objectPosition: '50% 25%', zoom: 1.3 },
   { title: 'Fate’s sense of humour', text: 'He learned almost every South Indian language except Malayalam… then fell for a Malayali girl.', image: 'p4', objectPosition: '50% 30%' },
   { title: 'Home', text: 'His keyboard, her ukulele, endless conversations. Now, with their families’ blessings, a lifetime of choosing each other.', image: 'p7', objectPosition: '50% 50%' }
@@ -61,10 +65,19 @@ export interface CoupleQuizItem {
 export const COUPLE_QUIZ: CoupleQuizItem[] = [
   { q: 'Who speaks more languages?', answer: 'groom', note: 'Almost every South Indian language… except Malayalam. Fate noticed.' },
   { q: 'Who came with a checklist for love?', answer: 'bride', note: 'Respect, reassurance, and someone who makes life lighter. All ticked.' },
-  { q: 'Who brings the music?', answer: 'both', note: 'His keyboard, her ukulele. The duet is still in rehearsal.' },
+  { q: 'Who brings the music?', answer: 'both', note: 'His keyboard, her ukulele and her singing. The duet is still in rehearsal.' },
   { q: 'Who turns any ordinary moment into fun?', answer: 'groom', note: 'Sometimes even on purpose.' },
   { q: 'Who notices the little things first?', answer: 'bride', note: 'Quiet, observant, and happiest in life’s little moments.' },
-  { q: 'Who sings off-key on road trips?', answer: 'both', note: 'Ask anyone who was on the Wayanad trip.' },
+  { q: 'Who is the better singer?', answer: 'bride', note: 'He sings too, but she’s the voice of the duo.' },
+  { q: 'Who gets pampered most at home?', answer: 'groom', note: 'Amma’s favourite, and he knows it.' },
+  { q: 'Who is the better cook?', answer: 'bride', note: 'He’s in charge of tasting.' },
+  { q: 'Who cries at movies?', answer: 'bride', note: 'Keep the tissues ready for the wedding album.' },
+  { q: 'Who is first on the dance floor at family functions?', answer: 'bride', note: 'Watch for her at the reception.' },
+  { q: 'Who says sorry first after a fight?', answer: 'groom', note: 'Peace over everything, remember?' },
+  { q: 'Who was the better student in school?', answer: 'both', note: 'Two sets of report cards, both proudly framed at home.' },
+  { q: 'Who is more scared of ghosts?', answer: 'bride', note: 'Lights stay on. No horror movies, please.' },
+  { q: 'Who is the better driver?', answer: 'groom', note: 'Bangalore traffic was good practice.' },
+  { q: 'Who is more likely to forget a birthday?', answer: 'groom', note: 'Phone reminders are his best friend.' },
 ];
 
 // Filmstrip + lightbox photos are loaded automatically from src/assets/filmstrip/.
@@ -73,23 +86,23 @@ export { UNIFIED_MEMORIES, type UnifiedMemoryPhoto } from './filmstrip';
 export const WEDDING_CONTENT = {
   groom: 'Lalith',
   bride: 'Anjana',
-  inv1: 'We cordially invite you to celebrate our wedding and reception with the blessings of our families and elders.',
-  inv3: 'Your presence would make our celebration truly special.',
+  inv1: 'With the blessings of our families, we invite you to our wedding and reception.',
+  inv3: 'Your presence would make it truly special.',
   weddingVenue: 'Central Auditorium',
   weddingAddr: 'North Paravur, Kerala, India',
   weddingMap: 'https://maps.app.goo.gl/XAEM92g9pdnygrfF6',
   receptionVenue: 'Annalakshmi Restaurant',
   receptionAddr: '6 Mayor Ramanathan Salai, Chennai, India',
   receptionMap: 'https://maps.app.goo.gl/vN3tiGAB5BfHAyBB8',
-  groomStory: 'A gentle soul with a laugh that fills every room. Always the first to say yes to an adventure.',
-  brideStory: 'Graceful, warm and full of wonder. She turns every ordinary day into a celebration.',
+  groomStory: 'A laugh that fills every room, and always first to say yes to an adventure.',
+  brideStory: 'Graceful and warm, she turns ordinary days into celebrations.',
   groomVow: '“In my every lifetime, I will find my way to you.”',
-  brideVow: '“Until I am alive, your happiness and every little dream will be taken care of.”',
+  brideVow: '“As long as I live, your happiness and every little dream will be taken care of.”',
   story: `It all began in Bangalore, where traffic moves slowly, but somehow love found the express lane.
 
 She is from Keralam, and he is from Chennai. They speak different mother tongues but share one language perfectly: laughter.
 
-A trip to Wayanad with friends brought them closer through long drives, off-key singing, and jokes only they understood. She is quiet and observant, happiest in life’s little moments. He can turn any ordinary moment into fun, sometimes intentionally.
+A trip to Wayanad with friends brought them closer through long drives, singing and dancing in the car, and jokes only they understood. She is quiet and observant, happiest in life’s little moments. He can turn any ordinary moment into fun, sometimes intentionally.
 
 She has a checklist for love: respect, reassurance, and someone who makes life lighter. He has no checklist — he simply knows she is the one. After learning almost every South Indian language except Malayalam, he finds himself falling for a Malayali girl. Clearly, fate has a sense of humour and it has a particularly amusing plan for him.
 
@@ -115,24 +128,24 @@ export const LANG_MAPPINGS: Record<Language, LanguageContent> = {
     greetPrefix: 'Dear ',
     greetSuffix: ', with love we invite you',
     open: 'Open Invitation',
-    inv1: 'We cordially invite you to celebrate our wedding and reception with the blessings of our families and elders.',
-    inv3: 'Your presence would make our celebration truly special.',
+    inv1: 'With the blessings of our families, we invite you to our wedding and reception.',
+    inv3: 'Your presence would make it truly special.',
     shareMsg: (name: string, link: string) => `Dear ${name},\n\nWith joy, Lalith & Anjana invite you to celebrate our wedding on November 29, 2026, and our reception on December 6, 2026. 🌺\n\nYour personal invitation: ${link}`
   },
   ta: {
     greetPrefix: 'அன்புள்ள ',
     greetSuffix: ', அன்புடன் உங்களை அழைக்கிறோம்',
     open: 'அழைப்பிதழைத் திறக்கவும்',
-    inv1: 'எங்கள் குடும்பத்தினர் மற்றும் பெரியோர்களின் ஆசீர்வாதத்துடன், எங்கள் திருமணம் மற்றும் வரவேற்பு விழாவில் கலந்துகொண்டு சிறப்பிக்குமாறு உங்களை அன்புடன் அழைக்கிறோம்.',
-    inv3: 'உங்கள் வருகை எங்கள் கொண்டாட்டத்தை மேலும் சிறப்பாக்கும்.',
+    inv1: 'குடும்பத்தினரின் ஆசீர்வாதத்துடன், எங்கள் திருமணம் மற்றும் வரவேற்பிற்கு உங்களை அன்புடன் அழைக்கிறோம்.',
+    inv3: 'உங்கள் வருகை எங்களுக்குப் பெருமகிழ்ச்சி.',
     shareMsg: (name: string, link: string) => `அன்புள்ள ${name},\n\nலலித் & அஞ்சனா திருமணத்திற்கு (நவம்பர் 29, 2026) மற்றும் வரவேற்பு விழாவிற்கு (டிசம்பர் 6, 2026) உங்களை அன்புடன் அழைக்கிறோம். 🌺\n\nஉங்கள் அழைப்பிதழ்: ${link}`
   },
   ml: {
     greetPrefix: 'പ്രിയപ്പെട്ട ',
     greetSuffix: ', സ്നേഹത്തോടെ ഞങ്ങൾ നിങ്ങളെ ക്ഷണിക്കുന്നു',
     open: 'ക്ഷണക്കത്ത് തുറക്കുക',
-    inv1: 'ഞങ്ങളുടെ കുടുംബാംഗങ്ങളുടെയും മുതിർന്നവരുടെയും അനുഗ്രഹത്തോടെ, ഞങ്ങളുടെ വിവാഹത്തിലും വിവാഹ സൽക്കാരത്തിലും പങ്കുചേരാൻ നിങ്ങളെ സ്നേഹപൂർവ്വം ക്ഷണിക്കുന്നു.',
-    inv3: 'നിങ്ങളുടെ സാന്നിധ്യം ഞങ്ങളുടെ ആഘോഷത്തെ കൂടുതൽ സവിശേഷമാക്കും.',
+    inv1: 'കുടുംബങ്ങളുടെ അനുഗ്രഹത്തോടെ, ഞങ്ങളുടെ വിവാഹത്തിലേക്കും സൽക്കാരത്തിലേക്കും നിങ്ങളെ സ്നേഹപൂർവ്വം ക്ഷണിക്കുന്നു.',
+    inv3: 'നിങ്ങളുടെ സാന്നിധ്യം ഞങ്ങൾക്ക് ഏറെ സന്തോഷം.',
     shareMsg: (name: string, link: string) => `പ്രിയപ്പെട്ട ${name},\n\nലളിത് & അഞ്ജന വിവാഹത്തിലേക്കും (നവംബർ 29, 2026) വിവാഹ സൽക്കാരത്തിലേക്കും (ഡിസംബർ 6, 2026) നിങ്ങളെ സ്നേഹപൂർവ്വം ക്ഷണിക്കുന്നു. 🌺\n\nനിങ്ങളുടെ ക്ഷണക്കത്ത്: ${link}`
   }
 };

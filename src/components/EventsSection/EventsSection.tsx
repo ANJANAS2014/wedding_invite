@@ -3,7 +3,6 @@ import React from 'react';
 import { WEDDING_EVENTS } from '../../data/events';
 import { useNow } from '../../hooks/useNow';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
-import { NextTeaser } from '../ScrollGuide/NextTeaser';
 import { WeddingCard } from './WeddingCard';
 import { TrainJourney } from './TrainJourney';
 import { ReceptionCard } from './ReceptionCard';
@@ -48,7 +47,6 @@ export const EventsSection: React.FC = () => {
         })}
 
         </div>
-        <NextTeaser label="Next: tell us you're coming" targetId="s5" tone="light" />
       </div>
     </section>
   );

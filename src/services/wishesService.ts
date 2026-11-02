@@ -36,7 +36,7 @@ async function fetchServerWishes(): Promise<WishRecord[] | null> {
   const data = await getJson<{ ok?: boolean; wishes?: ApiWish[] }>(API_ROUTES.wishes);
   if (!data || !data.ok || !Array.isArray(data.wishes)) return null;
   return data.wishes
-    .filter((w) => w && w.displayName && w.wish)
+    .filter((w) => w && w.displayName && (w.wish || w.photoUrl))
     .map((w, idx) => ({
       id: w.id || buildStableWishId(String(w.displayName), String(w.wish), idx),
       displayName: String(w.displayName).trim(),

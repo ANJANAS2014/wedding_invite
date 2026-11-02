@@ -148,6 +148,13 @@ export default async function handler(req, res) {
         if (!UUID_PATTERN.test(id)) break;
         await supabaseRequest(cfg, `/rest/v1/rsvp_responses?id=eq.${id}`, { method: "PATCH", prefer: "return=minimal", body: { wish_approved: body.approved === true } });
         return sendJson(res, 200, { ok: true });
+      case "editWish": {
+        // Host edit of the wish text (e.g. filling in a wish left blank). Keeps the photo; marks approved when non-empty.
+        if (!UUID_PATTERN.test(id)) break;
+        const text = typeof body.wishes === "string" ? body.wishes.replace(/\r\n?/g, "\n").slice(0, 1000) : "";
+        await supabaseRequest(cfg, `/rest/v1/rsvp_responses?id=eq.${id}`, { method: "PATCH", prefer: "return=minimal", body: { wishes: text.trim() || null, wish_approved: text.trim().length > 0 } });
+        return sendJson(res, 200, { ok: true });
+      }
       case "listResponses":
         return sendJson(res, 200, { ok: true, ...(await listResponses(cfg)) });
       case "clearWish":

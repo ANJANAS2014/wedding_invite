@@ -25,7 +25,7 @@ import { useInvitationOpening } from '../hooks/useInvitationOpening';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useScrollMoments } from '../hooks/useScrollMoments';
 import { ScrollProgress } from '../components/ScrollGuide/ScrollProgress';
-import { GuidedTour } from '../components/ScrollGuide/GuidedTour';
+import { ScrollCue } from '../components/ScrollGuide/ScrollCue';
 import { duckMusic } from '../utils/musicEvents';
 import {
   CoupleSection,
@@ -127,7 +127,7 @@ export const App: React.FC = () => {
       </main>
 
       <ScrollProgress />
-      <GuidedTour />
+      <ScrollCue />
       <MusicPlayer />
       <RsvpShortcut />
 

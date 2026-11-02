@@ -37,7 +37,7 @@ export const WishModal: React.FC<WishModalProps> = ({ wish, liked, photoFailed, 
       </div>
 
       <div className="modal-body-content">
-        <p className="modal-wish-text">“{wish.wish}”</p>
+        <p className="modal-wish-text">{wish.wish.trim() ? `“${wish.wish}”` : '❤'}</p>
         <div className="modal-author-row">
           <div className="modal-author-meta">
             <h4 className="modal-author-name">{wish.displayName}</h4>
