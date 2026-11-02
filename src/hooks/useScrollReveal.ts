@@ -26,7 +26,7 @@ export function useScrollReveal(selector = '#main'): void {
         : null;
 
     const scan = () => {
-      root.querySelectorAll('.reveal, .bu').forEach((el) => {
+      root.querySelectorAll('.reveal, .bu, .kasavu').forEach((el) => {
         if (seen.has(el)) return;
         seen.add(el);
         if (reduce || !io) {

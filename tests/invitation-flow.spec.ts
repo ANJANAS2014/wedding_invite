@@ -101,3 +101,29 @@ test('wishes wall shows diyas by default; a lamp shows its wish and opens the fu
   await page.getByRole('button', { name: 'Read full wish' }).click();
   await expect(page.locator('.postcard-modal-overlay')).toBeVisible();
 });
+
+test.describe('Scroll guide', () => {
+  test('a "what\'s next" teaser glides to the next section', async ({ page }) => {
+    const teaser = page.locator('.next-teaser', { hasText: 'where & when to celebrate' });
+    await teaser.scrollIntoViewIfNeeded();
+    await teaser.click();
+    await expect
+      .poll(async () => page.evaluate(() => Math.abs(document.getElementById('s2')!.getBoundingClientRect().top)))
+      .toBeLessThan(40);
+  });
+
+  test('the guided tour starts from the cover and any click stops it', async ({ browser }) => {
+    // the tour is hidden for reduced motion, which this file enables by default
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'no-preference' });
+    const page = await context.newPage();
+    await page.goto('/?to=Priya');
+    await page.locator('#op').click();
+    await expect(page.locator('.temple')).toHaveCount(0, { timeout: 5000 });
+    await page.locator('.tour-start').click();
+    await expect(page.locator('.tour-pill')).toBeVisible();
+    await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 4000 }).toBeGreaterThan(200);
+    await page.mouse.click(195, 420);
+    await expect(page.locator('.tour-pill')).toHaveCount(0);
+    await context.close();
+  });
+});

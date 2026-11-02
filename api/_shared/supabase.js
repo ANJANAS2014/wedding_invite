@@ -29,7 +29,7 @@ function isSameOrigin(req) {
   }
 }
 
-// Returns null when Supabase is not configured, so callers can fall back to the legacy Apps Script flow.
+// Returns null when Supabase is not configured (the API then answers 503).
 function supabaseConfig() {
   const rawUrl = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;

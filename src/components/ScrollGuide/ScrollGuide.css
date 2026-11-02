@@ -1,0 +1,142 @@
+/* ==========================================================================
+   SCROLL GUIDE — "what's next" teasers, reading-progress hairline, tour
+   ========================================================================== */
+.next-teaser {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+  margin: clamp(26px, 4vw, 40px) auto 0;
+  padding: 6px 12px;
+  background: none;
+  border: 0;
+  font: italic 400 clamp(16px, 1.6vw, 19px) / 1.35 var(--fh);
+  text-align: center;
+  cursor: pointer;
+}
+
+.next-teaser--dark {
+  color: #9a7022;
+}
+
+.next-teaser--light {
+  color: var(--gold-l);
+}
+
+.next-teaser svg {
+  width: 16px;
+  height: 16px;
+  animation: teaser-bob 1.8s var(--ease) infinite;
+}
+
+@keyframes teaser-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(4px); opacity: 1; }
+}
+
+/* reading-progress hairline */
+.scroll-progress {
+  --p: 0;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 205; /* above content, below the mute button (210) and modals (250+) */
+  height: 2px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+}
+
+body.opened .scroll-progress {
+  opacity: 1;
+}
+
+.scroll-progress-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #9a7022, #c19a3d 40%, #f0d68e);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--p));
+}
+
+.scroll-progress-tip {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  background: #f0d68e;
+  box-shadow: 0 0 6px rgba(240, 214, 142, 0.9);
+  transform: translateX(calc(var(--p) * 100vw)) rotate(45deg);
+}
+
+/* guided tour */
+.tour-start {
+  position: relative;
+  z-index: 2;
+  min-height: 40px;
+  margin-top: 4px;
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(183, 137, 46, 0.5);
+  color: #8a6219;
+  font: 500 10px / 1 var(--fb);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.tour-pill {
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 230;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 20px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(240, 214, 142, 0.6);
+  border-radius: 999px;
+  background: rgba(42, 10, 16, 0.88);
+  color: var(--gold-l);
+  font: 500 11px / 1 var(--fb);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6);
+}
+
+.tour-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold-l);
+  animation: tour-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes tour-pulse {
+  50% { opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .next-teaser svg,
+  .tour-dot {
+    animation: none;
+  }
+
+  .tour-start {
+    display: none;
+  }
+}
+
+/* keep the floating RSVP shortcut out of the way while touring */
+body.touring .rsvp-shortcut {
+  display: none !important;
+}

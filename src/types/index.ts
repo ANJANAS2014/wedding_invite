@@ -9,9 +9,6 @@ export const LANGUAGES: readonly Language[] = ['en', 'ta', 'ml'];
 export const isLanguage = (value: unknown): value is Language =>
   typeof value === 'string' && (LANGUAGES as readonly string[]).includes(value);
 
-/** Lotus curtain animation state driven by the invitation-opening flow. */
-export type CurtainStatus = 'idle' | 'closing' | 'parting';
-
 /**
  * Temple-door opening state (page 1 → page 2).
  * closed → unlocking (button fades, knockers swing) → parting (doors swing

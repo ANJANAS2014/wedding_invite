@@ -24,6 +24,8 @@ export const STORAGE_KEYS = {
 export const SESSION_KEYS = {
   /** Guest Tracker unlocked for this tab. */
   trackerAuth: 'gt_auth',
+  /** Admin password for the server-side Responses tab (this tab only). */
+  adminKey: 'gt_admin_key',
 } as const;
 
 type StorageArea = 'local' | 'session';

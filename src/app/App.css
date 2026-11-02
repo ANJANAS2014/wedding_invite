@@ -8,10 +8,8 @@
   width: 100%;
 }
 
+/* Rendered (laid out) from the start but invisible, so opening the doors
+   only flips visibility instead of laying out the whole page mid-animation. */
 body:not(.opened) #main {
-  display: none;
-}
-
-body.opened #main {
-  animation: invitation-arrive .65s both cubic-bezier(.2, .7, .2, 1);
+  visibility: hidden;
 }

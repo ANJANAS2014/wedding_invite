@@ -1,25 +1,10 @@
 import type { Language } from '../types';
 
-export interface GalleryPhoto {
-  src: WeddingImageKey;
-  alt: string;
-  ratio: string;
-  position?: string;
-  caption?: string;
-}
-
 // Image paths are served from /public. Section backgrounds and cover art are
 // referenced directly by CSS variables in src/styles/variables.css.
 export const WEDDING_IMAGES = {
-  p1: "/images/gallery/gallery-couple-doorway-portrait.jpg",
-  p2: "/images/gallery/wedding-hero-couple-trees.jpg",
-  p3: "/images/gallery/gallery-couple-white-wall-portrait.jpg",
   p4: "/images/gallery/gallery-couple-lotus-closeup-portrait.jpg",
-  p5: "/images/gallery/gallery-couple-lotus-boat-landscape.jpg",
-  p6: "/images/gallery/hero-couple-lotus-field.jpg",
   p7: "/images/gallery/gallery-couple-water-lotus-landscape.jpg",
-  p8: "/images/gallery/gallery-couple-lotus-wide-landscape.jpg",
-  p9: "/images/gallery/gallery-bride-lotus-landscape.jpg",
   p10: "/images/couple/bride-office-portrait.jpg",
   p12: "/images/couple/groom-park-portrait.jpg",
   w1: "/images/venues/wedding-venue-central-auditorium.jpg",
@@ -32,47 +17,6 @@ export const WEDDING_IMAGES = {
 } satisfies Record<string, string>;
 
 export type WeddingImageKey = keyof typeof WEDDING_IMAGES;
-
-export const WEDDING_GALLERY: GalleryPhoto[] = [
-  { src: 'p7', alt: 'Lalith and Anjana among the lotus blooms', ratio: '3/2' },
-  { src: 'p5', alt: 'A quiet moment together on the lotus lake', ratio: '3/2' },
-  { src: 'p2', alt: 'Lalith and Anjana beneath the trees', ratio: '3/4' },
-  { src: 'p8', alt: 'A wide view across the lotus garden', ratio: '3/2' },
-  { src: 'p4', alt: 'A close portrait among the lotus flowers', ratio: '3/4' },
-  { src: 'p1', alt: 'Lalith and Anjana sharing a moment in a doorway', ratio: '3/4' },
-  { src: 'p3', alt: 'The couple together against a white wall', ratio: '3/4' },
-  { src: 'p9', alt: 'Anjana among lotus flowers by the water', ratio: '3/2' },
-  { src: 'p6', alt: 'The couple surrounded by the lotus field', ratio: '3/2' }
-];
-
-export interface ReelPhoto {
-  src: string;
-  caption: string;
-  subcaption?: string;
-}
-
-export const REELS_PHOTOS: ReelPhoto[] = [
-  {
-    src: WEDDING_IMAGES.story_photo_one,
-    caption: 'Where our story began',
-    subcaption: 'Bangalore laughs & endless conversations'
-  },
-  {
-    src: WEDDING_IMAGES.story_photo_two,
-    caption: 'The Wayanad getaway',
-    subcaption: 'Winding roads, off-key songs & happy moments'
-  },
-  {
-    src: WEDDING_IMAGES.story_photo_three,
-    caption: 'Finding home in each other',
-    subcaption: 'Ukuleles, keyboards, and warmth'
-  },
-  {
-    src: WEDDING_IMAGES.story_photo_four,
-    caption: 'Choosing each other, always',
-    subcaption: 'A lifetime of adventures together'
-  }
-];
 
 /** "Our Story" swipeable moments (hook + cards). Lines are taken from WEDDING_CONTENT.story. */
 export interface StoryMoment {
@@ -95,29 +39,8 @@ export const STORY_MOMENTS: StoryMoment[] = [
   { title: 'Home', text: 'His keyboard, her ukulele, endless conversations. Now, with their families’ blessings, a lifetime of choosing each other.', image: 'p7', objectPosition: '50% 50%' }
 ];
 
-export interface UnifiedMemoryPhoto {
-  src: string;
-  alt: string;
-  caption?: string;
-  subcaption?: string;
-  ratio?: string;
-}
-
-export const UNIFIED_MEMORIES: UnifiedMemoryPhoto[] = [
-  ...WEDDING_GALLERY.map(g => ({
-    src: WEDDING_IMAGES[g.src],
-    alt: g.alt,
-    caption: g.alt,
-    ratio: g.ratio || '3/2'
-  })),
-  ...REELS_PHOTOS.map(r => ({
-    src: r.src,
-    alt: r.caption,
-    caption: r.caption,
-    subcaption: r.subcaption,
-    ratio: '4/5'
-  }))
-];
+// Filmstrip + lightbox photos are loaded automatically from src/assets/filmstrip/.
+export { UNIFIED_MEMORIES, type UnifiedMemoryPhoto } from './filmstrip';
 
 export const WEDDING_CONTENT = {
   groom: 'Lalith',

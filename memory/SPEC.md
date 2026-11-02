@@ -1,7 +1,7 @@
 # Lalith & Anjana — Wedding Invitation (static site)
 
 - Static, no-build site: `index.html` + `css/base.css` (all live styles; later rules override earlier ones) + `js/main.js` (renders everything into `#app`) + `data/*.js` (content, theme, image map).
-- RSVP/wishes use Netlify Functions (`/.netlify/functions/*`) backed by Google Apps Script; they are NOT available in the Emergent preview (404 there is expected).
+- RSVP/wishes use Vercel serverless functions (`/api/*`) backed by Supabase; they are NOT available in local Vite dev/preview (404 there is expected).
 - Emergent preview shim: `frontend/package.json` `yarn dev` serves `/app` with `python3 -m http.server` on port 3000. Not part of the deployed site.
 
 ## Cover (#hero) — restored "Image 1" atmosphere (commit 8357f17 reference)
@@ -24,7 +24,7 @@ Falling petals: restored original `.pt` body-wide fixed petals (11 mobile / 18 d
 ## Iteration 4 — Guest management, Supabase-ready backend, compact sections
 - Personal invitations: `?i=<32-char token>` → `invite` function → name + language (en/ta/ml) → cover greeting, Open button, #fam invitation text (Tamil/Malayalam Unicode, Noto Serif Tamil/Malayalam loaded on demand), RSVP name prefill + "Replying to the invitation for X · Not you?" chip. Legacy `?to=Name&lang=ta` quick links still work (no tracking).
 - RSVP ("Will you be celebrating with us?"): name, wedding + reception accept/decline independently, per-event guest count 1–10, wishes (optional), photo (optional, JPG/PNG/WebP ≤5 MB via `rsvp-photo` signed upload URL to private bucket). Idempotent submissionId; resubmission from a personal link updates the answer. Success → thanks panel with summary + "Change my response". Friendly errors only.
-- Backend: `netlify/functions/{rsvp,rsvp-photo,invite,wishes,admin-guests}.js`, helpers in `_shared/supabase.js` (REST via fetch, no deps). Supabase active only when SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY set; otherwise legacy Apps Script path. Admin = `ADMIN_PASSWORD` header `x-admin-key`.
+- Backend: `api/{rsvp,rsvp-photo,invite,wishes,admin-guests,share,team}.js`, helpers in `_shared/supabase.js` (REST via fetch, no deps). Supabase active only when SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY set; otherwise the API answers 503 (Apps Script removed 2 Nov 2026). Admin = `ADMIN_PASSWORD` header `x-admin-key`.
 - DB: `supabase/01_schema.sql` (events, guests, invitations, rsvp_responses, rsvp_event_responses, rsvp_photos, submit_rsvp(), rsvp_totals(), guest_tracker view), `supabase/02_security.sql` (RLS on, no public policies/grants, private guest-photos bucket). Docs: SUPABASE_SETUP.md, .env.example.
 - links.html: Guest Tracker tab (login, add guest w/ language + phone, stats, search/filter by status, copy/WhatsApp (marks Sent), RSVP details, approve wish, remove) + Quick link tab.
 - Event-day notice: fixed banner "The wedding/reception is happening now!" + Google Maps directions, only on the IST calendar date (test with `?now=2026-11-29T10:00`). All countdowns use IST (`ist()`).

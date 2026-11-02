@@ -3,7 +3,7 @@
    (approved: full-site-mockup-v2.html)
    ========================================================================== */
 .cp {
-  padding: clamp(64px, 9vw, 110px) clamp(16px, 5vw, 64px);
+  padding: clamp(52px, 7vw, 96px) clamp(16px, 5vw, 64px) clamp(28px, 4vw, 52px);
   background: radial-gradient(900px 500px at 50% 0, #fffaf1, #fbf6ec 60%, #f3e9d8);
   color: var(--ink);
   text-align: center;

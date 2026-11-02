@@ -8,7 +8,7 @@ test.describe('Wishes Wall on mobile', () => {
     await page.goto('/');
     // Open the invitation to reveal the wishes wall
     await page.locator('#op').click();
-    // Wait for the curtain to part and main content to appear
+    // Wait for the temple doors to open and main content to appear
     await page.waitForTimeout(1800);
     // Diyas is the default view; these tests cover the postcard ("Read all wishes") view
     await page.getByRole('tab', { name: /Read all wishes/ }).click();

@@ -151,7 +151,7 @@ begin
 end $$;
 
 -- ---------------------------------------------------------------------
--- submit_rsvp: atomic create-or-update of a guest's RSVP (called only by Netlify Functions)
+-- submit_rsvp: atomic create-or-update of a guest's RSVP (called only by the Vercel api/ functions)
 --  * same client_submission_id again  -> treated as a retry, nothing duplicated
 --  * same invitation again            -> answer is updated (revision + 1)
 --  * no invitation (general link)     -> stored as an unlinked response

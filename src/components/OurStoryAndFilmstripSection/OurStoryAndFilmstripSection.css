@@ -8,7 +8,7 @@
 
 /* ---------- Our Story ---------- */
 .st {
-  padding: clamp(84px, 12vw, 156px) clamp(18px, 5vw, 72px) clamp(56px, 7vw, 90px);
+  padding: clamp(44px, 6vw, 90px) clamp(18px, 5vw, 72px) clamp(28px, 4vw, 52px);
   color: var(--ink);
 }
 
@@ -167,7 +167,7 @@
 .fs {
   --fw: clamp(210px, 24vw, 340px);
   --rail: calc(var(--fw) * 0.115);
-  padding: clamp(24px, 4vw, 48px) 0 clamp(64px, 8vw, 110px);
+  padding: clamp(16px, 3vw, 36px) 0 clamp(20px, 3vw, 40px);
   overflow: hidden;
 }
 
@@ -209,13 +209,17 @@
 .filmstrip-viewport {
   position: relative;
   overflow: hidden;
-  filter: drop-shadow(0 18px 22px rgba(40, 16, 8, 0.28));
+  /* a static box-shadow instead of filter: drop-shadow, which re-rendered the
+     whole moving strip on every frame */
+  box-shadow: 0 18px 26px -8px rgba(40, 16, 8, 0.32);
 }
 
 .filmstrip-track {
   display: flex;
   width: max-content;
-  animation: film-roll 90s linear infinite;
+  will-change: transform;
+  /* --film-dur is set from the strip width (FILM_SPEED_PX_PER_S in the .tsx) */
+  animation: film-roll var(--film-dur, 50s) linear infinite;
 }
 
 .filmstrip-viewport:hover .filmstrip-track,
@@ -224,7 +228,8 @@
 }
 
 @keyframes film-roll {
-  to { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
 }
 
 .film-frame {
@@ -320,10 +325,6 @@
 @media (max-width: 720px) {
   .fs {
     --fw: clamp(200px, 60vw, 250px);
-  }
-
-  .filmstrip-track {
-    animation-duration: 70s;
   }
 }
 

@@ -13,6 +13,8 @@ import { WishesEmptyState, WishesSkeleton } from './WishesStates';
 interface WishesWallProps {
   /** Incremented after an RSVP so the wall reloads with the new wish. */
   refreshKey?: number;
+  /** The wish this guest just sent, shown immediately while the wall refreshes. */
+  pendingWish?: WishRecord | null;
 }
 
 const TOUCH_RESUME_DELAY_MS = 2000;
@@ -50,8 +52,8 @@ function useStableViewportWidth(): number {
   return width;
 }
 
-export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
-  const { wishes, isLoading, isLiked, toggleLike } = useWishes(refreshKey);
+export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0, pendingWish = null }) => {
+  const { wishes, isLoading, isLiked, toggleLike } = useWishes(refreshKey, pendingWish);
   const viewportWidth = useStableViewportWidth();
   const [userPaused, setUserPaused] = useState<boolean>(false);
   const [offscreen, setOffscreen] = useState<boolean>(false);
@@ -213,6 +215,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0 }) => {
         <a
           href="#rsvp-wishes"
           onClick={(e) => {
+            haptic(8);
             const box = document.getElementById('rsvp-wishes');
             if (!box) return;
             e.preventDefault();

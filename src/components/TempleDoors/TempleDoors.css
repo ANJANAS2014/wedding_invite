@@ -34,7 +34,7 @@ body.doors-busy {
   --sh:clamp(58px,9svh,86px);             /* step height */
   --mh:clamp(52px,min(17vmin,8.4svh),100px); /* medallion radius */
   position:fixed;left:0;right:0;top:0;height:100vh;height:100lvh;z-index:200;overflow:hidden;
-  background:#ece4dc;-webkit-tap-highlight-color:transparent}
+  background:#ece4dc;-webkit-tap-highlight-color:transparent;touch-action:none}
 .temple.is-done{display:none}
 .tp-scene{position:absolute;inset:0;transform-origin:50% calc(var(--lb) + (100% - var(--lb) - var(--sh))/2)}
 
@@ -170,9 +170,13 @@ body.doors-busy {
 @keyframes tp-breathe{50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 12px 28px -8px rgba(0,0,0,.6),0 0 0 9px rgba(246,226,160,.22)}}
 .temple:not(.is-closed) .tp-ui .btn{opacity:0;transform:scale(.94);pointer-events:none;transition:opacity .3s,transform .3s}
 
-/* final "walk through the doorway": scene zooms toward the doorway and dissolves */
-.temple.is-fading .tp-scene{transform:scale(1.9);opacity:0;transition:transform 1.1s cubic-bezier(.5,0,.6,1),opacity .7s ease .4s}
-.temple.is-fading{background:transparent;transition:background .4s ease .5s}
+/* final "walk through the doorway": scene eases toward the doorway and dissolves.
+   Transform + opacity only, on a pre-promoted layer; the noise/blend textures are
+   switched off first so the GPU isn't re-rasterising them every frame. */
+.temple.is-parting .tp-scene,.temple.is-fading .tp-scene{will-change:transform,opacity}
+.temple.is-fading .tp-wall::after,.temple.is-fading .tp-door::before{display:none}
+.temple.is-fading .tp-scene{transform:scale(1.25);opacity:0;transition:transform .8s cubic-bezier(.4,0,.2,1),opacity .6s ease .2s}
+.temple.is-fading{background:transparent;transition:background .3s ease .3s;pointer-events:none}
 
 /* landscape (tablets, desktops) */
 @media (min-aspect-ratio:1/1){

@@ -3,15 +3,24 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { WEDDING_CONTENT, WEDDING_IMAGES, UNIFIED_MEMORIES, STORY_HOOK, STORY_MOMENTS } from '../../data/weddingData';
 import { prefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
+import { NextTeaser } from '../ScrollGuide/NextTeaser';
+import { haptic } from '../../utils/haptics';
 
 // Rendered twice back-to-back so the CSS marquee loops seamlessly.
 const FILMSTRIP_FRAMES = [...UNIFIED_MEMORIES, ...UNIFIED_MEMORIES];
+
+/** Filmstrip scroll speed. Change this one number to make it faster or slower. */
+const FILM_SPEED_PX_PER_S = 95;
 
 const PARAGRAPHS = WEDDING_CONTENT.story.split(/\n\s*\n/);
 const MOMENT_MS = 5500;
 
 // Crop guidance for the uniform 3:2 film frames
-const framePosition = (ratio?: string) => (ratio === '3/2' ? '50% 50%' : '50% 28%');
+/** Landscape photos crop centred; portraits crop a little higher to keep faces in frame. */
+const setFramePosition = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const img = e.currentTarget;
+  img.style.objectPosition = img.naturalWidth > img.naturalHeight ? '50% 50%' : '50% 28%';
+};
 
 /**
  * Instagram-style story cards: progress bars, auto-advance only while at
@@ -81,7 +90,10 @@ const StoryCards: React.FC = () => {
         if (touchX.current === null) return;
         const dx = e.changedTouches[0].clientX - touchX.current;
         touchX.current = null;
-        if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+        if (Math.abs(dx) > 40) {
+          haptic(5);
+          go(dx < 0 ? 1 : -1);
+        }
       }}
     >
       <div className="story-bars" aria-hidden="true">
@@ -117,8 +129,8 @@ const StoryCards: React.FC = () => {
         </figure>
       ))}
 
-      <button type="button" className="story-tap story-tap--prev" aria-label="Previous moment" onClick={() => go(-1)} />
-      <button type="button" className="story-tap story-tap--next" aria-label="Next moment" onClick={() => go(1)} />
+      <button type="button" className="story-tap story-tap--prev" aria-label="Previous moment" onClick={() => { haptic(5); go(-1); }} />
+      <button type="button" className="story-tap story-tap--next" aria-label="Next moment" onClick={() => { haptic(5); go(1); }} />
     </div>
   );
 };
@@ -130,6 +142,24 @@ interface OurStoryAndFilmstripSectionProps {
 export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionProps> = ({ onOpenLightbox }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [isTouchHeld, setIsTouchHeld] = useState<boolean>(false);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  // Duration = one loop's width / speed, so the pace stays the same on every
+  // screen size and when photos are added or removed.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const update = () => {
+      const loopWidth = track.scrollWidth / 2;
+      if (loopWidth > 0) track.style.setProperty('--film-dur', `${(loopWidth / FILM_SPEED_PX_PER_S).toFixed(2)}s`);
+    };
+    update();
+    if (!('ResizeObserver' in window)) return;
+    const ro = new ResizeObserver(update);
+    ro.observe(track);
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <section className="our-story-filmstrip-section" id="story-filmstrip-section" aria-labelledby="our-story-heading">
@@ -181,8 +211,13 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
             {isPaused ? 'Play' : 'Pause'}
           </button>
         </div>
-        <div className="filmstrip-viewport" onTouchStart={() => setIsPaused(true)}>
-          <div className={`filmstrip-track ${isPaused ? 'is-paused' : ''}`}>
+        <div
+          className="filmstrip-viewport"
+          onTouchStart={() => setIsTouchHeld(true)}
+          onTouchEnd={() => setIsTouchHeld(false)}
+          onTouchCancel={() => setIsTouchHeld(false)}
+        >
+          <div ref={trackRef} className={`filmstrip-track ${isPaused || isTouchHeld ? 'is-paused' : ''}`}>
             {FILMSTRIP_FRAMES.map((photo, index) => {
               const actualIndex = index % UNIFIED_MEMORIES.length;
               const isClone = index >= UNIFIED_MEMORIES.length;
@@ -214,7 +249,7 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
                       loading={actualIndex <= 2 ? 'eager' : 'lazy'}
                       decoding="async"
                       className="film-picture-img"
-                      style={{ objectPosition: framePosition(photo.ratio) }}
+                      onLoad={setFramePosition}
                     />
                   </div>
                   <span className="film-edge" aria-hidden="true">
@@ -226,6 +261,7 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
             })}
           </div>
         </div>
+        <NextTeaser label="Next: where & when to celebrate" targetId="s2" />
       </div>
     </section>
   );

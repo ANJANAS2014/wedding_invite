@@ -15,13 +15,14 @@ import { TrackerStats } from './TrackerStats';
 import { AddGuestForm } from './AddGuestForm';
 import { GuestRow } from './GuestRow';
 import { QuickLinkGenerator } from './QuickLinkGenerator';
+import { ResponsesPanel } from './ResponsesPanel';
 
 interface GuestTrackerModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type TrackerTab = 'tracker' | 'quick';
+type TrackerTab = 'tracker' | 'responses' | 'quick';
 
 /**
  * Host controls (opened with ?tracker=1 or ?links=1): a local guest tracker
@@ -91,6 +92,7 @@ export const GuestTrackerModal: React.FC<GuestTrackerModalProps> = ({ isOpen, on
           {(
             [
               ['tracker', 'Guest Tracker'],
+              ['responses', 'RSVPs & Wishes'],
               ['quick', 'Quick Link Generator'],
             ] as const
           ).map(([tab, label]) => (
@@ -109,6 +111,8 @@ export const GuestTrackerModal: React.FC<GuestTrackerModalProps> = ({ isOpen, on
 
         {activeTab === 'quick' ? (
           <QuickLinkGenerator />
+        ) : activeTab === 'responses' ? (
+          <ResponsesPanel />
         ) : !isAuthenticated ? (
           <TrackerLogin onUnlock={handleUnlock} />
         ) : (

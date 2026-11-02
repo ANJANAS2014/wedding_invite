@@ -8,8 +8,24 @@ import { RsvpShortcut } from '../components/RsvpShortcut/RsvpShortcut';
 import { FallingPetals } from '../components/FallingPetals/FallingPetals';
 import { Footer } from '../components/Footer/Footer';
 import { useInvitationParams } from '../hooks/useInvitationParams';
+import type { RsvpRecord, WishRecord } from '../types';
+
+/** The wall entry for an RSVP this guest just sent (shown before the server refresh). */
+const wishFromRsvp = (rsvp: RsvpRecord): WishRecord => ({
+  id: rsvp.id || `pending-${rsvp.submittedAt}`,
+  displayName: rsvp.name.trim().split(/\s+/)[0],
+  wish: rsvp.wishes.trim(),
+  photoUrl: rsvp.photoPreview || undefined,
+  submittedAt: rsvp.submittedAt,
+  likesCount: 0,
+  weddingAttending: rsvp.weddingAttending,
+  receptionAttending: rsvp.receptionAttending,
+});
 import { useInvitationOpening } from '../hooks/useInvitationOpening';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { useScrollMoments } from '../hooks/useScrollMoments';
+import { ScrollProgress } from '../components/ScrollGuide/ScrollProgress';
+import { GuidedTour } from '../components/ScrollGuide/GuidedTour';
 import { duckMusic } from '../utils/musicEvents';
 import {
   CoupleSection,
@@ -32,13 +48,16 @@ import {
  */
 export const App: React.FC = () => {
   const { guestName, inviteToken, language, openTracker } = useInvitationParams();
-  const { doorStatus, openInvitation, skipOpening } = useInvitationOpening();
+  const { doorStatus, openInvitation, skipOpening, onFadeEnd } = useInvitationOpening();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isTrackerOpen, setIsTrackerOpen] = useState<boolean>(false);
   const [wishesRefreshKey, setWishesRefreshKey] = useState<number>(0);
+  const [pendingWish, setPendingWish] = useState<WishRecord | null>(null);
 
   useEffect(() => prefetchSections(), []);
   useScrollReveal('#main');
+  // a small petal puff the first time each major section comes into view
+  useScrollMoments(['couple', 'story-filmstrip-section', 's2', 'wishes']);
 
   // Music dips while a photo is open in the lightbox
   useEffect(() => duckMusic(lightboxIndex !== null), [lightboxIndex]);
@@ -66,7 +85,7 @@ export const App: React.FC = () => {
       <FallingPetals />
 
       {/* Page 1: closed temple doors with the monogram and "Open Invitation" */}
-      <TempleDoors status={doorStatus} language={language} onOpen={openInvitation} onSkip={skipOpening} />
+      <TempleDoors status={doorStatus} language={language} onOpen={openInvitation} onSkip={skipOpening} onFadeEnd={onFadeEnd} />
 
       <main id="main">
         {/* Page 2: cover — greeting, names and the invitation words */}
@@ -78,13 +97,9 @@ export const App: React.FC = () => {
           <TeamPicker guestName={guestName} inviteToken={inviteToken} />
         </Suspense>
 
-        <div className="kasavu" aria-hidden="true" />
-
         <Suspense fallback={null}>
           <CoupleSection />
         </Suspense>
-
-        <div className="kasavu" aria-hidden="true" />
 
         <Suspense fallback={null}>
           <OurStoryAndFilmstripSection onOpenLightbox={setLightboxIndex} />
@@ -96,25 +111,28 @@ export const App: React.FC = () => {
           <EventsSection />
         </Suspense>
 
-        <div className="kasavu" aria-hidden="true" />
-
         <Suspense fallback={null}>
           <RsvpSection
             guestName={guestName}
             inviteToken={inviteToken}
-            onSubmittedSuccess={() => setWishesRefreshKey((prev) => prev + 1)}
+            onSubmittedSuccess={(rsvp) => {
+              if (rsvp.wishes) setPendingWish(wishFromRsvp(rsvp));
+              setWishesRefreshKey((prev) => prev + 1);
+            }}
           />
         </Suspense>
 
         <div className="kasavu" aria-hidden="true" />
 
         <Suspense fallback={null}>
-          <WishesWall refreshKey={wishesRefreshKey} />
+          <WishesWall refreshKey={wishesRefreshKey} pendingWish={pendingWish} />
         </Suspense>
 
         <Footer />
       </main>
 
+      <ScrollProgress />
+      <GuidedTour />
       <MusicPlayer />
       <RsvpShortcut />
 

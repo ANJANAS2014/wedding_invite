@@ -547,8 +547,9 @@
    ========================================================================== */
 #s5.rs {
   --line: rgba(240, 214, 142, 0.28);
-  padding: clamp(84px, 12vw, 150px) clamp(18px, 5vw, 72px);
-  background: radial-gradient(1000px 520px at 50% -10%, #7a2232, var(--burg) 46%, var(--burg-d));
+  padding: clamp(44px, 6vw, 90px) clamp(18px, 5vw, 72px) clamp(28px, 4vw, 52px);
+  /* flows on from the burgundy Events section above (no divider between them) */
+  background: linear-gradient(180deg, var(--burg-d) 0, rgba(58, 11, 20, 0) 140px), radial-gradient(1000px 520px at 50% 20%, #7a2232, var(--burg) 46%, var(--burg-d));
   overflow: hidden;
 }
 

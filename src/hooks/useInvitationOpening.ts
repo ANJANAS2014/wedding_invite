@@ -8,10 +8,11 @@ import { showerPetals } from '../components/FallingPetals/FallingPetals';
 
 // Timeline (ms after the tap). Keep in sync with TempleDoors.css transitions.
 const T_PART = 450; // doors start swinging inward, revealing the portrait inside
-const T_REVEAL = 1950; // page-2 text rises in
-const T_ARRIVE = 1700; // gentle haptic as the doorway clears
-const T_FADE = 1650; // scene zooms through the doorway; page 2 shown behind
-const T_DONE = 2800; // overlay unmounted
+const T_SHOW = 600; // page 2 made visible behind the (still opaque) door scene
+const T_ARRIVE = 1450; // gentle haptic as the doorway clears
+const T_FADE = 1500; // scene eases through the doorway and dissolves (0.8s, see CSS)
+const T_REVEAL = 1650; // page-2 text rises in as the scene dissolves
+const T_DONE_FALLBACK = 2600; // unmount even if transitionend never fires
 
 /**
  * "Open Invitation" flow for the temple-door landing page.
@@ -24,6 +25,7 @@ export function useInvitationOpening() {
   const [isOpened, setIsOpened] = useState<boolean>(false);
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
   const timersRef = useRef<number[]>([]);
+  const petalsShownRef = useRef<boolean>(false);
 
   useEffect(() => {
     document.body.classList.toggle('opened', isOpened);
@@ -52,43 +54,55 @@ export function useInvitationOpening() {
     setDoorStatus('done');
   }, []);
 
+  /** Unmounts the doors, then lets the welcome petals fall on page 2. */
+  const completeOpening = useCallback(() => {
+    clearTimers();
+    setIsOpened(true);
+    setIsRevealed(true);
+    setDoorStatus('done');
+    if (!petalsShownRef.current) {
+      petalsShownRef.current = true;
+      window.setTimeout(() => showerPetals(44), 150);
+    }
+  }, []);
+
   const openInvitation = useCallback(() => {
     if (doorStatus !== 'closed') return;
     hapticTap();
     announceInvitationOpen(); // starts the music on this same tap
     playTempleChime(0);
-    window.setTimeout(() => showerPetals(44), 900); // welcome shower as the doors part
 
     if (prefersReducedMotion()) {
       hapticOpen();
       window.scrollTo(0, 0);
       finish();
+      window.setTimeout(() => showerPetals(44), 300);
       return;
     }
 
     hapticSoft();
     setDoorStatus('unlocking');
     const at = (ms: number, fn: () => void) => timersRef.current.push(window.setTimeout(fn, ms));
-    at(T_PART, () => {
-      setDoorStatus('parting');
-      window.scrollTo(0, 0);
-    });
-    at(T_REVEAL, () => setIsRevealed(true));
+    window.scrollTo(0, 0);
+    at(T_PART, () => setDoorStatus('parting'));
+    at(T_SHOW, () => setIsOpened(true));
     at(T_ARRIVE, hapticOpen);
-    at(T_FADE, () => {
-      setIsOpened(true);
-      setDoorStatus('fading');
-      window.scrollTo(0, 0);
-    });
-    at(T_DONE, () => setDoorStatus('done'));
-  }, [doorStatus, finish]);
+    at(T_FADE, () => setDoorStatus('fading'));
+    at(T_REVEAL, () => setIsRevealed(true));
+    at(T_DONE_FALLBACK, completeOpening);
+  }, [doorStatus, finish, completeOpening]);
+
+  /** Called when the door scene's fade-out transition ends. */
+  const onFadeEnd = useCallback(() => {
+    if (doorStatus === 'fading') completeOpening();
+  }, [doorStatus, completeOpening]);
 
   /** A tap on the doors while they are animating jumps straight to page 2. */
   const skipOpening = useCallback(() => {
     if (doorStatus === 'closed' || doorStatus === 'done') return;
     window.scrollTo(0, 0);
-    finish();
-  }, [doorStatus, finish]);
+    completeOpening();
+  }, [doorStatus, completeOpening]);
 
-  return { isOpened, doorStatus, openInvitation, skipOpening };
+  return { isOpened, doorStatus, openInvitation, skipOpening, onFadeEnd };
 }

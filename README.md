@@ -1,6 +1,6 @@
 # Lalith & Anjana · Wedding Invitation
 
-React 18 + TypeScript + Vite wedding invitation with South Indian artwork, a lotus-curtain opening, background music, multilingual personal greetings (English, Tamil, Malayalam), an RSVP form with photo upload, a wishes wall, and a host Guest Tracker. Serverless functions in `api/` (Vercel) talk to Supabase, or to the legacy Google Apps Script backend when Supabase isn't configured.
+React 18 + TypeScript + Vite wedding invitation with South Indian artwork, a temple-door opening, background music, multilingual personal greetings (English, Tamil, Malayalam), an RSVP form with photo upload, a wishes wall, and a host Guest Tracker. Serverless functions in `api/` (Vercel) talk to Supabase (database + photo storage).
 
 - Feature walkthrough and manual testing: [`TESTING.md`](TESTING.md)
 - Where images live: [`IMAGE_MAP.md`](IMAGE_MAP.md)
@@ -32,7 +32,7 @@ Useful URLs:
 src/
 ├── main.tsx                 Entry: global CSS, then <App/>
 ├── app/
-│   ├── App.tsx              Composition: cover → curtain → sections → overlays
+│   ├── App.tsx              Composition: temple doors → cover → sections → overlays
 │   ├── App.css              #main shell (hidden until body.opened)
 │   └── lazySections.ts      Code-split sections/modals + idle prefetch
 ├── components/
@@ -101,7 +101,6 @@ The feature folders are TempleDoors (landing page), CoverHero, FallingPetals, Mu
 Environment variables (Vercel project settings; see `.env.example` and `SUPABASE_SETUP.md`):
 
 - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_PHOTO_BUCKET`: Supabase mode.
-- `APPS_SCRIPT_URL`, `RSVP_SHARED_SECRET`: legacy Google Apps Script mode, used when Supabase isn't set.
 - `ADMIN_PASSWORD`: protects `api/admin-guests.js`.
 
 | Endpoint | Used by the site |

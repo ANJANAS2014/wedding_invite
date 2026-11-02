@@ -6,7 +6,7 @@ Audit date: 1 Nov 2026. Taken from `main` at `e5224c1`, before any refactoring.
 
 - **Frontend**: React 18 + TypeScript + Vite single-page app. `src/main.tsx` imports the global styles and renders `src/App.tsx`.
 - `App.tsx` (≈300 lines) does a lot: it parses the URL (`?to`, `?i`, `?lang`, `?tracker`, `?links`), runs the curtain state machine, plays the Web Audio temple-bell chime, calls haptics, lazy-loads and prefetches the sections, renders an inline footer and holds the lightbox, tracker and wishes-refresh state.
-- **Eager components**: CoverHero, LotusCurtain, MusicPlayer, InvitationIntroSection, FallingPetals.
+- **Eager components**: CoverHero, TempleDoors, MusicPlayer, FallingPetals. (LotusCurtain and InvitationIntroSection were removed as unused on 2 Nov 2026.)
 - **Lazy components** (`React.lazy`, prefetched when the browser is idle): EventDayNotice, EventsSection, CoupleSection, OurStoryAndFilmstripSection, RsvpSection, WishesWall, LightboxModal, GuestTrackerModal. Each of these import paths appears twice in App.tsx (once for `lazy` and once for the prefetch).
 - **Backend**: Vercel serverless functions in `api/*.js` (`rsvp`, `rsvp-photo`, `wishes`, `invite`, `admin-guests`) plus `api/_shared/supabase.js`. They use Supabase REST through `fetch` when `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are set, and fall back to Google Apps Script (`APPS_SCRIPT_URL` + `RSVP_SHARED_SECRET`) otherwise.
 - **Database**: `supabase/01_schema.sql` and `02_security.sql` (RLS on, no public grants, private photo bucket).
@@ -19,7 +19,7 @@ Audit date: 1 Nov 2026. Taken from `main` at `e5224c1`, before any refactoring.
 | CoverHero | weddingData (content, images), utils/haptics; inline countdown logic |
 | EventsSection | weddingData; inline events array; second copy of the countdown logic; Google Calendar URL builder |
 | EventDayNotice | hard-coded venues, addresses and times (they repeat weddingData) |
-| CoupleSection, InvitationIntroSection | weddingData |
+| CoupleSection | weddingData |
 | OurStoryAndFilmstripSection | weddingData (`UNIFIED_MEMORIES_WITH_EXTRAS`) |
 | LightboxModal | weddingData; index state owned by App |
 | RsvpSection | `fetch('/api/rsvp-photo')`, signed upload `PUT`, `fetch('/api/rsvp')`, localStorage `wedding_rsvps_v2` |
@@ -35,7 +35,7 @@ Audit date: 1 Nov 2026. Taken from `main` at `e5224c1`, before any refactoring.
   - `Footer.css` is imported by App.tsx because the footer is inline JSX, and there is no Footer component.
   - GuestTrackerModal has no stylesheet: about 27 KB of inline styles. It also depends on `.rsvp-input`, which lives in RsvpSection.css (a cross-component dependency).
 - Rules that live in the wrong file:
-  - `InvitationIntroSection.css` holds the App-level `#main` rules.
+  - The App-level `#main` rules live in `src/app/App.css`.
   - `CoverHero.css` holds the `#mu` and `#mh` (MusicPlayer) positioning rules for the cover state.
 - Shared animations are already centralised (`invitation-arrive`, `cover-arrive`, `fadeInPanel`).
 - Unused CSS (verified with a selector-vs-source scan and a manual check of dynamic class names):
@@ -79,7 +79,7 @@ Audit date: 1 Nov 2026. Taken from `main` at `e5224c1`, before any refactoring.
   - Wish likes are stored only in the guest's browser. There is no backend endpoint or column for likes.
 - RSVP submission always shows "Thank you" even if `/api/rsvp` fails. It is stored in localStorage as a fallback. This is existing behaviour, kept as is.
 - Sample postcards appear on localhost **and in production whenever there are no wishes**, so the "No wishes yet" empty state can't be reached. This is existing behaviour, kept as is.
-- `netlify.toml` points at `netlify/functions`, which doesn't exist. Deployment is Vercel (`vercel.json`, `api/`). Likely obsolete, but reported rather than removed.
+- ~~`netlify.toml` pointed at `netlify/functions`, which doesn't exist.~~ Removed (2 Nov 2026): deployment is Vercel only.
 
 ## 7. Tests and build status (before)
 
@@ -130,7 +130,7 @@ Audit date: 1 Nov 2026. Taken from `main` at `e5224c1`, before any refactoring.
 - Wish likes are per-browser only. There is no backend likes column or endpoint.
 - RSVP shows success even when `/api/rsvp` fails (it keeps a local copy).
 - Sample postcards show in production when there are no wishes.
-- `netlify.toml` points at a `netlify/functions` folder that doesn't exist (the site deploys on Vercel).
+- ~~`netlify.toml` pointed at a missing `netlify/functions` folder.~~ Removed; Vercel only.
 - `dist/` and `test-results/` are tracked in git (`test-results/` is now in `.gitignore`).
 - `memory/SPEC.md` describes the earlier static-site version.
 - `public/images/couple/groom-studio-portrait.jpg` isn't displayed anywhere.

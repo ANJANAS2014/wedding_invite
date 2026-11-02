@@ -5,6 +5,8 @@ import { WEDDING_START_MS } from '../../data/events';
 import { useNow } from '../../hooks/useNow';
 import { getCountdown, pad2 } from '../../utils/countdown';
 import type { Language } from '../../types';
+import { TOUR_START_EVENT } from '../../utils/motion';
+import '../ScrollGuide/ScrollGuide.css';
 import { CoverGarland, CoverProcession } from './CoverArt';
 
 interface CoverHeroProps {
@@ -148,6 +150,9 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => 
             <path d="M3 6l5 5 5-5" />
           </svg>
         </a>
+        <button type="button" className="tour-start" onClick={() => window.dispatchEvent(new Event(TOUR_START_EVENT))}>
+          ▶ Take the tour
+        </button>
       </div>
     </section>
     </>

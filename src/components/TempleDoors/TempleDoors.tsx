@@ -10,6 +10,8 @@ interface TempleDoorsProps {
   status: DoorStatus;
   language: Language;
   onOpen: () => void;
+  /** Fired when the scene's final fade-out transition ends. */
+  onFadeEnd?: () => void;
   onSkip: () => void;
 }
 
@@ -110,7 +112,7 @@ const Lamp: React.FC<{ side: 'l' | 'r' }> = ({ side }) => (
  * the couple's portrait inside, then the view moves through the doorway into
  * the page-2 cover.
  */
-export const TempleDoors: React.FC<TempleDoorsProps> = ({ status, language, onOpen, onSkip }) => {
+export const TempleDoors: React.FC<TempleDoorsProps> = ({ status, language, onOpen, onSkip, onFadeEnd }) => {
   if (status === 'done') return null;
   const text = LANG_MAPPINGS[language] || LANG_MAPPINGS.en;
 
@@ -124,11 +126,16 @@ export const TempleDoors: React.FC<TempleDoorsProps> = ({ status, language, onOp
 
   return (
     <div className={`temple is-${status}`} onClick={status === 'closed' ? undefined : onSkip}>
-      <div className="tp-scene">
+      <div
+        className="tp-scene"
+        onTransitionEnd={(e) => {
+          if (e.target === e.currentTarget && e.propertyName === 'opacity') onFadeEnd?.();
+        }}
+      >
         <div className="tp-wall" aria-hidden="true" />
         <div className="tp-doorway" aria-hidden="true">
           <div className="tp-inside">
-            <img src={INVITE_PORTRAIT} alt="" decoding="async" />
+            <img src={INVITE_PORTRAIT} alt="" loading="eager" decoding="async" />
           </div>
           <div className="tp-glow" />
           <div className="tp-doors">

@@ -68,6 +68,29 @@ async function listGuests(cfg) {
   };
 }
 
+/** Every RSVP (from personal and general links), newest first, for the admin Responses tab. */
+async function listResponses(cfg) {
+  const rows = await supabaseRequest(cfg, `/rest/v1/rsvp_responses?select=${RESPONSE_SELECT},invitation_id,invitations(guests(display_name))&order=created_at.desc&limit=1000`);
+  const list = Array.isArray(rows) ? rows : [];
+  const photoUrls = await signPhotoUrls(cfg, list.map((r) => one(r.rsvp_photos)?.storage_path).filter(Boolean).slice(0, 300)).catch(() => ({}));
+  return {
+    responses: list.map((r) => ({
+      ...shapeResponse(r, photoUrls),
+      invitedAs: one(one(r.invitations)?.guests)?.display_name || null,
+    })),
+  };
+}
+
+/** Removes the response's photo file(s) from Storage and the rsvp_photos row(s). */
+async function deletePhotos(cfg, responseId) {
+  const photos = await supabaseRequest(cfg, `/rest/v1/rsvp_photos?response_id=eq.${responseId}&select=storage_path`);
+  const paths = (Array.isArray(photos) ? photos : []).map((p) => p.storage_path).filter(Boolean);
+  if (paths.length) {
+    await supabaseRequest(cfg, `/storage/v1/object/${encodeURIComponent(cfg.bucket)}`, { method: "DELETE", body: { prefixes: paths } }).catch(() => null);
+  }
+  await supabaseRequest(cfg, `/rest/v1/rsvp_photos?response_id=eq.${responseId}`, { method: "DELETE", prefer: "return=minimal" });
+}
+
 async function createGuest(cfg, body, res) {
   const name = cleanName(body.name).slice(0, 80);
   if (!name) return sendJson(res, 400, { ok: false, message: "Please enter the guest's name." });
@@ -124,6 +147,20 @@ export default async function handler(req, res) {
       case "approveWish":
         if (!UUID_PATTERN.test(id)) break;
         await supabaseRequest(cfg, `/rest/v1/rsvp_responses?id=eq.${id}`, { method: "PATCH", prefer: "return=minimal", body: { wish_approved: body.approved === true } });
+        return sendJson(res, 200, { ok: true });
+      case "listResponses":
+        return sendJson(res, 200, { ok: true, ...(await listResponses(cfg)) });
+      case "clearWish":
+        // Takes the wish (and its photo) off the wishes wall but keeps the RSVP itself.
+        if (!UUID_PATTERN.test(id)) break;
+        await deletePhotos(cfg, id);
+        await supabaseRequest(cfg, `/rest/v1/rsvp_responses?id=eq.${id}`, { method: "PATCH", prefer: "return=minimal", body: { wishes: null, wish_approved: false } });
+        return sendJson(res, 200, { ok: true });
+      case "deleteResponse":
+        // Deletes the whole RSVP: attendance rows and photo row cascade; the photo file is removed first.
+        if (!UUID_PATTERN.test(id)) break;
+        await deletePhotos(cfg, id);
+        await supabaseRequest(cfg, `/rest/v1/rsvp_responses?id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" });
         return sendJson(res, 200, { ok: true });
       case "deleteGuest":
         if (!UUID_PATTERN.test(id)) break;

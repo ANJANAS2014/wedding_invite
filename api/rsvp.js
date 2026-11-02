@@ -5,13 +5,6 @@ import {
 
 const MAX_BODY_LENGTH = 12000;
 
-function statusForBackendError(error) {
-  if (error === "invalid_request") return 400;
-  if (error === "unauthorized") return 401;
-  if (error === "not_configured") return 503;
-  return 502;
-}
-
 function validateRsvp(body) {
   const errors = {};
   const name = cleanName(body.name);
@@ -92,7 +85,6 @@ async function handleSupabase(req, res, cfg) {
     });
     res.status(200).json({
       ok: true,
-      ...(await totals(cfg)),
       ...(result?.duplicate ? { duplicate: true } : {}),
       ...(result?.updated ? { updated: true } : {}),
     });
@@ -111,96 +103,6 @@ export default async function handler(req, res) {
   }
 
   const cfg = supabaseConfig();
-  if (cfg) return handleSupabase(req, res, cfg);
-
-  const scriptUrl = process.env.APPS_SCRIPT_URL;
-  const secret = process.env.RSVP_SHARED_SECRET;
-  if (!scriptUrl || !secret || secret.length < 32) {
-    return sendJson(res, 503, {
-      ok: false,
-      message: "The RSVP service is not configured yet.",
-    });
-  }
-
-  let endpoint;
-  try {
-    endpoint = new URL(scriptUrl);
-  } catch {
-    return sendJson(res, 503, { ok: false, message: "The RSVP service is misconfigured." });
-  }
-  if (endpoint.protocol !== "https:" || endpoint.hostname !== "script.google.com") {
-    return sendJson(res, 503, { ok: false, message: "The RSVP service is misconfigured." });
-  }
-
-  let request;
-  if (req.method === "GET") {
-    request = { action: "total" };
-  } else {
-    const rawBody = req.body;
-    const bodyStr = typeof rawBody === "string" ? rawBody : JSON.stringify(rawBody);
-    if (bodyStr.length > MAX_BODY_LENGTH) {
-      return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." });
-    }
-    try {
-      const body = typeof rawBody === "object" ? rawBody : JSON.parse(rawBody);
-      if (body && typeof body.website === "string" && body.website.trim()) {
-        return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." });
-      }
-      request = {
-        action: "submit",
-        name: body.name,
-        weddingAttendance: body.weddingAttendance,
-        weddingGuestCount: body.weddingGuestCount,
-        receptionAttendance: body.receptionAttendance,
-        receptionGuestCount: body.receptionGuestCount,
-        wishes: body.wishes,
-        photoUrl: body.photoUrl,
-        photoMetadata: body.photoMetadata,
-        submissionId: body.submissionId,
-      };
-    } catch {
-      return sendJson(res, 400, { ok: false, message: "Invalid RSVP submission." });
-    }
-  }
-
-  try {
-    const upstream = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ ...request, secret }),
-      redirect: "follow",
-    });
-    const result = await upstream.json();
-    if (!upstream.ok || result?.ok !== true) {
-      return sendJson(
-        res,
-        statusForBackendError(result?.error),
-        { ok: false, message: result?.message || "The RSVP service could not complete your request." },
-      );
-    }
-    if (
-      !Number.isSafeInteger(result.weddingTotalConfirmed) ||
-      result.weddingTotalConfirmed < 0 ||
-      !Number.isSafeInteger(result.receptionTotalConfirmed) ||
-      result.receptionTotalConfirmed < 0
-    ) {
-      return sendJson(res, 502, { ok: false, message: "The RSVP service returned invalid totals." });
-    }
-    const totalConfirmed = result.weddingTotalConfirmed + result.receptionTotalConfirmed;
-    if (!Number.isSafeInteger(totalConfirmed)) {
-      return sendJson(res, 502, { ok: false, message: "The RSVP service returned invalid totals." });
-    }
-    res.status(200).json({
-      ok: true,
-      weddingTotalConfirmed: result.weddingTotalConfirmed,
-      receptionTotalConfirmed: result.receptionTotalConfirmed,
-      totalConfirmed,
-      ...(result.duplicate === true ? { duplicate: true } : {}),
-    });
-  } catch {
-    sendJson(res, 502, {
-      ok: false,
-      message: "The RSVP service is temporarily unavailable.",
-    });
-  }
+  if (!cfg) return sendJson(res, 503, { ok: false, message: "The RSVP service is not configured yet." });
+  return handleSupabase(req, res, cfg);
 }

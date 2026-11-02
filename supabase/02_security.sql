@@ -5,8 +5,8 @@
 -- Access model
 --   * The browser NEVER talks to the database directly. The public "anon"/publishable
 --     key is not used by this site at all.
---   * All reads/writes go through Netlify Functions using the service-role (secret) key,
---     which bypasses RLS and is stored only in Netlify environment variables.
+--   * All reads/writes go through the Vercel api/ functions using the service-role (secret) key,
+--     which bypasses RLS and is stored only in Vercel environment variables.
 --   * RLS is enabled with NO policies for anon/authenticated, so even if someone finds the
 --     project URL and the public key, every table, view and function returns nothing.
 -- =====================================================================
@@ -28,7 +28,7 @@ revoke all on function public.submit_rsvp(uuid, uuid, text, text, boolean, integ
 revoke all on function public.rsvp_totals() from anon, authenticated, public;
 revoke all on function public.touch_updated_at() from anon, authenticated, public;
 
--- 3. Server-side role used by the Netlify Functions.
+-- 3. Server-side role used by the the Vercel api/ functions.
 grant usage on schema public to service_role;
 grant select, insert, update, delete on table public.guests, public.invitations, public.rsvp_responses,
                                          public.rsvp_event_responses, public.rsvp_photos to service_role;
@@ -51,7 +51,7 @@ on conflict (id) do update
 
 -- 5. Storage policies: none for anon/authenticated on this bucket.
 --    Uploads happen only through one-time signed upload URLs created by the
---    rsvp-photo Netlify Function; viewing happens only through short-lived signed
+--    rsvp-photo Vercel api/ function; viewing happens only through short-lived signed
 --    URLs created by the wishes / admin-guests functions. No listing, no public URLs.
 --    (storage.objects already has RLS enabled by Supabase; we simply add no
 --    permissive policy for 'guest-photos'.) Remove any policy someone may have

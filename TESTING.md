@@ -157,7 +157,7 @@ Open the **Network** URL from §2 on your phone. Verify:
 - Haptic feedback on tap/open (Android).
 - Swiping the wishes rail; tap pauses the marquee.
 - Music toggle works (mobile autoplay policies allow audio only after a user gesture — the button click counts).
-- The curtain animation is smooth (GPU-bound: lamps, mandala, petals).
+- The temple-door opening is smooth (doors, fade into page 2, then petals).
 
 ---
 
@@ -238,6 +238,6 @@ src/data/                  wedding content, events, sample wishes
 src/utils/                 pure helpers (countdown, calendar, chime, haptics…)
 src/types/                 shared TypeScript types
 src/styles/                design tokens, global base styles, shared keyframes
-api/                       Vercel serverless functions (Supabase / Apps Script)
+api/                       Vercel serverless functions (Supabase)
 tests/                     Playwright specs (config: playwright.config.ts)
 ```

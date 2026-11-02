@@ -4,6 +4,7 @@ import type { RsvpRecord } from '../../types';
 import { MAX_GUESTS_PER_EVENT, MAX_WISH_CHARS, submitRsvp, validateRsvp } from '../../services/rsvpService';
 import { readFileAsDataUrl, validatePhoto } from '../../services/photoUploadService';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
+import { NextTeaser } from '../ScrollGuide/NextTeaser';
 import { haptic } from '../../utils/haptics';
 import { prefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { RsvpEventCard } from './RsvpEventCard';
@@ -54,39 +55,63 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
     if (sealStage === 2) envelopeRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }, [sealStage]);
 
-  const playSealSequence = (record: RsvpRecord) => {
+  // The fold / envelope / flap stages play while the RSVP is still saving, so the
+  // guest sees progress immediately; the seal only stamps once the save succeeds.
+  const sealStartedAt = useRef<number>(0);
+  const at = (ms: number, fn: () => void) => sealTimers.current.push(window.setTimeout(fn, ms));
+  const clearSealTimers = () => {
+    sealTimers.current.forEach((t) => window.clearTimeout(t));
+    sealTimers.current = [];
+  };
+
+  const startSealSequence = () => {
+    if (prefersReducedMotion()) return;
+    clearSealTimers();
+    sealStartedAt.current = Date.now();
+    setSealStage(1);
+    at(700, () => setSealStage(2));
+    at(1350, () => setSealStage(3));
+  };
+
+  const finishSealSequence = (record: RsvpRecord) => {
     if (prefersReducedMotion()) {
       setSubmittedData(record);
       burstPetals(null, 30);
       return;
     }
-    const at = (ms: number, fn: () => void) => sealTimers.current.push(window.setTimeout(fn, ms));
-    setSealStage(1);
-    at(700, () => setSealStage(2));
-    at(1350, () => setSealStage(3));
-    at(2000, () => {
+    const wait = Math.max(0, 2000 - (Date.now() - sealStartedAt.current));
+    at(wait, () => {
       setSealStage(4);
       haptic(10);
     });
-    at(2700, () => {
+    at(wait + 700, () => {
       burstPetals(envelopeRef.current, 46);
       setSealStage(5);
     });
-    at(3700, () => {
+    at(wait + 1700, () => {
       setSealStage(0);
       setSubmittedData(record);
       document.getElementById('rsvp')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
   };
 
+  /** Save failed: unfold back to the form so the guest can retry. */
+  const cancelSealSequence = () => {
+    clearSealTimers();
+    setSealStage(0);
+  };
+
   // "Yes" starts at 1 guest (or keeps the chosen count); "Sorry" clears it.
   const answerEvent = (setter: React.Dispatch<React.SetStateAction<EventAnswer>>) => (answer: 'yes' | 'no') => {
+    haptic(8);
     setErrorMessage('');
     setter((prev) => ({ answer, count: answer === 'yes' ? Math.max(1, prev.count) : 1 }));
   };
 
-  const stepEvent = (setter: React.Dispatch<React.SetStateAction<EventAnswer>>) => (step: number) =>
+  const stepEvent = (setter: React.Dispatch<React.SetStateAction<EventAnswer>>) => (step: number) => {
+    haptic(5);
     setter((prev) => ({ ...prev, count: Math.max(1, Math.min(maxGuests, prev.count + step)) }));
+  };
 
   const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setErrorMessage('');
@@ -131,11 +156,13 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
 
     haptic(15);
     setIsSubmitting(true);
+    startSealSequence();
     try {
       const record = await submitRsvp(values, { inviteToken, photoFile, photoPreview });
       onSubmittedSuccess?.(record);
-      playSealSequence(record);
+      finishSealSequence(record);
     } catch (error) {
+      cancelSealSequence();
       setErrorMessage(
         error instanceof Error && error.message ? error.message : "We couldn't send your response just yet. Please try again."
       );
@@ -314,6 +341,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             </div>
           </form>
         )}
+        <NextTeaser label="Next: blessings from our people" targetId="wishes" tone="light" />
       </div>
     </section>
   );

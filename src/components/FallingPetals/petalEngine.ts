@@ -1,4 +1,4 @@
-// @ts-nocheck -- canvas engine ported 1:1 from Claude outputs/petal-shower-3d-mockup.html
+// @ts-nocheck -- canvas engine ported 1:1 from design-archive/petal-shower-3d-mockup.html
 /* Premium Rose & Gold petal shower: curved 3-D petals, depth layers, wind,
    scroll/touch response, welcome shower and blessings burst. */
 export interface PetalShowerApi {

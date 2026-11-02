@@ -2,6 +2,7 @@ import './CoupleSection.css';
 import React from 'react';
 import { WEDDING_CONTENT, WEDDING_IMAGES } from '../../data/weddingData';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
+import { NextTeaser } from '../ScrollGuide/NextTeaser';
 
 /** Bride & Groom — two round portraits side by side, both vows together underneath. */
 export const CoupleSection: React.FC = () => (
@@ -64,5 +65,6 @@ export const CoupleSection: React.FC = () => (
         <p>{WEDDING_CONTENT.brideVow}</p>
       </blockquote>
     </div>
+    <NextTeaser label="Next: how a Malayali girl beat the language barrier" targetId="story-filmstrip-section" />
   </section>
 );

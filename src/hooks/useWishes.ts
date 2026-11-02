@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { WishRecord } from '../types';
 import { loadStoredLikes, loadWishes, saveStoredLikes, type StoredLikes } from '../services/wishesService';
 
@@ -6,18 +6,34 @@ import { loadStoredLikes, loadWishes, saveStoredLikes, type StoredLikes } from '
  * Wishes Wall data: loads (and reloads when `refreshKey` changes) the wish
  * list, and manages this browser's likes (persisted to localStorage only).
  */
-export function useWishes(refreshKey: number) {
+const sameWish = (a: WishRecord, b: WishRecord): boolean =>
+  a.wish.trim().toLowerCase() === b.wish.trim().toLowerCase() &&
+  a.displayName.trim().split(/\s+/)[0].toLowerCase() === b.displayName.trim().split(/\s+/)[0].toLowerCase();
+
+/** Puts the guest's just-sent wish at the front unless the server list already has it. */
+const withPending = (list: WishRecord[], pending: WishRecord | null | undefined): WishRecord[] =>
+  pending && !list.some((w) => w.id === pending.id || sameWish(w, pending)) ? [pending, ...list] : list;
+
+export function useWishes(refreshKey: number, pendingWish?: WishRecord | null) {
   const [wishes, setWishes] = useState<WishRecord[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [likes, setLikes] = useState<StoredLikes>(() => ({ userLiked: {}, counts: {} }));
+  const pendingRef = useRef<WishRecord | null | undefined>(pendingWish);
+  pendingRef.current = pendingWish;
+
+  // Show a just-sent wish straight away, without waiting for the server.
+  useEffect(() => {
+    if (pendingWish) setWishes((prev) => withPending(prev, pendingWish));
+  }, [pendingWish]);
 
   useEffect(() => {
     let cancelled = false;
-    setIsLoading(true);
+    // Only the first load shows the skeleton; later refreshes update in place.
+    if (refreshKey === 0) setIsLoading(true);
     setLikes(loadStoredLikes());
     loadWishes()
       .then((list) => {
-        if (!cancelled) setWishes(list);
+        if (!cancelled) setWishes(withPending(list, pendingRef.current));
       })
       .catch(() => {
         // keep the previous list

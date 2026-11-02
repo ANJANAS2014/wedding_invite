@@ -4,6 +4,7 @@ import { WEDDING_EVENTS } from '../../data/events';
 import { useNow } from '../../hooks/useNow';
 import { makeGoogleCalendarUrl } from '../../utils/calendar';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
+import { NextTeaser } from '../ScrollGuide/NextTeaser';
 
 /** Index of the next celebration: the reception once the wedding has ended. */
 const nextEventIndex = (now: number): number =>
@@ -92,6 +93,7 @@ export const EventsSection: React.FC = () => {
         })}
 
         </div>
+        <NextTeaser label="Next: tell us you're coming" targetId="s5" tone="light" />
       </div>
     </section>
   );
