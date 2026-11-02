@@ -26,9 +26,9 @@ const lampPosition = (index: number, total: number, id: string) => {
   const row = Math.floor(index / cols);
   const col = index % cols;
   const x = ((col + 0.5) / cols) * 100 + (row % 2 ? 5 : -5) + (hash01(id, 1) * 8 - 4);
-  // keep lamps above the reading card in the lower part of the pond
-  const y = 26 + (rows > 1 ? (row / (rows - 1)) * 30 : 14) + (hash01(id, 2) * 6 - 3);
-  return { left: Math.max(9, Math.min(91, x)), top: Math.max(22, Math.min(58, y)) };
+  // lamps float in the sky band below the moon (the reading card sits under the band)
+  const y = 50 + (rows > 1 ? (row / (rows - 1)) * 32 : 14) + (hash01(id, 2) * 6 - 3);
+  return { left: Math.max(9, Math.min(91, x)), top: Math.max(44, Math.min(86, y)) };
 };
 
 /**
@@ -104,6 +104,7 @@ export const WishesPond: React.FC<WishesPondProps> = ({ wishes, onOpen }) => {
 
   return (
     <div className="pond" ref={pondRef} aria-label="Wishes as floating lamps. Tap a lamp to read a wish.">
+      <div className="pond-sky">
       <div className="pond-moon" aria-hidden="true" />
       {lamps.map((w, i) => {
         const pos = lampPosition(i, lamps.length, w.id);
@@ -133,6 +134,7 @@ export const WishesPond: React.FC<WishesPondProps> = ({ wishes, onOpen }) => {
           </button>
         );
       })}
+      </div>
       {active && (
         <div className="pond-card" role="status" aria-live="polite">
           <p className="pond-card-wish">“{active.wish}”</p>

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07 · Wishes Wall — redesign mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap">
+<style>
+  /* ---------- mockup viewer chrome (not part of the design) ---------- */
+  :root { --ink:#3a1218; --burg:#5a1420; --gold-d:#b8892e; --line:#e5d2b0; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#efe6d6; color:var(--ink); font:400 15px/1.55 'Jost', system-ui, sans-serif; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:12px 24px; padding:12px 24px; background:#fbf6ec; border-bottom:1px solid var(--line); }
+  .bar h1 { margin:0; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .bar .sizes { display:flex; gap:6px; align-items:center; margin-left:auto; font-size:13px; }
+  .bar button { min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); font:500 13px 'Jost', sans-serif; cursor:pointer; }
+  .bar button[aria-pressed="true"] { background:var(--burg); border-color:var(--burg); color:#fbf6ec; }
+  .frames { display:flex; align-items:flex-start; gap:24px; padding:24px; }
+  .frame { flex:none; }
+  .frame > p { margin:0 0 8px; font:500 12px/1 'Jost', sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#8a6a3a; }
+  .frame-desk { flex:1 1 auto; min-width:0; }
+  .clip { overflow:hidden; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  iframe { display:block; border:0; transform-origin:0 0; }
+  .notes { max-width:1120px; margin:0 auto; padding:8px 24px 64px; display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; }
+  .notes section { background:#fbf6ec; border:1px solid var(--line); border-radius:8px; padding:20px 24px; }
+  .notes h2 { margin:0 0 12px; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .notes ul { margin:0; padding-left:18px; }
+  .notes li { margin:0 0 8px; }
+  .notes code { font-size:13px; background:#f1e6d2; padding:1px 4px; border-radius:3px; }
+  .ok { color:#1f6b3a; font-weight:500; } .warn { color:#9a5b00; font-weight:500; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:6px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:last-child { text-align:right; white-space:nowrap; }
+  @media (max-width:900px) { .frames { flex-direction:column; } .frame-desk { width:100%; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1>07 · Wishes Wall — desktop &amp; mobile mockup</h1>
+  <div class="sizes" role="group" aria-label="Mobile preview width">
+    Mobile width:
+    <button type="button" data-w="320">320</button>
+    <button type="button" data-w="375">375</button>
+    <button type="button" data-w="390" aria-pressed="true">390</button>
+    <button type="button" data-w="430">430</button>
+  </div>
+</div>
+
+<div class="frames">
+  <div class="frame frame-desk">
+    <p>Desktop · 1440px (scaled to fit)</p>
+    <div class="clip" id="deskClip"><iframe id="desk" title="Desktop mockup" width="1440" scrolling="no"></iframe></div>
+  </div>
+  <div class="frame frame-mob">
+    <p id="mobLabel">Mobile · 390px</p>
+    <div class="clip"><iframe id="mob" title="Mobile mockup" width="390" scrolling="no"></iframe></div>
+  </div>
+</div>
+
+<div class="notes">
+  <section><h2>Audit: current section</h2><ul><li><b>Header is crowded and the text too small.</b> Eyebrow, title, subtitle, rule, an 11px uppercase count with italic hint, then 11px tracked tab labels. The tabs are text with an underline, not clear 44px buttons.</li><li><b>Hazy pond.</b> It has horizontal scanlines across the whole panel, a blurred glowing moon and a soft light column, so the "night" reads as low-resolution.</li><li><b>Oversized pond.</b> It's about 560px tall on desktop for a few lamps, and the reading card overlaps its lower edge. Prev / Read full wish / Next are 11px tracked links.</li><li><b>Grain over everything.</b> The <code>.grain</code> texture covers the whole section, including the postcard text.</li><li><b>"Write your own wish" is a small underlined link.</b> It's 11px tracked uppercase, not a clear button.</li></ul></section>
+  <section><h2>System (from 01 · Our Events)</h2><ul><li>Same header, type scale, spacing, 44px controls and light surface as Bride & Groom and Our Story.</li><li>The segmented pill toggle introduced here is the standard pattern for any two-view switch.</li></ul></section>
+  <section><h2>Design decisions</h2><ul><li>The view switch is a 44px segmented pill: "✦ Floating lamps" / "☰ Read all wishes". The count and hint sit on one 16px line.</li><li>The pond keeps the idea (night water, moon, floating diyas) but is drawn crisply: a solid gradient sky, a sharp moon, a thin light path and vector diyas. It's 380px tall instead of about 560px. The lit lamp has a gold ring. The reading card sits below the lamps (never over them) as a solid ivory card: 22px text clamped to 3 lines, then three 44px buttons.</li><li>"Read all wishes" is an even grid of postcards: message, name, and a 44px ♥ like button. It's shown below as a second state, and on the live site the toggle switches between them.</li><li>Kept as is: lamp auto-cycling, new-wish arrival animation, the full-wish modal, photos on postcards and the auto-scrolling rail when there are many wishes.</li></ul></section>
+  <section><h2>Self-check</h2><table><tr><td>Sharp: no scanlines, grain or blurred glow</td><td class="ok">pass</td></tr><tr><td>Aligned: one column, centred controls</td><td class="ok">pass</td></tr><tr><td>Balanced pairs: equal postcards per row</td><td class="ok">pass</td></tr><tr><td>No wasted space: pond about 25% shorter</td><td class="ok">pass</td></tr><tr><td>Clear hierarchy: header → switch → wishes → write</td><td class="ok">pass</td></tr><tr><td>Text/image proportion</td><td class="ok">pass</td></tr><tr><td>Desktop + 320/375/390/430</td><td class="ok">pass</td></tr><tr><td>Matches the system</td><td class="ok">pass</td></tr></table><h2 style="margin-top:20px">Missing</h2><ul><li>Real wishes come from the server. The mockup uses the project's own sample wishes from <code>src/data/sampleWishes.ts</code>, the same ones the site shows on localhost.</li><li>The like counts shown are the samples' <code>likesCount</code> values.</li></ul></section>
+</div>
+
+<!-- ======================= THE DESIGN (rendered into both frames) ======================= -->
+<template id="design">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&family=Great+Vibes&display=swap">
+<style>
+  :root {
+    /* existing tokens (src/styles/variables.css) */
+    --maroon:#6b1a24; --burg:#5a1420; --burg-d:#3a0b14; --ink:#3a1218; --ivory:#f8efdc; --cream:#f8efdc; --card:#fffaf0; --paper-2:#fbf6ec;
+    --champ:#e9d3a4; --gold:#c19a3d; --gold-d:#b8892e; --gold-l:#f0d68e;
+    --gold-rgb:193 154 61; --gold-l-rgb:240 214 142; --gold-d-rgb:184 137 46; --burg-rgb:90 20 32; --burg-d-rgb:58 11 20; --ivory-rgb:248 239 220; --champ-rgb:233 211 164;
+    --leaf:#5f6f4a; /* muted botanical green — proposed new token (used sparingly) */
+    --fh:'Cormorant Garamond', Georgia, serif; --fb:'Jost', system-ui, sans-serif; --fs:'Great Vibes', 'Cormorant Garamond', cursive;
+    /* layout system (approved in 01 · Our Events) */
+    --max:1120px; --gutter:20px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+    --pad-y:40px;
+  }
+  @media (min-width:600px) { :root { --gutter:var(--s6); --pad-y:var(--s7); } }
+  @media (min-width:960px) { :root { --pad-y:var(--s8); } }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { -webkit-font-smoothing:antialiased; }
+  img { display:block; max-width:100%; height:auto; }
+  button { font:inherit; }
+
+  /* section shells */
+  .sec { padding:var(--pad-y) max(var(--gutter), env(safe-area-inset-left)) var(--pad-y) max(var(--gutter), env(safe-area-inset-right)); font:400 16px/1.5 var(--fb); }
+  .sec--light { background:linear-gradient(180deg, var(--paper-2), var(--ivory)); color:var(--ink);
+    --hair:1px solid rgb(var(--gold-rgb) / .35); --hair-soft:1px solid rgb(var(--gold-rgb) / .22); --t-kicker:var(--gold-d); --t-title:var(--burg); --t-label:var(--gold-d); --t-muted:#6a4a40; }
+  .sec--dark { background:radial-gradient(120% 60% at 50% 0%, #6e1d2b 0%, var(--burg) 45%, var(--burg-d) 100%); color:var(--ivory);
+    --hair:1px solid rgb(var(--gold-l-rgb) / .28); --hair-soft:1px solid rgb(var(--gold-l-rgb) / .16); --t-kicker:var(--gold-l); --t-title:var(--champ); --t-label:var(--gold); --t-muted:rgb(var(--ivory-rgb) / .78); }
+  .wrap { max-width:var(--max); margin:0 auto; }
+  .narrow { max-width:720px; margin-inline:auto; }
+
+  /* section header (same in every section) */
+  .head { text-align:center; margin-bottom:var(--s5); }
+  .kicker { margin:0 0 var(--s2); font:italic 500 22px/1.2 var(--fh); letter-spacing:.02em; color:var(--t-kicker); }
+  .head h2 { margin:0; font:500 clamp(40px, 4.4vw, 56px)/1.05 var(--fh); color:var(--t-title); letter-spacing:.005em; }
+  .orn { display:flex; align-items:center; justify-content:center; gap:var(--s3); margin-top:var(--s3); color:var(--gold); }
+  .orn::before, .orn::after { content:""; width:56px; height:1px; background:currentColor; opacity:.7; }
+  .orn svg { width:12px; height:12px; }
+  .lead { margin:var(--s3) auto 0; max-width:560px; font:italic 500 20px/1.4 var(--fh); color:var(--t-title); }
+
+  /* type scale */
+  .label { font:500 12px/1.2 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:var(--t-label); }
+  .t-h3 { margin:0; font:italic 500 clamp(34px, 3.2vw, 40px)/1 var(--fh); color:var(--t-title); }
+  .t-lead { font:500 20px/1.35 var(--fh); }
+  .t-body { font:400 16px/1.6 var(--fb); color:var(--t-muted); }
+
+  /* buttons: 44px, two styles */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:var(--s2); min-height:44px; padding:0 var(--s5); border-radius:6px;
+    font:500 15px/1 var(--fb); letter-spacing:.02em; text-decoration:none; cursor:pointer; white-space:nowrap; }
+  .btn--solid { background:var(--burg); color:var(--ivory); border:1px solid var(--burg); }
+  .sec--dark .btn--solid { background:var(--gold-l); color:var(--burg-d); border-color:var(--gold-l); }
+  .btn--line { background:transparent; color:var(--burg); border:1px solid rgb(var(--gold-rgb) / .6); }
+  .sec--dark .btn--line { color:var(--gold-l); border-color:rgb(var(--gold-l-rgb) / .55); }
+
+  .next { margin:var(--s5) 0 0; text-align:center; font:italic 500 20px/1.3 var(--fh); color:var(--t-kicker); }
+  .sec--light .next { color:var(--gold-d); }
+  .next svg { display:block; width:14px; height:14px; margin:var(--s1) auto 0; }
+
+
+  .hint { margin:var(--s2) 0 0; text-align:center; font:400 16px/1.4 var(--fb); color:var(--t-muted); }
+  .hint b { font-weight:500; color:var(--burg); }
+  .tabs { display:inline-grid; grid-template-columns:1fr 1fr; padding:4px; margin:var(--s4) auto 0; border:var(--hair); border-radius:999px; background:var(--card); }
+  .tabwrap { text-align:center; }
+  .tabs button { min-height:44px; padding:0 var(--s5); border:0; border-radius:999px; background:none; color:var(--burg); font:500 15px/1 var(--fb); cursor:pointer; white-space:nowrap; }
+  .tabs [aria-selected="true"] { background:var(--burg); color:var(--ivory); }
+
+  /* floating lamps: a crisp night pond (no scanlines, no blurred moon) */
+  .pond { position:relative; padding-bottom:var(--s4); margin-top:var(--s5); border-radius:200px 200px 10px 10px / 120px 120px 10px 10px; overflow:hidden;
+    background:linear-gradient(180deg, #2a1838 0%, #17142a 45%, #0e1324 100%); box-shadow:0 18px 36px -26px rgba(14,19,36,.8); }
+  .sky { position:relative; height:clamp(200px, 20vw, 240px); }
+  .moon { position:absolute; left:50%; top:12%; width:56px; height:56px; transform:translateX(-50%); border-radius:50%;
+    background:radial-gradient(circle at 40% 38%, #fff7df, #e9d29a 70%); box-shadow:0 0 0 10px rgb(233 210 154 / .08); }
+  .path { position:absolute; left:50%; top:calc(12% + 72px); bottom:0; width:3px; transform:translateX(-50%); background:linear-gradient(180deg, rgb(233 210 154 / .35), transparent 70%); }
+  .diya { position:absolute; width:64px; height:64px; margin:-32px 0 0 -32px; border:0; background:none; cursor:pointer; border-radius:50%; }
+  .diya.is-lit { box-shadow:inset 0 0 0 1px rgb(240 214 142 / .7); }
+  .bowl { position:absolute; left:10px; right:10px; bottom:16px; height:14px; border-radius:0 0 22px 22px; background:linear-gradient(180deg, #e0904a, #a8562a); }
+  .flame { position:absolute; left:50%; bottom:28px; width:12px; height:20px; transform:translateX(-50%); border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    background:radial-gradient(circle at 50% 70%, #fff6d0 0 30%, #ffc44d 60%, #ff8a1f 100%); }
+  .pcard { position:relative; width:min(480px, calc(100% - 32px)); margin:0 auto; padding:var(--s4) var(--s5);
+    background:var(--card); border-radius:8px; text-align:center; color:var(--ink); }
+  .pcard .w { margin:0; font:italic 500 22px/1.3 var(--fh); color:var(--burg); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .pcard .n { display:block; margin-top:var(--s1); }
+  .pnav { display:grid; grid-template-columns:auto 1fr auto; gap:var(--s2); margin-top:var(--s3); }
+  .pnav button { min-height:44px; padding:0 var(--s3); border:1px solid rgb(var(--gold-rgb) / .5); border-radius:6px; background:none; color:var(--burg); font:500 14px/1 var(--fb); cursor:pointer; }
+
+  /* "Read all wishes": postcards in an even grid */
+  .state { margin:var(--s6) 0 var(--s3); text-align:center; font:500 12px/1 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:#9a7a40; }
+  .state::before, .state::after { content:" — "; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:var(--s4); margin:0; padding:0; list-style:none; }
+  .pc { display:flex; flex-direction:column; padding:var(--s5) var(--s4) var(--s3); background:var(--card); border:var(--hair); border-radius:8px; }
+  .msg { flex:1; margin:0; font:italic 500 20px/1.4 var(--fh); color:var(--burg); }
+  .foot { display:flex; align-items:center; justify-content:space-between; gap:var(--s2); margin-top:var(--s3); padding-top:var(--s2); border-top:var(--hair-soft); }
+  .foot b { font:500 14px/1.3 var(--fb); color:var(--t-muted); }
+  .like { min-width:44px; min-height:44px; border:0; background:none; color:#b0485e; font:500 15px/1 var(--fb); cursor:pointer; }
+
+  .write { display:flex; justify-content:center; margin-top:var(--s5); }
+
+  @media (max-width:599px) {
+    .tabs button { padding:0 var(--s3); font-size:14px; }
+    .pond { border-radius:140px 140px 10px 10px / 80px 80px 10px 10px; }
+    .sky { height:180px; }
+    .pcard { padding:var(--s3) var(--s4); }
+    .pcard .w { font-size:20px; }
+  }
+  @media (max-width:359px) { .tabs { grid-template-columns:1fr; border-radius:12px; } .tabs button { border-radius:8px; } }
+
+</style>
+</head>
+<body>
+<section class="sec sec--light" aria-labelledby="wishes-title"><div class="wrap">
+  <header class="head"><p class="kicker">Wishes Wall</p><h2 id="wishes-title">With love, from our people</h2><div class="orn" aria-hidden="true"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 -10C2 -6 2 -3 0 0C-2 -3 -2 -6 0 -10Z M0 10C2 6 2 3 0 0C-2 3 -2 6 0 10Z M-10 0C-6 -2 -3 -2 0 0C-3 2 -6 2 -10 0Z M10 0C6 -2 3 -2 0 0C3 2 6 2 10 0Z"/></svg></div><p class="lead">A little love from everyone celebrating with us</p></header>
+  <p class="hint"><b>4 wishes so far</b> · Tap a glowing lamp to read a wish</p>
+  <div class="tabwrap"><div class="tabs" role="tablist" aria-label="Wishes view">
+    <button type="button" role="tab" aria-selected="true">✦ Floating lamps</button><button type="button" role="tab" aria-selected="false">☰ Read all wishes</button></div></div>
+
+  <div class="pond" aria-label="Wishes as floating lamps. Tap a lamp to read a wish.">
+    <div class="sky"><span class="moon" aria-hidden="true"></span><span class="path" aria-hidden="true"></span>
+    <button type="button" class="diya is-lit" style="left:14%;top:58%" aria-label="Read the wish from Vikram & Meera"><i class="flame"></i><i class="bowl"></i></button><button type="button" class="diya" style="left:33%;top:76%" aria-label="Read the wish from Karthik & Divya"><i class="flame"></i><i class="bowl"></i></button><button type="button" class="diya" style="left:67%;top:62%" aria-label="Read the wish from Pooja Narayanan"><i class="flame"></i><i class="bowl"></i></button><button type="button" class="diya" style="left:86%;top:78%" aria-label="Read the wish from Sneha & Rahul"><i class="flame"></i><i class="bowl"></i></button></div>
+    <div class="pcard" role="status"><p class="w">“Wishing you both a lifetime of boundless happiness, shared laughter, and beautiful adventures together! So thrilled for you both.”</p><b class="n label">— Vikram & Meera</b>
+      <div class="pnav"><button type="button" aria-label="Previous wish">‹ Prev</button><button type="button">Read full wish</button><button type="button" aria-label="Next wish">Next ›</button></div></div>
+  </div>
+
+  <p class="state" aria-hidden="true">State: Read all wishes</p>
+  <ul class="cards"><li class="pc"><p class="msg">“Wishing you both a lifetime of boundless happiness, shared laughter, and beautiful adventures together! So thrilled for you both.”</p><div class="foot"><b>— Vikram & Meera</b>
+  <button type="button" class="like" aria-pressed="false" aria-label="Like this wish">♥ <span>12</span></button></div></li><li class="pc"><p class="msg">“May your journey together be as harmonious as your favorite songs! Congratulations Lalith and Anjana!”</p><div class="foot"><b>— Karthik & Divya</b>
+  <button type="button" class="like" aria-pressed="false" aria-label="Like this wish">♥ <span>8</span></button></div></li><li class="pc"><p class="msg">“Sending you so much love from Bangalore! Can’t wait to celebrate the big day with you both.”</p><div class="foot"><b>— Pooja Narayanan</b>
+  <button type="button" class="like" aria-pressed="false" aria-label="Like this wish">♥ <span>15</span></button></div></li><li class="pc"><p class="msg">“Here is to a wonderful beginning of a forever love story. God bless you both!”</p><div class="foot"><b>— Sneha & Rahul</b>
+  <button type="button" class="like" aria-pressed="false" aria-label="Like this wish">♥ <span>6</span></button></div></li></ul>
+
+  <div class="write"><a class="btn btn--line" href="#rsvp-wishes">Write your own wish →</a></div>
+</div></section>
+
+</body>
+</html>
+</template>
+
+<script>
+  const src = document.getElementById('design').innerHTML;
+  const desk = document.getElementById('desk'), mob = document.getElementById('mob'), deskClip = document.getElementById('deskClip');
+  const fitHeight = (f) => { try { const h = f.contentDocument.documentElement.scrollHeight; f.style.height = h + 'px'; return h; } catch { return 0; } };
+  const scaleDesk = () => {
+    const h = fitHeight(desk); const s = Math.min(1, deskClip.clientWidth / 1440);
+    desk.style.transform = `scale(${s})`; deskClip.style.height = (h * s) + 'px';
+  };
+  // srcdoc keeps relative image paths resolving against this file's folder
+  desk.srcdoc = src; mob.srcdoc = src;
+  desk.addEventListener('load', () => { scaleDesk(); setTimeout(scaleDesk, 600); });
+  mob.addEventListener('load', () => { fitHeight(mob); setTimeout(() => fitHeight(mob), 600); });
+  addEventListener('resize', scaleDesk);
+  new ResizeObserver(() => scaleDesk()).observe(deskClip);
+  document.querySelectorAll('.sizes button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.sizes button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    mob.width = b.dataset.w; document.getElementById('mobLabel').textContent = `Mobile · ${b.dataset.w}px`;
+    setTimeout(() => fitHeight(mob), 50); setTimeout(() => fitHeight(mob), 400);
+  }));
+</script>
+</body>
+</html>

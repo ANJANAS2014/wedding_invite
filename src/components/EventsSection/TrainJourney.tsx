@@ -15,7 +15,7 @@ export const TrainJourney: React.FC = () => (
 
     <div className="tr-line" aria-hidden="true">
       <div className="tr-train">
-        <img src={WEDDING_SCENE.train} alt="" width={642} height={403} loading="lazy" decoding="async" />
+        <img src={WEDDING_SCENE.train} alt="" width={532} height={165} loading="lazy" decoding="async" />
       </div>
     </div>
 

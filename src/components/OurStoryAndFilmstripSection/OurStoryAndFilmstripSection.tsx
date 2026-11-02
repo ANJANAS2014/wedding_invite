@@ -15,19 +15,24 @@ const FILM_SPEED_PX_PER_S = 95;
 const PARAGRAPHS = WEDDING_CONTENT.story.split(/\n\s*\n/);
 const MOMENT_MS = 5500;
 
-// Crop guidance for the uniform 3:2 film frames
-/** Landscape photos crop centred; portraits crop a little higher to keep faces in frame. */
-const setFramePosition = (e: React.SyntheticEvent<HTMLImageElement>) => {
+/**
+ * Film frames keep each photo's own orientation (3:2 landscape, 4:5 portrait)
+ * at one shared height, so no photo is cropped through a face.
+ */
+const markFrameOrientation = (e: React.SyntheticEvent<HTMLImageElement>) => {
   const img = e.currentTarget;
-  img.style.objectPosition = img.naturalWidth > img.naturalHeight ? '50% 50%' : '50% 28%';
+  const frame = img.closest('.film-frame');
+  if (frame) frame.classList.toggle('is-portrait', img.naturalHeight > img.naturalWidth);
 };
 
 /**
- * Instagram-style story cards: progress bars, auto-advance only while at
- * least half visible, tap right/left for next/previous, swipe, press-and-hold
- * to pause. Reduced motion: no auto-advance and no animation.
+ * Our Story: the story card (photo + progress bars) beside an index of the
+ * six moments on desktop; on phones the caption sits in a solid panel under
+ * the photo. Auto-advances only while at least half visible; tap right/left
+ * for next/previous, swipe, press-and-hold to pause. Reduced motion: no
+ * auto-advance and no animation.
  */
-const StoryCards: React.FC = () => {
+const StoryBlock: React.FC<{ more: React.ReactNode }> = ({ more }) => {
   const [index, setIndex] = useState<number>(0);
   const [inView, setInView] = useState<boolean>(false);
   const [held, setHeld] = useState<boolean>(false);
@@ -44,6 +49,12 @@ const StoryCards: React.FC = () => {
     },
     [count]
   );
+
+  const jump = (i: number) => {
+    haptic(5);
+    setIndex(i);
+    setCycle((c) => c + 1);
+  };
 
   useEffect(() => {
     const el = boxRef.current;
@@ -73,64 +84,91 @@ const StoryCards: React.FC = () => {
     }
   };
 
-  return (
-    <div
-      ref={boxRef}
-      className={`story-cards ${held ? 'is-held' : ''} ${inView ? 'is-playing' : ''}`}
-      role="region"
-      aria-roledescription="carousel"
-      aria-label={`Our story in ${count} moments`}
-      style={{ '--moment': `${MOMENT_MS}ms` } as React.CSSProperties}
-      onPointerDown={startHold}
-      onPointerUp={endHold}
-      onPointerLeave={endHold}
-      onPointerCancel={endHold}
-      onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
-      onTouchEnd={(e) => {
-        if (touchX.current === null) return;
-        const dx = e.changedTouches[0].clientX - touchX.current;
-        touchX.current = null;
-        if (Math.abs(dx) > 40) {
-          haptic(5);
-          go(dx < 0 ? 1 : -1);
-        }
-      }}
-    >
-      <div className="story-bars" aria-hidden="true">
-        {STORY_MOMENTS.map((m, i) => (
-          <i key={m.title} className={i < index ? 'done' : i === index ? 'cur' : ''}>
-            <b key={i === index ? cycle : 'x'} />
-          </i>
-        ))}
-      </div>
+  const m = STORY_MOMENTS[index];
 
-      {STORY_MOMENTS.map((m, i) => (
-        <figure
-          key={m.title}
-          className={`story-card ${i === index ? 'on' : ''}`}
-          aria-hidden={i !== index}
-          aria-roledescription="slide"
-          aria-label={`${i + 1} of ${count}: ${m.title}`}
+  return (
+    <div className="story-grid">
+      <div className="story-cardcol reveal">
+        <div
+          ref={boxRef}
+          className={`story-cards ${held ? 'is-held' : ''} ${inView ? 'is-playing' : ''}`}
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={`Our story in ${count} moments`}
+          style={{ '--moment': `${MOMENT_MS}ms` } as React.CSSProperties}
+          onPointerDown={startHold}
+          onPointerUp={endHold}
+          onPointerLeave={endHold}
+          onPointerCancel={endHold}
+          onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+          onTouchEnd={(e) => {
+            if (touchX.current === null) return;
+            const dx = e.changedTouches[0].clientX - touchX.current;
+            touchX.current = null;
+            if (Math.abs(dx) > 40) {
+              haptic(5);
+              go(dx < 0 ? 1 : -1);
+            }
+          }}
         >
-          <img
-            src={WEDDING_IMAGES[m.image]}
-            alt=""
-            loading={i < 2 ? 'eager' : 'lazy'}
-            decoding="async"
-            style={{ objectPosition: m.objectPosition, transform: m.zoom ? `scale(${m.zoom})` : undefined }}
-          />
-          <figcaption key={i === index ? cycle : 'idle'}>
-            <span>
-              {i + 1} / {count}
+          <div className="story-ph">
+            {STORY_MOMENTS.map((mo, i) => (
+              <figure
+                key={mo.title}
+                className={`story-card ${i === index ? 'on' : ''}`}
+                aria-hidden={i !== index}
+                aria-roledescription="slide"
+                aria-label={`${i + 1} of ${count}: ${mo.title}`}
+              >
+                <img
+                  src={WEDDING_IMAGES[mo.image]}
+                  alt=""
+                  loading={i < 2 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  style={{ objectPosition: mo.objectPosition, transform: mo.zoom ? `scale(${mo.zoom})` : undefined }}
+                />
+              </figure>
+            ))}
+            <div className="story-bars" aria-hidden="true">
+              {STORY_MOMENTS.map((mo, i) => (
+                <i key={mo.title} className={i < index ? 'done' : i === index ? 'cur' : ''}>
+                  <b key={i === index ? cycle : 'x'} />
+                </i>
+              ))}
+            </div>
+            <button type="button" className="story-tap story-tap--prev" aria-label="Previous moment" onClick={() => { haptic(5); go(-1); }} />
+            <button type="button" className="story-tap story-tap--next" aria-label="Next moment" onClick={() => { haptic(5); go(1); }} />
+          </div>
+          {/* caption panel (phones): solid, never printed over the photo */}
+          <div className="story-cap" key={cycle} aria-live="polite">
+            <span className="rd-label">
+              {index + 1} / {count}
             </span>
             <h3>{m.title}</h3>
             <p>{m.text}</p>
-          </figcaption>
-        </figure>
-      ))}
+          </div>
+        </div>
+        <p className="story-hint">Tap to continue · hold to pause</p>
+      </div>
 
-      <button type="button" className="story-tap story-tap--prev" aria-label="Previous moment" onClick={() => { haptic(5); go(-1); }} />
-      <button type="button" className="story-tap story-tap--next" aria-label="Next moment" onClick={() => { haptic(5); go(1); }} />
+      <div className="story-side reveal">
+        <p className="story-hook">{STORY_HOOK}</p>
+        {/* desktop index of the six moments; the active one shows its text */}
+        <ol className="story-moments" aria-label="The moments">
+          {STORY_MOMENTS.map((mo, i) => (
+            <li key={mo.title} className={i === index ? 'on' : undefined}>
+              <button type="button" onClick={() => jump(i)} aria-current={i === index || undefined}>
+                <span className="rd-label">{String(i + 1).padStart(2, '0')}</span>
+                <span>
+                  <b>{mo.title}</b>
+                  <span className="story-moment-text">{mo.text}</span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ol>
+        {more}
+      </div>
     </div>
   );
 };
@@ -163,36 +201,33 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
 
   return (
     <section className="our-story-filmstrip-section" id="story-filmstrip-section" aria-labelledby="our-story-heading">
-      {/* Part 1: Our Story — chapters */}
-      <article className="st grain" id="story">
-        <header className="st-head reveal">
-          <span className="eyebrow">Read how it all began</span>
-          <h2 id="our-story-heading">Our Story</h2>
-          <HeaderRule />
-        </header>
+      {/* Part 1: Our Story */}
+      <article className="st rd-sec rd-light" id="story">
+        <div className="rd-wrap">
+          <header className="rd-head reveal">
+            <span className="rd-kicker">Read how it all began</span>
+            <h2 id="our-story-heading">Our Story</h2>
+            <HeaderRule />
+          </header>
 
-        <p className="story-hook reveal">{STORY_HOOK}</p>
+          <StoryBlock
+            more={
+              <button
+                type="button"
+                className="rd-btn rd-btn--line story-more"
+                onClick={() => setIsExpanded(!isExpanded)}
+                aria-expanded={isExpanded}
+                aria-controls="story-full-text"
+              >
+                {isExpanded ? 'Show less' : 'Read the full story'}
+              </button>
+            }
+          />
 
-        <div className="reveal">
-          <StoryCards />
-        </div>
-        <p className="story-hint reveal">Tap to continue · hold to pause</p>
-
-        <div className="story-full">
-          <button
-            type="button"
-            className="st-more story-toggle-btn"
-            onClick={() => setIsExpanded(!isExpanded)}
-            aria-expanded={isExpanded}
-          >
-            {isExpanded ? 'Show less' : 'Read the full story'}
-          </button>
           {isExpanded && (
-            <div className="story-full-text">
+            <div className="story-full-text" id="story-full-text">
               {PARAGRAPHS.map((para, j) => (
-                <p key={j} className={j === 0 ? 'st-lead' : undefined}>
-                  {para}
-                </p>
+                <p key={j}>{para}</p>
               ))}
             </div>
           )}
@@ -200,17 +235,7 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
       </article>
 
       {/* Part 2: 35mm film strip */}
-      <div className="filmstrip-wrapper fs grain" aria-label="35mm photographic memory filmstrip">
-        <div className="fs-bar">
-          <button
-            type="button"
-            className="filmstrip-toggle-btn"
-            onClick={() => setIsPaused(!isPaused)}
-            aria-label={isPaused ? 'Resume filmstrip animation' : 'Pause filmstrip animation'}
-          >
-            {isPaused ? 'Play' : 'Pause'}
-          </button>
-        </div>
+      <div className="filmstrip-wrapper fs rd-light" aria-label="35mm photographic memory filmstrip">
         <div
           className="filmstrip-viewport"
           onTouchStart={() => setIsTouchHeld(true)}
@@ -249,10 +274,10 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
                       loading={actualIndex <= 2 ? 'eager' : 'lazy'}
                       decoding="async"
                       className="film-picture-img"
-                      onLoad={setFramePosition}
+                      onLoad={markFrameOrientation}
                     />
                   </div>
-                  <span className="film-edge" aria-hidden="true">
+                  <span className="film-edge film-edge--bottom" aria-hidden="true">
                     <span>{frameNum}</span>
                     <span>▸ {frameNum}A</span>
                   </span>
@@ -261,7 +286,24 @@ export const OurStoryAndFilmstripSection: React.FC<OurStoryAndFilmstripSectionPr
             })}
           </div>
         </div>
-        <NextTeaser label="Next: where & when to celebrate" targetId="s2" />
+        <div className="fs-bar">
+          <button
+            type="button"
+            className="rd-btn rd-btn--line filmstrip-toggle-btn"
+            onClick={() => setIsPaused(!isPaused)}
+            aria-label={isPaused ? 'Resume filmstrip animation' : 'Pause filmstrip animation'}
+          >
+            {isPaused ? (
+              <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor" /></svg>
+            ) : (
+              <svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12" fill="currentColor" /><rect x="8.5" y="1" width="3.5" height="12" fill="currentColor" /></svg>
+            )}
+            {isPaused ? 'Play' : 'Pause'}
+          </button>
+        </div>
+        <div className="rd-wrap">
+          <NextTeaser label="Next: where & when to celebrate" targetId="s2" />
+        </div>
       </div>
     </section>
   );

@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer ref={ref} className="site-footer">
-      <p className="footer-thanks foil reveal">
+      <p className="footer-thanks reveal">
         With love, {WEDDING_CONTENT.groom} &amp; {WEDDING_CONTENT.bride}
       </p>
       <HeaderRule className="reveal" />

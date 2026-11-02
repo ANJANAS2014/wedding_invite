@@ -135,12 +135,13 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0, pendingW
   );
 
   return (
-    <section className="sec wishes-wall-section grain" id="wishes" aria-labelledby="wishes-title">
-      <div className="wishes-section-header reveal">
-        <div className="eyebrow">Wishes Wall</div>
+    <section className="wishes-wall-section rd-sec rd-light" id="wishes" aria-labelledby="wishes-title">
+      <div className="rd-wrap">
+      <div className="rd-head wishes-section-header reveal">
+        <span className="rd-kicker">Wishes Wall</span>
         <h2 id="wishes-title">With love, from our people</h2>
-        <p className="wishes-subtitle">A little love from everyone celebrating with us</p>
-        <HeaderRule className="wishes-divider" />
+        <HeaderRule />
+        <p className="rd-lead">A little love from everyone celebrating with us</p>
 
         {!isLoading && wishes.length > 0 && (
           <p className="wishes-hint">
@@ -213,6 +214,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0, pendingW
 
       <div className="wishes-write">
         <a
+          className="rd-btn rd-btn--line"
           href="#rsvp-wishes"
           onClick={(e) => {
             haptic(8);
@@ -237,6 +239,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({ refreshKey = 0, pendingW
           onClose={() => setSelectedWishId(null)}
         />
       )}
+      </div>
     </section>
   );
 };

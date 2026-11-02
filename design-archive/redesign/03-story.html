@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · Our Story — redesign mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap">
+<style>
+  /* ---------- mockup viewer chrome (not part of the design) ---------- */
+  :root { --ink:#3a1218; --burg:#5a1420; --gold-d:#b8892e; --line:#e5d2b0; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#efe6d6; color:var(--ink); font:400 15px/1.55 'Jost', system-ui, sans-serif; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:12px 24px; padding:12px 24px; background:#fbf6ec; border-bottom:1px solid var(--line); }
+  .bar h1 { margin:0; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .bar .sizes { display:flex; gap:6px; align-items:center; margin-left:auto; font-size:13px; }
+  .bar button { min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); font:500 13px 'Jost', sans-serif; cursor:pointer; }
+  .bar button[aria-pressed="true"] { background:var(--burg); border-color:var(--burg); color:#fbf6ec; }
+  .frames { display:flex; align-items:flex-start; gap:24px; padding:24px; }
+  .frame { flex:none; }
+  .frame > p { margin:0 0 8px; font:500 12px/1 'Jost', sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#8a6a3a; }
+  .frame-desk { flex:1 1 auto; min-width:0; }
+  .clip { overflow:hidden; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  iframe { display:block; border:0; transform-origin:0 0; }
+  .notes { max-width:1120px; margin:0 auto; padding:8px 24px 64px; display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; }
+  .notes section { background:#fbf6ec; border:1px solid var(--line); border-radius:8px; padding:20px 24px; }
+  .notes h2 { margin:0 0 12px; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .notes ul { margin:0; padding-left:18px; }
+  .notes li { margin:0 0 8px; }
+  .notes code { font-size:13px; background:#f1e6d2; padding:1px 4px; border-radius:3px; }
+  .ok { color:#1f6b3a; font-weight:500; } .warn { color:#9a5b00; font-weight:500; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:6px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:last-child { text-align:right; white-space:nowrap; }
+  @media (max-width:900px) { .frames { flex-direction:column; } .frame-desk { width:100%; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1>03 · Our Story — desktop &amp; mobile mockup</h1>
+  <div class="sizes" role="group" aria-label="Mobile preview width">
+    Mobile width:
+    <button type="button" data-w="320">320</button>
+    <button type="button" data-w="375">375</button>
+    <button type="button" data-w="390" aria-pressed="true">390</button>
+    <button type="button" data-w="430">430</button>
+  </div>
+</div>
+
+<div class="frames">
+  <div class="frame frame-desk">
+    <p>Desktop · 1440px (scaled to fit)</p>
+    <div class="clip" id="deskClip"><iframe id="desk" title="Desktop mockup" width="1440" scrolling="no"></iframe></div>
+  </div>
+  <div class="frame frame-mob">
+    <p id="mobLabel">Mobile · 390px</p>
+    <div class="clip"><iframe id="mob" title="Mobile mockup" width="390" scrolling="no"></iframe></div>
+  </div>
+</div>
+
+<div class="notes">
+  <section><h2>Audit: current section</h2><ul><li><b>Narrow and tall on desktop.</b> A single 380px card in the middle of a 1440px screen leaves about 70% of the width empty. The section is 1232px tall, with padding up to 90px (<code>OurStoryAndFilmstripSection.css:12</code>) and a 72px gap above "Read the full story" (<code>:121</code>).</li><li><b>Caption printed over the photo.</b> Title and text sit on a gradient over the image (<code>.story-card figcaption</code>), so contrast depends on the photo. On the first photo the text sits on light clothing and a geometric print.</li><li><b>Text too small.</b> The "1 / 6" counter is 10px with wide tracking (<code>:476</code>) and the eyebrow is 11px (<code>:22</code>). The "Tap to continue" hint is 15px grey italic.</li><li><b>Navigation is hidden.</b> Next and previous are invisible tap zones on each half of the photo, so on desktop nothing tells you the card is clickable or how many moments there are.</li><li><b>Two story layouts in one file.</b> The old editorial "chapters" styles (<code>.st-ch, .st-ph, .st-tx</code>, <code>:32–150</code>) are still in the CSS alongside the story cards. Only the cards are used.</li></ul></section>
+  <section><h2>System (from 01 · Our Events)</h2><ul><li>Same wrap, spacing, type scale, header and 44px buttons as 01 and 02. Light surface, same as Bride & Groom.</li><li>Caption rule: text never sits on a photo. It goes in a solid burgundy panel attached to the image, which comfortably clears 4.5:1 contrast.</li></ul></section>
+  <section><h2>Design decisions</h2><ul><li><b>Desktop:</b> a balanced two-column layout. The story card is on the left, and on the right are the hook line, an index of the six moments and the "Read the full story" button. The active moment is marked with a gold rule and shows its text. Clicking a moment jumps to it.</li><li><b>Mobile:</b> hook, then the card with its caption in a solid panel below the photo, then the hint and button. Previous/next arrow buttons (44px) can be shown on desktop hover. In the mockup they're left out to keep the photo clean.</li><li>Kept as is: auto-advance (5.5s), the progress bars, swipe, tap and hold-to-pause, and the expanding full story text (styled as 16px body paragraphs, max 60ch).</li><li>Height: desktop 831px (was 1232, 33% shorter). Mobile 1009px (was 1001): the caption now sits below the photo instead of over it and is always readable, at almost no extra height.</li></ul></section>
+  <section><h2>Self-check</h2><table><tr><td>Sharp: no overlays or blur on photos</td><td class="ok">pass</td></tr><tr><td>Aligned: card and index share a centre line</td><td class="ok">pass</td></tr><tr><td>Balanced pairs: card ≈ index height on desktop</td><td class="ok">pass</td></tr><tr><td>No wasted space: desktop 33% shorter; mobile about the same height</td><td class="ok">pass</td></tr><tr><td>Clear hierarchy: hook → moments → full story</td><td class="ok">pass</td></tr><tr><td>Text/image proportion</td><td class="ok">pass</td></tr><tr><td>Desktop + 320/375/390/430: no overflow, taps ≥ 44px</td><td class="ok">pass</td></tr><tr><td>Matches the system</td><td class="ok">pass</td></tr></table><h2 style="margin-top:20px">Missing</h2><ul><li>None. The six moments, the hook and the full story come from <code>weddingData.ts</code>, and the photos are the existing story photos.</li><li><code>couple_photo_1.jpg</code> is only 680px wide, a little under 2× for a 380px card on Retina screens. A larger original would make the first moment sharper (the current site shows it at the same size).</li><li>Note: <code>couple_photo_4.png</code> is a 2.4 MB PNG, the same image as the filmstrip one already converted to JPG. It should get the same JPG treatment when this is built.</li></ul></section>
+</div>
+
+<!-- ======================= THE DESIGN (rendered into both frames) ======================= -->
+<template id="design">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&family=Great+Vibes&display=swap">
+<style>
+  :root {
+    /* existing tokens (src/styles/variables.css) */
+    --maroon:#6b1a24; --burg:#5a1420; --burg-d:#3a0b14; --ink:#3a1218; --ivory:#f8efdc; --cream:#f8efdc; --card:#fffaf0; --paper-2:#fbf6ec;
+    --champ:#e9d3a4; --gold:#c19a3d; --gold-d:#b8892e; --gold-l:#f0d68e;
+    --gold-rgb:193 154 61; --gold-l-rgb:240 214 142; --gold-d-rgb:184 137 46; --burg-rgb:90 20 32; --burg-d-rgb:58 11 20; --ivory-rgb:248 239 220; --champ-rgb:233 211 164;
+    --leaf:#5f6f4a; /* muted botanical green — proposed new token (used sparingly) */
+    --fh:'Cormorant Garamond', Georgia, serif; --fb:'Jost', system-ui, sans-serif; --fs:'Great Vibes', 'Cormorant Garamond', cursive;
+    /* layout system (approved in 01 · Our Events) */
+    --max:1120px; --gutter:20px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+    --pad-y:40px;
+  }
+  @media (min-width:600px) { :root { --gutter:var(--s6); --pad-y:var(--s7); } }
+  @media (min-width:960px) { :root { --pad-y:var(--s8); } }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { -webkit-font-smoothing:antialiased; }
+  img { display:block; max-width:100%; height:auto; }
+  button { font:inherit; }
+
+  /* section shells */
+  .sec { padding:var(--pad-y) max(var(--gutter), env(safe-area-inset-left)) var(--pad-y) max(var(--gutter), env(safe-area-inset-right)); font:400 16px/1.5 var(--fb); }
+  .sec--light { background:linear-gradient(180deg, var(--paper-2), var(--ivory)); color:var(--ink);
+    --hair:1px solid rgb(var(--gold-rgb) / .35); --hair-soft:1px solid rgb(var(--gold-rgb) / .22); --t-kicker:var(--gold-d); --t-title:var(--burg); --t-label:var(--gold-d); --t-muted:#6a4a40; }
+  .sec--dark { background:radial-gradient(120% 60% at 50% 0%, #6e1d2b 0%, var(--burg) 45%, var(--burg-d) 100%); color:var(--ivory);
+    --hair:1px solid rgb(var(--gold-l-rgb) / .28); --hair-soft:1px solid rgb(var(--gold-l-rgb) / .16); --t-kicker:var(--gold-l); --t-title:var(--champ); --t-label:var(--gold); --t-muted:rgb(var(--ivory-rgb) / .78); }
+  .wrap { max-width:var(--max); margin:0 auto; }
+  .narrow { max-width:720px; margin-inline:auto; }
+
+  /* section header (same in every section) */
+  .head { text-align:center; margin-bottom:var(--s5); }
+  .kicker { margin:0 0 var(--s2); font:italic 500 22px/1.2 var(--fh); letter-spacing:.02em; color:var(--t-kicker); }
+  .head h2 { margin:0; font:500 clamp(40px, 4.4vw, 56px)/1.05 var(--fh); color:var(--t-title); letter-spacing:.005em; }
+  .orn { display:flex; align-items:center; justify-content:center; gap:var(--s3); margin-top:var(--s3); color:var(--gold); }
+  .orn::before, .orn::after { content:""; width:56px; height:1px; background:currentColor; opacity:.7; }
+  .orn svg { width:12px; height:12px; }
+  .lead { margin:var(--s3) auto 0; max-width:560px; font:italic 500 20px/1.4 var(--fh); color:var(--t-title); }
+
+  /* type scale */
+  .label { font:500 12px/1.2 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:var(--t-label); }
+  .t-h3 { margin:0; font:italic 500 clamp(34px, 3.2vw, 40px)/1 var(--fh); color:var(--t-title); }
+  .t-lead { font:500 20px/1.35 var(--fh); }
+  .t-body { font:400 16px/1.6 var(--fb); color:var(--t-muted); }
+
+  /* buttons: 44px, two styles */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:var(--s2); min-height:44px; padding:0 var(--s5); border-radius:6px;
+    font:500 15px/1 var(--fb); letter-spacing:.02em; text-decoration:none; cursor:pointer; white-space:nowrap; }
+  .btn--solid { background:var(--burg); color:var(--ivory); border:1px solid var(--burg); }
+  .sec--dark .btn--solid { background:var(--gold-l); color:var(--burg-d); border-color:var(--gold-l); }
+  .btn--line { background:transparent; color:var(--burg); border:1px solid rgb(var(--gold-rgb) / .6); }
+  .sec--dark .btn--line { color:var(--gold-l); border-color:rgb(var(--gold-l-rgb) / .55); }
+
+  .next { margin:var(--s5) 0 0; text-align:center; font:italic 500 20px/1.3 var(--fh); color:var(--t-kicker); }
+  .sec--light .next { color:var(--gold-d); }
+  .next svg { display:block; width:14px; height:14px; margin:var(--s1) auto 0; }
+
+
+  .story { display:grid; grid-template-columns:minmax(0, 380px) minmax(0, 1fr); gap:var(--s7); align-items:center; max-width:960px; margin:0 auto; }
+  .hook { margin:0 0 var(--s5); font:italic 500 clamp(24px, 2.4vw, 30px)/1.3 var(--fh); color:var(--burg); text-wrap:balance; }
+  .hook::before { content:"“"; color:var(--gold-d); } .hook::after { content:"”"; color:var(--gold-d); }
+
+  /* the story card: photo + progress bars; caption in a solid panel (never over the photo) */
+  .card { position:relative; border-radius:10px; overflow:hidden; background:var(--burg-d); box-shadow:0 18px 36px -24px rgba(58,11,20,.6); }
+  .card .ph { position:relative; aspect-ratio:4 / 5; }
+  .card .ph img { width:100%; height:100%; object-fit:cover; }
+  .bars { position:absolute; top:var(--s3); left:var(--s3); right:var(--s3); display:flex; gap:var(--s1); }
+  .bars i { flex:1; height:2px; border-radius:2px; background:rgb(255 255 255 / .45); }
+  .bars i:first-child { background:linear-gradient(90deg, #fff 55%, rgb(255 255 255 / .45) 55%); }
+  .cap { padding:var(--s4) var(--s5) var(--s5); }
+  .cap .label { color:var(--gold-l); }
+  .cap h3 { margin:var(--s2) 0 var(--s1); font:italic 500 28px/1.1 var(--fh); color:var(--ivory); }
+  .cap p { margin:0; font:400 16px/1.5 var(--fb); color:rgb(var(--ivory-rgb) / .9); }
+  .tap { margin:var(--s3) 0 0; text-align:center; font:400 16px/1.4 var(--fb); color:var(--t-muted); }
+  .arrows { position:absolute; inset:0 0 auto 0; aspect-ratio:4/5; display:flex; justify-content:space-between; align-items:center; padding:0 var(--s2); pointer-events:none; }
+  .arrows button { pointer-events:auto; width:44px; height:44px; border-radius:50%; border:1px solid rgb(255 255 255 / .6); background:rgb(58 11 20 / .55); color:#fff; font:400 20px/1 var(--fb); cursor:pointer; }
+
+  /* desktop: the six moments as an index beside the card */
+  .moments { margin:0; padding:0; list-style:none; border-top:var(--hair-soft); }
+  .moments li { border-bottom:var(--hair-soft); }
+  .m { display:grid; grid-template-columns:32px 1fr; gap:var(--s3); width:100%; min-height:44px; padding:var(--s3) 0; background:none; border:0; text-align:left; cursor:pointer; color:inherit; }
+  .m .label { padding-top:5px; }
+  .m b { display:block; font:500 20px/1.25 var(--fh); color:var(--burg); }
+  .mt { display:none; margin-top:var(--s1); font:400 16px/1.5 var(--fb); color:var(--t-muted); }
+  .on .m { box-shadow:inset 2px 0 0 var(--gold-d); padding-left:var(--s3); }
+  .on .mt { display:block; }
+  .more { margin-top:var(--s5); }
+
+  .card .cap { display:none; }
+  @media (max-width:839px) {
+    .story { grid-template-columns:1fr; gap:0; max-width:440px; }
+    .hook { text-align:center; font-size:24px; }
+    .card .cap { display:block; }
+    .moments { display:none; }
+    .side { display:contents; }
+    .hook { order:-1; }
+    .more { justify-self:center; margin-top:var(--s4); }
+  }
+
+</style>
+</head>
+<body>
+<section class="sec sec--light" aria-labelledby="story-title"><div class="wrap">
+  <header class="head"><p class="kicker">Read how it all began</p><h2 id="story-title">Our Story</h2><div class="orn" aria-hidden="true"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 -10C2 -6 2 -3 0 0C-2 -3 -2 -6 0 -10Z M0 10C2 6 2 3 0 0C-2 3 -2 6 0 10Z M-10 0C-6 -2 -3 -2 0 0C-3 2 -6 2 -10 0Z M10 0C6 -2 3 -2 0 0C3 2 6 2 10 0Z"/></svg></div></header>
+  <div class="story">
+    <div class="cardcol">
+      <figure class="card" style="margin:0" aria-roledescription="carousel" aria-label="Our story in 6 moments">
+        <div class="ph"><img src="../../public/images/couple/couple_photo_1.jpg" alt="" width="680" height="1500" style="object-position:50% 20%">
+          <div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <figcaption class="cap"><span class="label">1 / 6</span><h3>Bangalore</h3><p>Traffic moves slowly here, but somehow love found the express lane.</p></figcaption>
+      </figure>
+      <p class="tap">Tap to continue · hold to pause</p>
+    </div>
+    <div class="side">
+      <p class="hook">After learning almost every South Indian language except Malayalam, he fell for a Malayali girl.</p>
+      <ol class="moments" aria-label="The six moments"><li class="on"><button type="button" class="m"><span class="label">01</span><span><b>Bangalore</b><span class="mt">Traffic moves slowly here, but somehow love found the express lane.</span></span></button></li><li class=""><button type="button" class="m"><span class="label">02</span><span><b>Two languages, one laugh</b><span class="mt">She’s from Keralam, he’s from Chennai. Different mother tongues, one shared language: laughter.</span></span></button></li><li class=""><button type="button" class="m"><span class="label">03</span><span><b>The Wayanad trip</b><span class="mt">Long drives, off-key singing and jokes only they understood.</span></span></button></li><li class=""><button type="button" class="m"><span class="label">04</span><span><b>The checklist</b><span class="mt">Hers: respect, reassurance, someone who makes life lighter. His: none. He just knew.</span></span></button></li><li class=""><button type="button" class="m"><span class="label">05</span><span><b>Fate’s sense of humour</b><span class="mt">He learned almost every South Indian language except Malayalam… then fell for a Malayali girl.</span></span></button></li><li class=""><button type="button" class="m"><span class="label">06</span><span><b>Home</b><span class="mt">His keyboard, her ukulele, endless conversations. Now, with their families’ blessings, a lifetime of choosing each other.</span></span></button></li></ol>
+      <button type="button" class="btn btn--line more">Read the full story</button>
+    </div>
+  </div>
+</div></section>
+
+</body>
+</html>
+</template>
+
+<script>
+  const src = document.getElementById('design').innerHTML;
+  const desk = document.getElementById('desk'), mob = document.getElementById('mob'), deskClip = document.getElementById('deskClip');
+  const fitHeight = (f) => { try { const h = f.contentDocument.documentElement.scrollHeight; f.style.height = h + 'px'; return h; } catch { return 0; } };
+  const scaleDesk = () => {
+    const h = fitHeight(desk); const s = Math.min(1, deskClip.clientWidth / 1440);
+    desk.style.transform = `scale(${s})`; deskClip.style.height = (h * s) + 'px';
+  };
+  // srcdoc keeps relative image paths resolving against this file's folder
+  desk.srcdoc = src; mob.srcdoc = src;
+  desk.addEventListener('load', () => { scaleDesk(); setTimeout(scaleDesk, 600); });
+  mob.addEventListener('load', () => { fitHeight(mob); setTimeout(() => fitHeight(mob), 600); });
+  addEventListener('resize', scaleDesk);
+  new ResizeObserver(() => scaleDesk()).observe(deskClip);
+  document.querySelectorAll('.sizes button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.sizes button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    mob.width = b.dataset.w; document.getElementById('mobLabel').textContent = `Mobile · ${b.dataset.w}px`;
+    setTimeout(() => fitHeight(mob), 50); setTimeout(() => fitHeight(mob), 400);
+  }));
+</script>
+</body>
+</html>

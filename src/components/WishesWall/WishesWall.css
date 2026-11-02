@@ -9,14 +9,8 @@
   /* Card width lives here; wishesCarousel.ts `wishCardWidth` mirrors it. */
   --card-width: 304px;
   --wishes-gutter: 20px;
-  max-width: none;
-  width: 100%;
-  padding: clamp(16px, 2.2vw, 24px) 0 clamp(54px, 7vw, 76px);
-  background:
-    radial-gradient(ellipse 80% 55% at 50% 0%, #fcf7ee 0%, #f6ecda 68%, #f1e4cd 100%);
-  color: var(--ink);
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
 }
 
 @media (max-width: 480px) {
@@ -24,58 +18,6 @@
     --card-width: clamp(240px, 78vw, 300px);
     --wishes-gutter: 16px;
   }
-}
-
-.wishes-section-header {
-  max-width: 780px;
-  margin: 0 auto 20px;
-  padding: 0 var(--wishes-gutter);
-  text-align: center;
-}
-
-@media (max-width: 480px) {
-  .wishes-section-header {
-    margin-bottom: 24px;
-  }
-
-  .wishes-section-header .wishes-divider {
-    margin-bottom: 0;
-  }
-}
-
-.wishes-heart-crest {
-  display: inline-grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  margin-bottom: 6px;
-  border-radius: 50%;
-  border: 1px solid rgb(var(--gold-rgb) / 0.55);
-  background: rgba(255, 252, 245, 0.85);
-  color: #8b2233;
-  color: color-mix(in oklab, #8b2233, var(--wash-d) var(--wash-d-amt));
-  font-size: 14px;
-  line-height: 1;
-  box-shadow: 0 4px 12px rgba(107, 26, 36, 0.08);
-  box-shadow: 0 4px 12px color-mix(in oklab, rgba(107, 26, 36, 0.08), rgb(var(--wash-d-rgb) / 0.08) var(--wash-d-amt));
-}
-
-.wishes-section-header h2 {
-  color: var(--maroon);
-  font-size: clamp(32px, 5.2vw, 48px);
-  margin: 0 0 6px;
-}
-
-.wishes-subtitle {
-  margin: 0 auto;
-  font: italic 400 clamp(16px, 2.2vw, 19px) / 1.45 var(--fh);
-  color: #6b4338;
-  color: color-mix(in oklab, #6b4338, var(--wash-d) var(--wash-d-amt));
-  letter-spacing: 0.01em;
-}
-
-.wishes-divider {
-  margin: 10px auto 14px;
 }
 
 .wishes-controls-row {
@@ -96,18 +38,16 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
-  padding: 7px 16px;
-  border-radius: 999px;
+  min-height: 44px;
+  padding: 0 var(--s4);
+  border-radius: 6px;
   border: 1px solid rgb(var(--gold-rgb) / 0.65);
   background: #fffdf8;
   background: color-mix(in oklab, #fffdf8, var(--wash-l) var(--wash-l-amt));
   color: var(--maroon);
-  font: 500 11.5px / 1 var(--fb);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 15px / 1 var(--fb);
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(58, 18, 24, 0.07);
+  box-shadow: none;
   box-shadow: 0 4px 12px color-mix(in oklab, rgba(58, 18, 24, 0.07), rgb(var(--wash-d-rgb) / 0.07) var(--wash-d-amt));
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
@@ -228,16 +168,12 @@
   width: var(--card-width);
   max-width: var(--card-width);
   min-width: 0;
-  padding: 12px 12px 14px;
-  border-radius: 12px;
+  padding: var(--s3);
+  border-radius: 8px;
   background: #fffdf9;
   background: color-mix(in oklab, #fffdf9, var(--wash-l) var(--wash-l-amt));
   border: 1px solid rgb(var(--gold-rgb) / 0.42);
-  box-shadow:
-    0 12px 28px -16px rgba(72, 22, 31, 0.24),
-    0 2px 6px rgba(72, 22, 31, 0.05),
-    inset 0 0 0 3px #fffdf9,
-    inset 0 0 0 4px rgb(var(--gold-rgb) / 0.16);
+  box-shadow: 0 8px 20px -18px rgb(var(--burg-d-rgb) / 0.5);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -317,12 +253,9 @@
   letter-spacing: 0.04em;
 }
 
-.postcard-photo-sheen {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, transparent 55%);
-  pointer-events: none;
-}
+.postcard-photo-sheen { display: none; }
+/* no photo → no empty monogram frame; the wish leads */
+.postcard-photo-frame:has(.postcard-monogram) { display: none; }
 
 /* Postmark pill: sits between the photo and the message, never over the monogram. */
 .postcard-stamp {
@@ -337,7 +270,7 @@
   background: var(--card);
   border: 1px dashed rgba(154, 112, 34, 0.65);
   color: var(--maroon);
-  font: 500 10px / 1.2 var(--fb);
+  font: 500 11px / 1.2 var(--fb);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -348,7 +281,7 @@
 .stamp-seal {
   color: #a12538;
   color: color-mix(in oklab, #a12538, var(--wash-d) var(--wash-d-amt));
-  font-size: 10px;
+  font-size: 11px;
 }
 
 /* Postcard Message & Footer */
@@ -364,7 +297,7 @@
   margin: 0 0 12px;
   color: #3c161d;
   color: color-mix(in oklab, #3c161d, var(--wash-d) var(--wash-d-amt));
-  font: italic 400 17px / 1.4 var(--fh);
+  font: italic 500 19px / 1.4 var(--fh);
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
@@ -380,7 +313,7 @@
   margin: -6px 0 12px;
   color: #9a7022;
   color: color-mix(in oklab, #9a7022, var(--wash-g) var(--wash-g-amt));
-  font: 500 10.5px / 1.2 var(--fb);
+  font: 500 12px / 1.2 var(--fb);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -406,7 +339,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--maroon);
-  font: 500 13px / 1.25 var(--fb);
+  font: 500 14px / 1.25 var(--fb);
   letter-spacing: 0.02em;
 }
 
@@ -420,15 +353,15 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  min-width: 34px;
-  min-height: 30px;
-  padding: 4px 9px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--s2);
   border-radius: 999px;
-  border: 1px solid rgb(var(--gold-rgb) / 0.35);
-  background: rgba(251, 245, 234, 0.85);
+  border: 0;
+  background: none;
   color: #8b2233;
   color: color-mix(in oklab, #8b2233, var(--wash-d) var(--wash-d-amt));
-  font: 500 12.5px / 1 var(--fb);
+  font: 500 15px / 1 var(--fb);
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -466,9 +399,10 @@
 }
 
 .postcard-like-btn.large {
-  min-height: 38px;
-  padding: 7px 14px;
-  font-size: 14px;
+  min-height: 44px;
+  padding: 0 var(--s4);
+  font-size: 15px;
+  border: 1px solid rgb(var(--gold-rgb) / 0.45);
 }
 
 .like-heart {
@@ -482,7 +416,7 @@
 
 .like-count {
   font-variant-numeric: tabular-nums;
-  font-size: 12px;
+  font-size: 15px;
   color: #5c1926;
   color: color-mix(in oklab, #5c1926, var(--wash-d) var(--wash-d-amt));
 }
@@ -508,7 +442,7 @@
   }
 
   .postcard-message {
-    font-size: 16px;
+    font-size: 18px;
   }
 }
 
@@ -743,148 +677,112 @@
 /* ==========================================================================
    DIYAS VIEW — wishes as oil lamps on night water (default view)
    ========================================================================== */
-.wishes-wall-section {
-  padding-top: clamp(48px, 6vw, 96px);
-  padding-bottom: clamp(52px, 7vw, 100px);
-  background: linear-gradient(180deg, #f6eddf, #efe3cf);
-  background: linear-gradient(180deg, color-mix(in oklab, #f6eddf, var(--wash-l) var(--wash-l-amt)), color-mix(in oklab, #efe3cf, var(--wash-l) var(--wash-l-amt)));
-}
-
-.wishes-section-header .eyebrow {
-  font: 500 11px / 1 var(--fb);
-  letter-spacing: 0.38em;
-}
+/* ==========================================================================
+   REDESIGN (07-wishes, approved 2 Nov 2026): one-line count + hint, 44px
+   segmented view switch, a crisp night pond (no scanlines or blurred glow)
+   with the reading card below the lamps, then "Write your own wish".
+   ========================================================================== */
+.wishes-hint { margin: var(--s2) 0 0; font: 300 16px / 1.4 var(--fb); color: var(--rd-muted); }
+.wishes-hint span { font-weight: 500; color: var(--burg); }
 
 .wishes-view-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 28px;
-  margin: 18px 0 6px;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  margin: var(--s4) auto 0;
+  border: var(--rd-hair);
+  border-radius: 999px;
+  background: var(--card);
 }
-
 .wishes-view-toggle button {
   min-height: 44px;
-  padding: 0 2px;
-  background: none;
+  padding: 0 var(--s5);
   border: 0;
-  border-bottom: 1px solid transparent;
-  color: #8a6a55;
-  font: 500 11px var(--fb);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
+  border-radius: 999px;
+  background: none;
+  color: var(--burg);
+  font: 500 15px / 1 var(--fb);
+  white-space: nowrap;
   cursor: pointer;
 }
+.wishes-view-toggle button[aria-selected="true"] { background: var(--burg); color: var(--ivory); }
+.wishes-view-toggle button:focus-visible { outline: 2px solid var(--gold-d); outline-offset: 2px; }
 
-.wishes-view-toggle button[aria-selected="true"] {
-  border-color: var(--gold);
-  color: var(--burg);
-}
-
+/* ---------- the pond ---------- */
 .pond {
   position: relative;
-  max-width: 1080px;
-  height: clamp(420px, 62svh, 560px);
-  margin: 18px auto 0;
+  max-width: 1120px;
+  margin: var(--s5) auto 0;
+  padding-bottom: var(--s4);
   overflow: hidden;
-  border-radius: 200px 200px 10px 10px;
-  background:
-    radial-gradient(ellipse 70% 40% at 50% 8%, #3b2a4a 0%, rgba(28, 18, 40, 0) 70%),
-    linear-gradient(180deg, #1c1530 0%, #101a2c 55%, #0b1322 100%);
-  box-shadow: 0 30px 60px -30px rgba(20, 10, 30, 0.7), inset 0 0 0 1px rgb(var(--gold-l-rgb) / 0.25);
+  border-radius: 200px 200px 10px 10px / 120px 120px 10px 10px;
+  background: linear-gradient(180deg, #2a1838 0%, #17142a 45%, #0e1324 100%);
+  box-shadow: 0 18px 36px -26px rgba(14, 19, 36, 0.8);
 }
-
-.pond::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 9px);
-  animation: pond-ripple 9s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes pond-ripple {
-  to { background-position: 0 90px; }
-}
-
+.pond-sky { position: relative; height: clamp(200px, 20vw, 240px); }
 .pond-moon {
   position: absolute;
   left: 50%;
-  top: 6%;
-  width: 70px;
-  height: 70px;
-  margin-left: -35px;
+  top: 12%;
+  width: 56px;
+  height: 56px;
+  transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(circle, #fff6dc, #f0d68e 60%, rgba(240, 214, 142, 0) 72%);
-  background: radial-gradient(circle, color-mix(in oklab, #fff6dc, var(--wash-l) var(--wash-l-amt)), var(--gold-l) 60%, rgb(var(--gold-l-rgb) / 0) 72%);
-  opacity: 0.75;
+  background: radial-gradient(circle at 40% 38%, #fff7df, #e9d29a 70%);
+  box-shadow: 0 0 0 10px rgb(233 210 154 / 0.08);
 }
-
 .pond-moon::after {
   content: "";
   position: absolute;
   left: 50%;
-  top: 150%;
-  width: 24px;
-  height: 220px;
-  margin-left: -12px;
-  background: linear-gradient(180deg, rgb(var(--gold-l-rgb) / 0.35), rgb(var(--gold-l-rgb) / 0));
-  filter: blur(6px);
+  top: 72px;
+  width: 3px;
+  height: 120px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgb(233 210 154 / 0.35), transparent 70%);
 }
 
 .diya {
   position: absolute;
-  width: 54px;
+  width: 64px;
+  height: 64px;
   padding: 0;
   background: none;
   border: 0;
+  border-radius: 50%;
   cursor: pointer;
   transform: translate(-50%, -50%);
   animation: diya-bob var(--bd, 7s) cubic-bezier(0.45, 0, 0.55, 1) var(--dl, 0s) infinite;
   transition: top 3.2s var(--ease);
 }
-
-.diya:focus-visible {
-  outline: 2px solid var(--gold-l);
-  outline-offset: 4px;
-  border-radius: 8px;
-}
-
+.diya:focus-visible { outline: 2px solid var(--gold-l); outline-offset: 2px; }
 .diya-flame {
-  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
   width: 12px;
   height: 20px;
-  margin: 0 auto -5px;
+  margin-left: -6px;
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  background: radial-gradient(circle at 50% 70%, #fff8d8, #ffbe55 55%, #ff7a1a);
-  background: radial-gradient(circle at 50% 70%, color-mix(in oklab, #fff8d8, var(--wash-l) var(--wash-l-amt)), color-mix(in oklab, #ffbe55, var(--wash-g) var(--wash-g-amt)) 55%, #ff7a1a);
-  box-shadow: 0 0 18px 7px rgba(255, 180, 80, 0.45);
+  background: radial-gradient(circle at 50% 70%, #fff6d0 0 30%, #ffc44d 60%, #ff8a1f 100%);
   animation: diya-flicker 0.3s ease-in-out infinite alternate;
 }
-
 .diya-bowl {
-  display: block;
-  height: 16px;
-  border-radius: 0 0 28px 28px / 0 0 16px 16px;
-  background: linear-gradient(#d88a4a, #8a3c18);
-  background: linear-gradient(#d88a4a, color-mix(in oklab, #8a3c18, var(--wash-d) var(--wash-d-amt)));
-  box-shadow: inset 0 2px 0 rgba(255, 220, 170, 0.35);
-}
-
-.diya-glow {
-  display: block;
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 16px;
   height: 14px;
-  margin-top: 2px;
-  background: radial-gradient(ellipse, rgba(255, 180, 80, 0.45), transparent 70%);
-  filter: blur(1px);
+  border-radius: 0 0 22px 22px;
+  background: linear-gradient(180deg, #e0904a, #a8562a);
 }
-
-@keyframes diya-flicker {
-  to { transform: scale(0.9, 1.08) translateY(-1px); }
-}
-
+.diya-glow { display: none; }
+.diya.is-lit { box-shadow: inset 0 0 0 1px rgb(240 214 142 / 0.7); }
+.diya.is-lit .diya-flame { transform: scale(1.15); }
+@keyframes diya-flicker { to { transform: scale(0.92, 1.06) translateY(-1px); } }
 @keyframes diya-bob {
   0%, 100% { transform: translate(-50%, -50%) rotate(-2deg); }
-  50% { transform: translate(calc(-50% + 10px), calc(-50% - 6px)) rotate(2deg); }
+  50% { transform: translate(calc(-50% + 8px), calc(-50% - 4px)) rotate(2deg); }
 }
 
 .pond-sr {
@@ -898,146 +796,103 @@
   white-space: nowrap;
 }
 
-@media (max-width: 720px) {
-  .pond {
-    border-radius: 120px 120px 8px 8px;
-  }
+/* the reading card: solid ivory, under the lamps (never over them) */
+.pond-card {
+  position: relative;
+  width: min(480px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: var(--s4) var(--s5);
+  border-radius: 8px;
+  background: var(--card);
+  text-align: center;
+  color: var(--ink);
+  animation: pond-card-in 0.6s var(--ease);
+}
+@keyframes pond-card-in { from { opacity: 0; transform: translateY(8px); } }
+.pond-card-wish {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--burg);
+  font: italic 500 22px / 1.3 var(--fh);
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.pond-card-name { display: block; margin-top: var(--s1); font: 500 12px / 1.2 var(--fb); letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-d); }
+.pond-card-nav { display: grid; grid-template-columns: auto 1fr auto; gap: var(--s2); margin-top: var(--s3); }
+.pond-card-nav button {
+  min-height: 44px;
+  padding: 0 var(--s3);
+  border: 1px solid rgb(var(--gold-rgb) / 0.5);
+  border-radius: 6px;
+  background: none;
+  color: var(--burg);
+  font: 500 14px / 1 var(--fb);
+  cursor: pointer;
+}
+.pond-card-nav button:focus-visible { outline: 2px solid var(--gold-d); outline-offset: 2px; }
+
+.wishes-write { display: flex; justify-content: center; margin-top: var(--s5); }
+
+@media (max-width: 599px) {
+  .wishes-view-toggle button { padding: 0 var(--s3); font-size: 14px; }
+  .pond { border-radius: 140px 140px 10px 10px / 80px 80px 10px 10px; }
+  .pond-sky { height: 180px; }
+  .pond-card { padding: var(--s3) var(--s4); }
+  .pond-card-wish { font-size: 20px; }
+}
+@media (max-width: 359px) {
+  .wishes-view-toggle { grid-template-columns: 1fr; border-radius: 12px; }
+  .wishes-view-toggle button { border-radius: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .diya,
   .diya-flame,
-  .pond::before {
-    animation: none;
-  }
-
-  .diya {
-    transition: none;
-  }
+  .pond-card { animation: none; }
+  .diya { transition: none; }
 }
 
-/* ---------- Self-playing wishes (approved v2) ---------- */
-.wishes-hint {
-  margin: 4px 0 0;
-  color: #7a5a4a;
-  font: italic 400 17px var(--fh);
-}
-
-.wishes-hint span {
-  color: var(--burg);
-  font: 500 10.5px var(--fb);
-  font-style: normal;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-}
-
-.wishes-view-toggle button {
-  letter-spacing: 0.18em;
-}
-
-.diya.is-lit .diya-flame {
-  transform: scale(1.35);
-  box-shadow: 0 0 30px 14px rgba(255, 190, 90, 0.6);
-}
-
-.diya.is-lit::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 78px;
-  height: 78px;
-  margin: -39px 0 0 -39px;
-  border: 1px solid rgb(var(--gold-l-rgb) / 0.6);
-  border-radius: 50%;
-  animation: diya-ring 1.6s ease-out infinite;
-  pointer-events: none;
-}
-
-@keyframes diya-ring {
-  from { transform: scale(0.6); opacity: 1; }
-  to { transform: scale(1.4); opacity: 0; }
-}
-
+/* ---------- Refresh (2 Nov): night-glass wish card + brighter diyas ---------- */
 .pond-card {
+  background: linear-gradient(180deg, rgb(var(--burg-d-rgb) / 0.82), rgba(14, 10, 30, 0.86));
+  border: 1px solid rgb(var(--gold-l-rgb) / 0.55);
+  box-shadow: 0 0 0 4px rgb(var(--gold-l-rgb) / 0.06), 0 18px 40px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 180, 80, 0.12);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.pond-card-wish { color: #fbf3e2; }
+.pond-card-name { color: var(--gold-l); }
+.pond-card-nav button { color: var(--gold-l); border-color: rgb(var(--gold-l-rgb) / 0.45); }
+.pond-card-nav button:focus-visible { outline-color: var(--gold-l); }
+
+.diya-flame {
+  bottom: 27px;
+  width: 13px;
+  height: 24px;
+  margin-left: -6.5px;
+  background: radial-gradient(circle at 50% 72%, #fff 0 18%, #fff1b0 34%, #ffc23d 58%, #ff6a00 100%);
+  filter: drop-shadow(0 0 6px rgba(255, 190, 60, 0.95)) drop-shadow(0 0 14px rgba(255, 120, 20, 0.6));
+}
+.diya-bowl {
+  height: 15px;
+  background: linear-gradient(180deg, #ffd27a 0%, #f08a24 35%, #b8461a 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 240, 200, 0.7), 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+.diya-glow {
+  display: block;
   position: absolute;
   left: 50%;
   bottom: 18px;
-  z-index: 3;
-  width: min(88%, 440px);
-  padding: 16px 18px 10px;
-  transform: translateX(-50%);
-  border: 1px solid rgb(var(--gold-rgb) / 0.5);
-  border-radius: 6px;
-  background: rgba(251, 246, 236, 0.95);
-  text-align: center;
-  animation: pond-card-in 0.8s var(--ease);
+  width: 70px;
+  height: 46px;
+  margin-left: -35px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 200, 90, 0.45), rgba(255, 140, 40, 0.15) 60%, transparent);
+  pointer-events: none;
+  animation: diya-glow 2.4s ease-in-out infinite alternate;
 }
-
-@keyframes pond-card-in {
-  from { opacity: 0; transform: translate(-50%, 12px); }
-}
-
-.pond-card-wish {
-  display: -webkit-box;
-  margin: 0;
-  overflow: hidden;
-  color: #3f2224;
-  color: color-mix(in oklab, #3f2224, var(--wash-d) var(--wash-d-amt));
-  font: italic 400 18px / 1.45 var(--fh);
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-}
-
-.pond-card-name {
-  display: block;
-  margin-top: 8px;
-  color: var(--burg);
-  font: 500 10.5px var(--fb);
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-}
-
-.pond-card-nav {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  margin-top: 8px;
-}
-
-.pond-card-nav button {
-  min-height: 36px;
-  padding: 0 2px;
-  background: none;
-  border: 0;
-  border-bottom: 1px solid rgb(var(--gold-rgb) / 0.5);
-  color: var(--burg);
-  font: 500 10.5px var(--fb);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.wishes-write {
-  margin-top: 22px;
-  text-align: center;
-}
-
-.wishes-write a {
-  display: inline-block;
-  min-height: 44px;
-  padding: 12px 2px 6px;
-  border-bottom: 1px solid var(--gold);
-  color: var(--burg);
-  font: 500 12px var(--fb);
-  letter-spacing: 0.24em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .diya.is-lit::after,
-  .pond-card {
-    animation: none;
-  }
-}
+.diya.is-lit .diya-glow { background: radial-gradient(closest-side, rgba(255, 215, 120, 0.7), rgba(255, 150, 40, 0.25) 60%, transparent); }
+@keyframes diya-glow { to { opacity: 0.7; transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .diya-glow { animation: none; } }
+.diya-flame, .diya-bowl { z-index: 1; }

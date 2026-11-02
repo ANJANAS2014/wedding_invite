@@ -37,7 +37,7 @@ export const CoupleQuiz: React.FC = () => {
 
   return (
     <div className="cq reveal">
-      <span className="cq-eyebrow">A little game</span>
+      <span className="cq-eyebrow rd-label">A little game</span>
       <h3 className="cq-title">Who’s more likely to…?</h3>
       <p className="cq-hint">
         {answered === 0

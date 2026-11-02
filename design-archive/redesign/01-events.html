@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 · Our Events — redesign mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap">
+<style>
+  /* ---------- mockup viewer chrome (not part of the design) ---------- */
+  :root { --ink:#3a1218; --burg:#5a1420; --gold-d:#b8892e; --line:#e5d2b0; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#efe6d6; color:var(--ink); font:400 15px/1.55 'Jost', system-ui, sans-serif; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:12px 24px; padding:12px 24px; background:#fbf6ec; border-bottom:1px solid var(--line); }
+  .bar h1 { margin:0; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .bar .sizes { display:flex; gap:6px; align-items:center; margin-left:auto; font-size:13px; }
+  .bar button { min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); font:500 13px 'Jost', sans-serif; cursor:pointer; }
+  .bar button[aria-pressed="true"] { background:var(--burg); border-color:var(--burg); color:#fbf6ec; }
+  .frames { display:flex; align-items:flex-start; gap:24px; padding:24px; }
+  .frame { flex:none; }
+  .frame > p { margin:0 0 8px; font:500 12px/1 'Jost', sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#8a6a3a; }
+  .frame-desk { flex:1 1 auto; min-width:0; }
+  .clip { overflow:hidden; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  iframe { display:block; border:0; transform-origin:0 0; }
+  .notes { max-width:1120px; margin:0 auto; padding:8px 24px 64px; display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; }
+  .notes section { background:#fbf6ec; border:1px solid var(--line); border-radius:8px; padding:20px 24px; }
+  .notes h2 { margin:0 0 12px; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .notes ul { margin:0; padding-left:18px; }
+  .notes li { margin:0 0 8px; }
+  .notes code { font-size:13px; background:#f1e6d2; padding:1px 4px; border-radius:3px; }
+  .ok { color:#1f6b3a; font-weight:500; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:6px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:last-child { text-align:right; white-space:nowrap; }
+  @media (max-width:900px) { .frames { flex-direction:column; } .frame-desk { width:100%; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1>01 · Our Events — desktop &amp; mobile mockup</h1>
+  <div class="sizes" role="group" aria-label="Mobile preview width">
+    Mobile width:
+    <button type="button" data-w="320">320</button>
+    <button type="button" data-w="375">375</button>
+    <button type="button" data-w="390" aria-pressed="true">390</button>
+    <button type="button" data-w="430">430</button>
+  </div>
+</div>
+
+<div class="frames">
+  <div class="frame frame-desk">
+    <p>Desktop · 1440px (scaled to fit)</p>
+    <div class="clip" id="deskClip"><iframe id="desk" title="Desktop mockup" width="1440" scrolling="no"></iframe></div>
+  </div>
+  <div class="frame frame-mob">
+    <p id="mobLabel">Mobile · 390px</p>
+    <div class="clip"><iframe id="mob" title="Mobile mockup" width="390" scrolling="no"></iframe></div>
+  </div>
+</div>
+
+<div class="notes">
+  <section>
+    <h2>Audit: current section</h2>
+    <ul>
+      <li><b>Wedding scene overflows on mobile.</b> The mandapam is sized by height (<code>WeddingCard.css:121</code>, <code>:134</code>), so at 390px it runs past the card edge and gets clipped. The musicians sit off to one side, so the scene is lopsided.</li>
+      <li><b>Labels are too small to read.</b> 9–10.5px uppercase labels with 0.26–0.36em tracking (<code>WeddingCard.css:40, 54, 69, 86, 99</code>; the train boards drop to 7.5–9px at <code>TrainJourney.css:309–311</code>). On mobile, "Evening celebration" wraps onto two lines.</li>
+      <li><b>Card rows don't line up.</b> Each card lays out on its own, so the reception's shorter schedule leaves a gap above its buttons. Buttons are 40px tall (<code>WeddingCard.css:97</code>), below the 44px tap target.</li>
+      <li><b>Too much vertical space.</b> Section padding is up to 100px (<code>EventsSection.css:23</code>) and the header-to-cards gap up to 72px (<code>:26</code>). The section is 1245px tall on desktop and 1602px at 390px.</li>
+      <li><b>Effects that soften the image.</b> A noise texture over the whole section (<code>EventsSection.css:25</code>), gradient-clipped "Shubha Muhurtham" text (<code>:11–15</code>), and heavy drop-shadows on the scene art (<code>WeddingCard.css:123, 127</code>; <code>ReceptionCard.css:196</code>). The station boards' text is too small (<code>TrainJourney.css:309–311</code>).</li>
+      <li><b>Dead CSS.</b> About 150 lines of old "chapter" and countdown styles (<code>EventsSection.css:22–176</code>) aren't used by the current markup. Removing them makes later changes safer.</li>
+    </ul>
+  </section>
+  <section>
+    <h2>System defined here (reused in later sections)</h2>
+    <ul>
+      <li><b>Width:</b> 1120px max content width. Gutters: 20px on mobile, 32px from 600px.</li>
+      <li><b>Spacing:</b> only 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64. Section padding 64px (desktop) and 40px (mobile). Header to content: 24px.</li>
+      <li><b>Type scale:</b>
+        <ul>
+          <li>Section title 56/40px and date numeral 64/56px, both Cormorant 500.</li>
+          <li>Event title 40/34px Cormorant italic. Lead text 20px Cormorant.</li>
+          <li>Body 16px Jost. Labels 12px Jost 500, uppercase, 0.16em tracking (never below 11px).</li>
+        </ul>
+      </li>
+      <li><b>Colour:</b> existing tokens only (<code>--burg</code>, <code>--burg-d</code>, <code>--champ</code>, <code>--gold</code>, <code>--gold-l</code>, <code>--ivory</code>). No new colours.</li>
+      <li><b>Surfaces:</b> 1px gold hairline at 28% opacity, 8px radius, one soft shadow. No blur, backdrop-filter or noise.</li>
+      <li><b>Paired cards:</b> CSS subgrid, so scene, date, time, venue, schedule and actions line up row by row across both cards.</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Design decisions</h2>
+    <ul>
+      <li>The wedding scene is now symmetric: the nadaswaram player on the left and the drummer on the right both face the mandapam. Everything is sized in % of the card width, so it can't overflow.</li>
+      <li>The reception scene keeps the fairy lights and spotlight, drawn as crisp vectors without glow filters.</li>
+      <li>Directions and Add to calendar are two equal 44px buttons side by side, in sentence case so they fit on narrow phones. They stack below 360px.</li>
+      <li><b>Approved:</b> the train keeps its yellow Indian Railways boards (bilingual) as a deliberate pop of colour, now with text of at least 11px. It uses the new two-carriage train picture.</li>
+      <li>Implementation would keep the existing animations (train run, twinkle, music notes) and the "Next celebration" logic. The mockup is static.</li>
+      <li>Height: 1072px on desktop (was 1245, 14% shorter). At 390px it's 1547px (was 1602); mobile barely shrinks because the smallest text went up from 9–10px to 11–16px.</li>
+      <li><b>Approved:</b> the "Keralam" / "Chennai" labels are dropped because the venue address already names the place. "Next celebration" now sits on the scene's lower edge like a tab, which saves a row in each card.</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Self-check</h2>
+    <table>
+      <tr><td>Sharp: no blur, backdrop-filter, noise or low-res assets</td><td class="ok">pass</td></tr>
+      <tr><td>Aligned: one content width, shared left edges</td><td class="ok">pass</td></tr>
+      <tr><td>Balanced pairs: subgrid rows, equal card heights</td><td class="ok">pass</td></tr>
+      <tr><td>No wasted space: 14% shorter on desktop, slightly shorter on mobile with larger text</td><td class="ok">pass</td></tr>
+      <tr><td>Clear hierarchy: date, then event, then time and venue, then schedule</td><td class="ok">pass</td></tr>
+      <tr><td>Text/image proportion: scene is about 28% of card height</td><td class="ok">pass</td></tr>
+      <tr><td>Desktop + 320/375/390/430: no overflow, taps ≥ 44px</td><td class="ok">pass</td></tr>
+      <tr><td>Matches system: existing tokens and fonts</td><td class="ok">pass</td></tr>
+    </table>
+    <h2 style="margin-top:20px">Missing</h2>
+    <ul>
+      <li>Nothing required. All text and images come from <code>src/data/events.ts</code>, <code>weddingData.ts</code> and <code>public/images/</code>.</li>
+      <li>Optional: each schedule item has a note in <code>events.ts</code> (e.g. "Served at the auditorium as guests arrive."). The current site and this mockup leave the notes out to keep the cards compact. They could be shown if you'd like.</li>
+    </ul>
+  </section>
+</div>
+
+<!-- ======================= THE DESIGN (rendered into both frames) ======================= -->
+<template id="design">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap">
+<style>
+  :root {
+    /* existing tokens (src/styles/variables.css) */
+    --burg:#5a1420; --burg-d:#3a0b14; --ivory:#f8efdc; --champ:#e9d3a4; --gold:#c19a3d; --gold-l:#f0d68e;
+    --gold-l-rgb:240 214 142; --burg-d-rgb:58 11 20; --ivory-rgb:248 239 220; --champ-rgb:233 211 164;
+    --fh:'Cormorant Garamond', Georgia, serif; --fb:'Jost', system-ui, sans-serif;
+    /* layout system (new — reused by every section) */
+    --max:1120px; --gutter:20px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+    --pad-y:var(--s7);
+    --hair:1px solid rgb(var(--gold-l-rgb) / .28);
+    --hair-soft:1px solid rgb(var(--gold-l-rgb) / .16);
+  }
+  @media (min-width:600px) { :root { --gutter:var(--s6); } }
+  @media (min-width:960px) { :root { --pad-y:var(--s8); } }
+  @media (max-width:599px) { :root { --pad-y:40px; } }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { background:var(--burg-d); -webkit-font-smoothing:antialiased; }
+  img { display:block; max-width:100%; height:auto; }
+
+  /* ---------- section ---------- */
+  .ev {
+    padding:var(--pad-y) max(var(--gutter), env(safe-area-inset-left)) var(--pad-y) max(var(--gutter), env(safe-area-inset-right));
+    background:radial-gradient(120% 60% at 50% 0%, #6e1d2b 0%, var(--burg) 45%, var(--burg-d) 100%);
+    color:var(--ivory); font:400 16px/1.5 var(--fb);
+  }
+  .wrap { max-width:var(--max); margin:0 auto; }
+
+  /* ---------- header ---------- */
+  .head { text-align:center; margin-bottom:var(--s5); }
+  .kicker { margin:0 0 var(--s2); font:italic 500 22px/1.2 var(--fh); letter-spacing:.02em; color:var(--gold-l); }
+  .head h2 { margin:0; font:500 clamp(40px, 4.4vw, 56px)/1.05 var(--fh); color:var(--champ); letter-spacing:.005em; }
+  .orn { display:flex; align-items:center; justify-content:center; gap:var(--s3); margin-top:var(--s3); color:var(--gold); }
+  .orn::before, .orn::after { content:""; width:56px; height:1px; background:currentColor; opacity:.7; }
+  .orn svg { width:12px; height:12px; }
+
+  /* ---------- grid: two paired cards share rows via subgrid; train spans both ---------- */
+  .grid {
+    display:grid; grid-template-columns:repeat(2, minmax(0, 1fr));
+    grid-template-rows:auto auto auto auto 1fr auto auto;
+    column-gap:var(--s6); row-gap:0;
+  }
+  .card {
+    grid-row:1 / span 6; display:grid; grid-template-rows:subgrid; min-width:0;
+    border:var(--hair); border-radius:8px; overflow:hidden;
+    background:linear-gradient(180deg, rgb(var(--burg-d-rgb) / .55), rgb(var(--burg-d-rgb) / .2));
+    box-shadow:0 16px 32px -24px rgba(0,0,0,.7);
+  }
+  .card > :not(.scene) { margin:0 var(--s5); }
+
+  /* row 1 — scene: fixed proportion, art sized in % so it can never overflow */
+  .scene { position:relative; aspect-ratio:3 / 1; border-bottom:var(--hair-soft);
+    background:radial-gradient(60% 55% at 50% 100%, rgba(240,190,110,.16), transparent 70%); }
+  .scene::after { content:""; position:absolute; left:12%; right:12%; bottom:10%; height:1px; background:rgb(var(--gold-l-rgb) / .35); }
+  .stage { position:absolute; left:0; right:0; bottom:10%; display:flex; align-items:flex-end; justify-content:center; gap:2%; height:80%; }
+
+  .musician { height:46%; width:auto; filter:drop-shadow(0 4px 3px rgba(0,0,0,.35)); }
+  .mandapam { position:relative; height:100%; aspect-ratio:721 / 560; }
+  .mandapam img { position:absolute; height:auto; }
+  .mandapam .mm { inset:0; width:100%; filter:drop-shadow(0 6px 6px rgba(0,0,0,.35)); }
+  .mandapam .cp { left:35%; bottom:17.5%; width:30%; }
+  .mandapam .ag { left:38%; bottom:7%; width:24%; }
+
+  .lights { position:absolute; top:6%; left:6%; width:88%; height:auto; }
+  .lights path { fill:none; stroke:rgb(var(--gold-l-rgb) / .45); stroke-width:1; }
+  .lights circle { fill:#ffe7a8; }
+  .cone { position:absolute; left:50%; top:10%; bottom:10%; width:46%; transform:translateX(-50%);
+    background:linear-gradient(180deg, rgba(255,236,190,.14), rgba(255,236,190,.02)); clip-path:polygon(42% 0, 58% 0, 100% 100%, 0 100%); }
+  .couple { height:100%; width:auto; filter:drop-shadow(0 6px 6px rgba(0,0,0,.35)); }
+
+  /* "Next celebration" badge sits centred on the scene's lower border, like a tab (solid fill for contrast) */
+  .badge-wrap { position:absolute; left:50%; bottom:0; z-index:1; transform:translate(-50%, 50%); }
+  .label { font:500 12px/1.2 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:var(--gold); }
+  .badge { display:inline-block; background:var(--burg-d); padding:6px 12px; border:1px solid rgb(var(--gold-l-rgb) / .55); border-radius:999px; font:500 11px/1 var(--fb); letter-spacing:.14em; text-transform:uppercase; color:var(--gold-l); white-space:nowrap; }
+
+  /* row 2 — date + title */
+  .when { display:flex; align-items:center; gap:var(--s4); padding:var(--s6) 0 var(--s4); }
+  .day { font:500 clamp(56px, 5vw, 64px)/.85 var(--fh); color:var(--champ); font-variant-numeric:lining-nums; }
+  .when h3 { margin:0; font:italic 500 clamp(34px, 3.2vw, 40px)/1 var(--fh); color:var(--ivory); }
+  .when .label { display:block; margin-top:var(--s2); color:rgb(var(--champ-rgb) / .85); }
+
+  /* rows 4–5 — time, venue */
+  .row { display:flex; align-items:center; gap:var(--s3); padding:var(--s3) 0; border-top:var(--hair-soft); }
+  .time { justify-content:space-between; }
+  .time b { font:500 20px/1.2 var(--fh); color:var(--ivory); white-space:nowrap; }
+  .venue img { flex:none; width:56px; height:56px; object-fit:cover; border-radius:6px; border:1px solid rgb(var(--gold-l-rgb) / .5); }
+  .venue p { margin:0; font:500 20px/1.2 var(--fh); color:var(--ivory); }
+  .venue small { display:block; margin-top:var(--s1); font:400 16px/1.35 var(--fb); color:rgb(var(--ivory-rgb) / .78); }
+
+  /* row 6 — schedule (1fr row: absorbs the difference between the two cards) */
+  .sched { padding:var(--s3) 0 var(--s4); border-top:var(--hair-soft); list-style:none;
+    display:grid; grid-template-columns:auto 1fr; align-content:start; gap:var(--s2) var(--s4); }
+  .sched li { display:contents; }
+  .sched .label { padding-top:5px; color:var(--gold); white-space:nowrap; }
+  .sched span:last-child { display:flex; flex-wrap:wrap; align-items:center; min-width:0; gap:var(--s1) var(--s2); font:italic 500 20px/1.3 var(--fh); color:rgb(var(--ivory-rgb) / .92); }
+  .sched .key span:last-child { color:var(--gold-l); }
+  .sched .key em { font:500 11px/1 var(--fb); font-style:normal; letter-spacing:.14em; text-transform:uppercase; color:var(--burg-d); background:var(--gold-l); padding:4px 8px; border-radius:999px; }
+  .sched img { width:32px; transform:rotate(-6deg); }
+
+  /* row 7 — actions: two equal 44px buttons */
+  .acts { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:var(--s3); padding:var(--s4) 0 var(--s5); border-top:var(--hair-soft); }
+  .acts a { display:flex; align-items:center; justify-content:center; gap:var(--s2); min-width:0; min-height:44px; padding:0 var(--s3);
+    border:1px solid rgb(var(--gold-l-rgb) / .55); border-radius:6px; color:var(--gold-l); text-decoration:none;
+    font:500 15px/1 var(--fb); letter-spacing:.02em; white-space:nowrap; }
+  .acts a.primary { background:var(--gold-l); border-color:var(--gold-l); color:var(--burg-d); }
+  .acts svg { width:16px; height:16px; flex:none; }
+
+  /* ---------- train: spans both columns, one slim band ---------- */
+  .train { grid-column:1 / -1; grid-row:7; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:end; gap:var(--s4); margin-top:var(--s5); }
+  .stn { display:flex; flex-direction:column; align-items:center; gap:var(--s1); margin:0; }
+  /* approved: keep the Indian Railways yellow boards as a deliberate pop of colour */
+  .plate { display:flex; flex-direction:column; align-items:center; padding:4px 12px; border:2px solid #1d1408; border-radius:3px; background:#f4c430;
+    box-shadow:inset 0 0 0 1px #f4c430, inset 0 0 0 2px #1d1408; text-align:center; white-space:nowrap; color:#1d1408; }
+  .plate span { font:600 12px/1.3 'Noto Sans Malayalam','Noto Sans Tamil', system-ui, sans-serif; }
+  .plate b { font:600 12px/1.3 var(--fb); letter-spacing:.1em; }
+  .stn::after { content:""; order:2; width:60%; height:8px; margin-top:-4px; background:linear-gradient(90deg, #1d1408 0 3px, transparent 3px calc(100% - 3px), #1d1408 calc(100% - 3px)); }
+  .stn figcaption { order:3; }
+  .stn figcaption { font:500 11px/1 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:rgb(var(--champ-rgb) / .8); }
+  .track { position:relative; height:56px; margin-bottom:22px; }
+  .track::after { content:""; position:absolute; left:0; right:0; bottom:0; height:6px;
+    border-top:1px solid rgb(var(--gold-l-rgb) / .7); border-bottom:1px solid rgb(var(--gold-l-rgb) / .45);
+    background:repeating-linear-gradient(90deg, rgb(var(--gold-l-rgb) / .35) 0 2px, transparent 2px 10px); }
+  .track img { position:absolute; bottom:2px; left:58%; width:170px; transform:translateX(-50%); }
+
+  .next { margin:var(--s5) 0 0; text-align:center; font:italic 500 20px/1.3 var(--fh); color:var(--gold-l); }
+  .next svg { display:block; width:14px; height:14px; margin:var(--s1) auto 0; }
+
+  /* ---------- mobile: stacked wedding → train → reception ---------- */
+  @media (max-width:719px) {
+    .grid { display:flex; flex-direction:column; gap:var(--s4); }
+    .card { display:flex; flex-direction:column; }
+    .card > :not(.scene) { margin:0 var(--s4); }
+    .scene { aspect-ratio:12 / 5; }
+    .acts { padding-bottom:var(--s4); }
+    .acts a { font-size:14px; padding:0 var(--s2); gap:6px; }
+    .sched { padding-bottom:var(--s4); }
+    .train { order:0; margin:0; gap:var(--s3); }
+    .card--rec { order:1; }
+    .track { height:52px; margin-bottom:22px; }
+    .track img { width:116px; }
+    .plate { padding:4px 8px; }
+    .head h2 { font-size:40px; }
+    .next { margin-top:var(--s5); }
+  }
+  @media (max-width:359px) {
+    .acts { grid-template-columns:1fr; }
+    .when { gap:var(--s3); }
+    .sched { column-gap:var(--s3); }
+    .sched { grid-template-columns:1fr; row-gap:0; }
+    .day { font-size:48px; }
+    .when h3 { font-size:30px; }
+    .time { flex-wrap:wrap; gap:var(--s1) var(--s3); }
+    .time b { font-size:18px; }
+    .sched .label { padding-top:var(--s2); }
+    .plate b, .plate span { font-size:11px; letter-spacing:.08em; }
+    .stn figcaption { font-size:11px; letter-spacing:.1em; }
+  }
+</style>
+</head>
+<body>
+<section class="ev" aria-labelledby="events-title">
+  <div class="wrap">
+    <header class="head">
+      <p class="kicker">Shubha Muhurtham</p>
+      <h2 id="events-title">Our Events</h2>
+      <div class="orn" aria-hidden="true"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 -10C2 -6 2 -3 0 0C-2 -3 -2 -6 0 -10Z M0 10C2 6 2 3 0 0C-2 3 -2 6 0 10Z M-10 0C-6 -2 -3 -2 0 0C-3 2 -6 2 -10 0Z M10 0C6 -2 3 -2 0 0C3 2 6 2 10 0Z"/></svg></div>
+    </header>
+
+    <div class="grid">
+      <!-- WEDDING -->
+      <article class="card card--wed" aria-labelledby="wc-title">
+        <div class="scene" aria-hidden="true">
+          <div class="stage">
+            <img class="musician" src="../../public/images/events/wedding-nadaswaram-player.webp" alt="" width="280" height="338">
+            <div class="mandapam">
+              <img class="mm" src="../../public/images/events/wedding-mandapam.webp" alt="" width="721" height="560">
+              <img class="cp" src="../../public/images/events/wedding-thalikettu-couple.webp" alt="" width="440" height="377">
+              <img class="ag" src="../../public/images/events/wedding-homa-kundam.webp" alt="" width="360" height="283">
+            </div>
+            <img class="musician" src="../../public/images/events/wedding-drummer.webp" alt="" width="280" height="305">
+          </div>
+          <div class="badge-wrap"><span class="badge">Next celebration</span></div>
+        </div>
+        <div class="when"><b class="day">29</b><div><h3 id="wc-title">Wedding</h3><span class="label">Sunday · November 2026</span></div></div>
+        <p class="row time"><span class="label">Muhurtham</span><b>8:00 AM – 9:20 AM</b></p>
+        <div class="row venue"><img src="../../public/images/venues/wedding-venue-central-auditorium.jpg" alt="" width="900" height="720"><p>Central Auditorium<small>North Paravur, Kerala</small></p></div>
+        <ol class="sched" aria-label="Order of the day">
+          <li><span class="label">7:00 AM</span><span>Breakfast</span></li>
+          <li class="key"><span class="label">8:00 – 9:20 AM</span><span>Thalikettu <em>Muhurtham</em></span></li>
+          <li><span class="label">From 11:30 AM</span><span>Sadya <img src="../../public/images/events/wedding-sadya.webp" alt="Sadya on a banana leaf" width="660" height="563"></span></li>
+        </ol>
+        <div class="acts">
+          <a href="https://maps.app.goo.gl/XAEM92g9pdnygrfF6" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Directions</a>
+          <a class="primary" href="#" aria-label="Add the Wedding to Google Calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 2v2M7 16v-5a5 5 0 0 1 10 0v5l2 2H5l2-2z"/><circle cx="12" cy="20.5" r="1.4" fill="currentColor"/></svg>Add to calendar</a>
+        </div>
+      </article>
+
+      <!-- RECEPTION -->
+      <article class="card card--rec" aria-labelledby="rc-title" style="grid-column:2">
+        <div class="scene" aria-hidden="true">
+          <svg class="lights" viewBox="0 0 600 70">
+            <path d="M0,6 Q100,58 200,6"/><path d="M200,6 Q300,58 400,6"/><path d="M400,6 Q500,58 600,6"/>
+            <g id="bulbs"></g>
+          </svg>
+          <div class="cone"></div>
+          <div class="stage" style="height:84%"><img class="couple" src="../../public/images/events/reception-couple.webp" alt="" width="520" height="856"></div>
+        </div>
+        <div class="when"><b class="day">06</b><div><h3 id="rc-title">Reception</h3><span class="label">Sunday · December 2026</span></div></div>
+        <p class="row time"><span class="label">Evening</span><b>6:00 PM – 10:30 PM</b></p>
+        <div class="row venue"><img src="../../public/images/venues/reception-venue-annalakshmi.jpg" alt="" width="900" height="720"><p>Annalakshmi Restaurant<small>6 Mayor Ramanathan Salai, Chennai</small></p></div>
+        <ol class="sched" aria-label="Order of the evening">
+          <li><span class="label">7:00 PM</span><span>Photographs with everyone</span></li>
+          <li><span class="label">7:30 PM</span><span>Buffet dinner</span></li>
+        </ol>
+        <div class="acts">
+          <a href="https://maps.app.goo.gl/vN3tiGAB5BfHAyBB8" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Directions</a>
+          <a class="primary" href="#" aria-label="Add the Reception to Google Calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 2v2M7 16v-5a5 5 0 0 1 10 0v5l2 2H5l2-2z"/><circle cx="12" cy="20.5" r="1.4" fill="currentColor"/></svg>Add to calendar</a>
+        </div>
+      </article>
+
+      <!-- TRAIN: Aluva → MGR Chennai Central -->
+      <div class="train" role="img" aria-label="A train runs from Aluva, near the wedding venue, to MGR Chennai Central for the reception">
+        <figure class="stn" aria-hidden="true"><div class="plate"><span lang="ml">ആലുവ</span><b>ALUVA</b></div><figcaption>29 Nov</figcaption></figure>
+        <div class="track" aria-hidden="true"><img src="../../public/images/events/journey-train.webp" alt="" width="532" height="165"></div>
+        <figure class="stn" aria-hidden="true"><div class="plate"><span lang="ta">சென்னை சென்ட்ரல்</span><b>MGR CENTRAL</b></div><figcaption>6 Dec</figcaption></figure>
+      </div>
+    </div>
+
+    <p class="next">Next: tell us you're coming<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></p>
+  </div>
+</section>
+<script>
+  // fairy-light bulbs along the three swags (same maths as ReceptionCard.tsx)
+  const g = document.getElementById('bulbs'); let html = '';
+  [0, 200, 400].forEach((x0) => { const cx = x0 + 100, x1 = x0 + 200;
+    for (let i = 1; i <= 9; i++) { const t = i / 10;
+      const x = (1-t)**2*x0 + 2*(1-t)*t*cx + t*t*x1, y = (1-t)**2*6 + 2*(1-t)*t*58 + t*t*6 + 3;
+      html += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6"/>`; } });
+  g.innerHTML = html;
+  // mobile: the reception card leaves the subgrid's second column
+  const mq = matchMedia('(max-width:719px)'); const rec = document.querySelector('.card--rec');
+  const fix = () => { rec.style.gridColumn = mq.matches ? '' : '2'; }; fix(); mq.addEventListener('change', fix);
+</script>
+</body>
+</html>
+</template>
+
+<script>
+  const src = document.getElementById('design').innerHTML;
+  const desk = document.getElementById('desk'), mob = document.getElementById('mob'), deskClip = document.getElementById('deskClip');
+  const fitHeight = (f) => { try { const h = f.contentDocument.documentElement.scrollHeight; f.style.height = h + 'px'; return h; } catch { return 0; } };
+  const scaleDesk = () => {
+    const h = fitHeight(desk); const s = Math.min(1, deskClip.clientWidth / 1440);
+    desk.style.transform = `scale(${s})`; deskClip.style.height = (h * s) + 'px';
+  };
+  // srcdoc keeps relative image paths resolving against this file's folder
+  desk.srcdoc = src; mob.srcdoc = src;
+  desk.addEventListener('load', () => { scaleDesk(); setTimeout(scaleDesk, 600); });
+  mob.addEventListener('load', () => { fitHeight(mob); setTimeout(() => fitHeight(mob), 600); });
+  addEventListener('resize', scaleDesk);
+  new ResizeObserver(() => scaleDesk()).observe(deskClip);
+  document.querySelectorAll('.sizes button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.sizes button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    mob.width = b.dataset.w; document.getElementById('mobLabel').textContent = `Mobile · ${b.dataset.w}px`;
+    setTimeout(() => fitHeight(mob), 50); setTimeout(() => fitHeight(mob), 400);
+  }));
+</script>
+</body>
+</html>

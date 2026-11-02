@@ -1,0 +1,48 @@
+/* ==========================================================================
+   RECEPTION SCENE — the couple under fairy lights (card styles: WeddingCard.css)
+   Crisp vectors: no glow filters.
+   ========================================================================== */
+.rc-lights { position: absolute; top: 6%; left: 6%; width: 88%; height: auto; overflow: visible; }
+.rc-wire path { fill: none; stroke: rgb(var(--gold-l-rgb) / 0.45); stroke-width: 1; }
+.rc-bulbs circle { fill: #ffe7a8; animation: rc-twinkle 2.8s ease-in-out infinite alternate; }
+.rc-bulbs .b1 { animation-delay: -0.7s; }
+.rc-bulbs .b2 { animation-delay: -1.4s; }
+.rc-bulbs .b3 { animation-delay: -2.1s; }
+
+/* spotlight cone */
+.rc-scene::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  bottom: 10%;
+  width: 46%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(255, 236, 190, 0.14), rgba(255, 236, 190, 0.02));
+  clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+.rc-couple {
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  height: 84%;
+  width: auto;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.35));
+}
+.rc-spark {
+  position: absolute;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  background: radial-gradient(circle, #fff6d6 0 20%, rgba(255, 230, 160, 0.5) 40%, transparent 70%);
+  animation: rc-spark 3.2s ease-in-out infinite;
+}
+@keyframes rc-twinkle { from { opacity: 0.45; } to { opacity: 1; } }
+@keyframes rc-spark { 0%, 70%, 100% { opacity: 0; transform: scale(0.3); } 82% { opacity: 1; transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-bulbs circle { animation: none; }
+  .rc-spark { display: none; }
+}

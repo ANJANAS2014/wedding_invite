@@ -76,17 +76,19 @@ export const WEDDING_SCENE = {
 } as const;
 
 export interface ScheduleItem {
-  icon: 'breakfast' | 'agni' | 'sadya';
+  icon: 'breakfast' | 'agni' | 'sadya' | 'cake' | 'photos' | 'dinner';
   time: string;
   title: string;
   note: string;
   /** Badge next to the time (the Muhurtham). */
   badge?: string;
+  /** Optional small picture shown beside the title (the sadya leaf). */
+  image?: { src: string; alt: string };
 }
 
 /** Order of the day at Central Auditorium, North Paravur. */
 export const WEDDING_SCHEDULE: readonly ScheduleItem[] = [
-  { icon: 'breakfast', time: 'From 7:00 AM', title: 'Breakfast', note: 'Served at the auditorium as guests arrive.' },
+  { icon: 'breakfast', time: '7:00 AM', title: 'Breakfast', note: 'Served at the auditorium as guests arrive.' },
   {
     icon: 'agni',
     time: '8:00 – 9:20 AM',
@@ -94,5 +96,22 @@ export const WEDDING_SCHEDULE: readonly ScheduleItem[] = [
     title: 'Thalikettu',
     note: 'Under the mandapam, with Agni as witness, as the panchavadyam plays.',
   },
-  { icon: 'sadya', time: 'After the Thalikettu', title: 'Sadya', note: 'A traditional feast, served on banana leaf.' },
+  {
+    icon: 'sadya',
+    time: 'From 11:30 AM',
+    title: 'Sadya',
+    note: 'A traditional feast, served on banana leaf.',
+    image: { src: WEDDING_SCENE.sadya, alt: 'Sadya on a banana leaf' },
+  },
+];
+
+/** Illustration for the reception card scene. */
+export const RECEPTION_SCENE = {
+  couple: '/images/events/reception-couple.webp',
+} as const;
+
+/** Order of the evening at Annalakshmi, Chennai. */
+export const RECEPTION_SCHEDULE: readonly ScheduleItem[] = [
+  { icon: 'photos', time: '7:00 PM', title: 'Photographs with everyone', note: 'Photos with the couple, with everyone. Come up to the stage.' },
+  { icon: 'dinner', time: '7:30 PM', title: 'Buffet dinner', note: 'Dinner is served at Annalakshmi.' },
 ];

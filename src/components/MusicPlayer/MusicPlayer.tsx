@@ -12,6 +12,15 @@ const MUSIC_SRC = '/audio/background-music.mp3';
 type WebkitWindow = Window & { webkitAudioContext?: typeof AudioContext };
 
 /**
+ * iPhone / iPad (incl. iPadOS that reports as a Mac). On iOS, Web Audio output is
+ * silenced by the ring/silent switch while a plain <audio> element is not — so the
+ * MP3 must NOT be routed through a GainNode there, or guests in silent mode hear nothing.
+ */
+const IS_IOS =
+  typeof navigator !== 'undefined' &&
+  (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+
+/**
  * Background music toggle (#mu).
  * Music starts when the guest taps "Open Invitation" on the temple doors
  * (INVITE_OPEN_EVENT) — that tap is the user gesture mobile browsers require,
@@ -29,9 +38,12 @@ export const MusicPlayer: React.FC = () => {
   // is routed through a Web Audio GainNode where available.
   const fadeCtxRef = useRef<AudioContext | null>(null);
   const gainRef = useRef<GainNode | null>(null);
+  /** True once the guest has asked for music (opened the invitation / unmuted). */
+  const wantPlayRef = useRef<boolean>(false);
+  const retryArmedRef = useRef<boolean>(false);
 
   const ensureGain = () => {
-    if (gainRef.current || !audioRef.current) return;
+    if (IS_IOS || gainRef.current || !audioRef.current) return;
     try {
       const AC = window.AudioContext || (window as WebkitWindow).webkitAudioContext;
       if (!AC) return;
@@ -40,6 +52,8 @@ export const MusicPlayer: React.FC = () => {
       gain.gain.value = 0;
       ctx.createMediaElementSource(audioRef.current).connect(gain);
       gain.connect(ctx.destination);
+      // Resume inside the tap itself; a context left suspended would play the MP3 silently.
+      if (ctx.state === 'suspended') void ctx.resume();
       fadeCtxRef.current = ctx;
       gainRef.current = gain;
     } catch {
@@ -108,8 +122,23 @@ export const MusicPlayer: React.FC = () => {
     }
   };
 
+  /** If the browser blocked playback, start on the guest's next tap / key press instead. */
+  const armRetry = () => {
+    if (retryArmedRef.current) return;
+    retryArmedRef.current = true;
+    const retry = () => {
+      window.removeEventListener('pointerdown', retry, true);
+      window.removeEventListener('keydown', retry, true);
+      retryArmedRef.current = false;
+      if (!mutedRef.current && audioRef.current?.paused) startPlayback();
+    };
+    window.addEventListener('pointerdown', retry, true);
+    window.addEventListener('keydown', retry, true);
+  };
+
   const startPlayback = () => {
     if (mutedRef.current) return;
+    wantPlayRef.current = true;
     if (useSynthRef.current) {
       startSynth();
       return;
@@ -118,11 +147,19 @@ export const MusicPlayer: React.FC = () => {
     if (!audio) return;
     ensureGain();
     if (!gainRef.current) audio.volume = 0;
-    audio
-      .play()
+    let started: Promise<void> | undefined;
+    try {
+      started = audio.play();
+    } catch {
+      armRetry();
+      return;
+    }
+    // Old browsers return undefined from play(); treat that as started.
+    Promise.resolve(started)
       .then(() => fadeTo(FULL_VOLUME, FADE_IN_S))
       .catch(() => {
-        // Blocked by autoplay policy — the guest can still use the toggle.
+        // Blocked (autoplay policy, or the file was still loading) — try again on the next tap.
+        armRetry();
       });
   };
 
@@ -133,7 +170,21 @@ export const MusicPlayer: React.FC = () => {
     audioRef.current = audio;
     audio.onerror = () => {
       useSynthRef.current = true;
+      // If the guest already opened the invitation, fall back to the drone right away.
+      if (wantPlayRef.current && !mutedRef.current) startSynth();
     };
+
+    // Phones pause/suspend audio when the guest switches apps (Directions, Calendar,
+    // WhatsApp) or locks the screen — pick the music back up when they return.
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible' || !wantPlayRef.current || mutedRef.current) return;
+      const ctx = fadeCtxRef.current;
+      if (ctx && ctx.state !== 'running') void ctx.resume().catch(() => {});
+      if (!useSynthRef.current && audio.paused) {
+        audio.play().catch(() => armRetry());
+      }
+    };
+    document.addEventListener('visibilitychange', onVisible);
 
     // Dip under the lightbox / videos, then come back up softly
     const onDuck = (e: Event) => {
@@ -147,6 +198,7 @@ export const MusicPlayer: React.FC = () => {
     return () => {
       window.removeEventListener(INVITE_OPEN_EVENT, startPlayback);
       window.removeEventListener(MUSIC_DUCK_EVENT, onDuck);
+      document.removeEventListener('visibilitychange', onVisible);
       fadeCtxRef.current?.close().catch(() => {});
       audio.pause();
       if (audioCtxRef.current) {
@@ -162,6 +214,7 @@ export const MusicPlayer: React.FC = () => {
     setMusicMuted(nextMuted);
 
     if (nextMuted) {
+      wantPlayRef.current = false;
       audioRef.current?.pause();
       if (audioCtxRef.current) void audioCtxRef.current.suspend();
     } else {

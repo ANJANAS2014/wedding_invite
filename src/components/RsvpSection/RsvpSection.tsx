@@ -172,10 +172,10 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
   };
 
   return (
-    <section className="mar rs" id="s5">
-      <div className="sec" id="rsvp">
-        <header className="rs-head reveal">
-          <div className="eyebrow">RSVP</div>
+    <section className="rs rd-sec rd-dark" id="s5">
+      <div className="rd-wrap" id="rsvp">
+        <header className="rd-head reveal">
+          <span className="rd-kicker">RSVP</span>
           <h2>Will you be celebrating with us?</h2>
           <HeaderRule />
         </header>
@@ -200,7 +200,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
           <RsvpConfirmation rsvp={submittedData} onEdit={() => setSubmittedData(null)} />
         ) : (
           <form
-            className={`rsvp-upgrade-form ${sealStage === 1 ? 'is-folding' : ''}`}
+            className={`rs-reply rsvp-upgrade-form ${sealStage === 1 ? 'is-folding' : ''}`}
             onSubmit={handleSubmit}
             noValidate
             hidden={sealStage >= 2}
@@ -212,16 +212,17 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             )}
 
             {/* Step 1 — guest name (pre-filled from a personal link) */}
-            <p className="rsvp-step" id="rsvp-step-1">
-              <span aria-hidden="true">1</span>Your name
-            </p>
-            <div className="rsvp-name-block">
+            <div className="rs-block">
+              <p className="rs-step" id="rsvp-step-1">
+                <span className="rs-n" aria-hidden="true">1</span>
+                <label htmlFor="rsvp-name"><b>Your name *</b></label>
+              </p>
               <input
                 id="rsvp-name"
                 name="name"
                 type="text"
-                className="rsvp-input"
-                placeholder=" "
+                className="rs-field"
+                autoComplete="name"
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
@@ -231,86 +232,78 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                 required
                 aria-invalid={errorMessage === 'Please enter your name.' || undefined}
               />
-              <label htmlFor="rsvp-name" className="rsvp-float-label">
-                Your name *
-              </label>
             </div>
 
             {/* Step 2 — Yes / Sorry for each celebration */}
-            <p className="rsvp-step">
-              <span aria-hidden="true">2</span>Will you be joining us? <em>Choose for each celebration</em>
-            </p>
-            <div className="rsvp-events-grid">
-              <RsvpEventCard
-                eventKey="wedding"
-                tag="OUR WEDDING"
-                dateLabel="29 November 2026"
-                answer={wedding.answer}
-                guestCount={wedding.count}
-                maxGuests={maxGuests}
-                onAnswer={answerEvent(setWedding)}
-                onStep={stepEvent(setWedding)}
-              />
-              <RsvpEventCard
-                eventKey="reception"
-                tag="OUR RECEPTION"
-                dateLabel="6 December 2026"
-                answer={reception.answer}
-                guestCount={reception.count}
-                maxGuests={maxGuests}
-                onAnswer={answerEvent(setReception)}
-                onStep={stepEvent(setReception)}
-              />
+            <div className="rs-block">
+              <p className="rs-step">
+                <span className="rs-n" aria-hidden="true">2</span>
+                <b>Will you be joining us?</b>
+                <em>Choose for each celebration</em>
+              </p>
+              <div className="rsvp-events-grid">
+                <RsvpEventCard
+                  eventKey="wedding"
+                  tag="OUR WEDDING"
+                  dateLabel="29 November 2026"
+                  answer={wedding.answer}
+                  guestCount={wedding.count}
+                  maxGuests={maxGuests}
+                  onAnswer={answerEvent(setWedding)}
+                  onStep={stepEvent(setWedding)}
+                />
+                <RsvpEventCard
+                  eventKey="reception"
+                  tag="OUR RECEPTION"
+                  dateLabel="6 December 2026"
+                  answer={reception.answer}
+                  guestCount={reception.count}
+                  maxGuests={maxGuests}
+                  onAnswer={answerEvent(setReception)}
+                  onStep={stepEvent(setReception)}
+                />
+              </div>
             </div>
 
             {/* Step 3 — optional wish, photo and emoji */}
-            <div className="rsvp-wishes-section">
-              <p className="rsvp-step">
-                <span aria-hidden="true">3</span>A little wish for us <em>Optional · it will appear on our Wishes Wall</em>
+            <div className="rs-block rsvp-wishes-section">
+              <p className="rs-step">
+                <span className="rs-n" aria-hidden="true">3</span>
+                <label htmlFor="rsvp-wishes"><b>A little wish for us</b></label>
+                <em>Optional · it will appear on our Wishes Wall</em>
               </p>
-              <div className="rsvp-wishes-header-row">
-                <label htmlFor="rsvp-wishes" className="rsvp-wishes-heading rsvp-sr">
-                  A little wish for us
-                </label>
-
-                <div className="rsvp-camera-upload-container">
-                  <input
-                    id="rsvp-photo-input"
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    onChange={handlePhotoSelect}
-                    hidden
-                  />
-                  {photoPreview ? (
-                    <div className="rsvp-inline-preview">
-                      <img src={photoPreview} alt="Attached photo" className="rsvp-inline-preview-img" />
-                      <button type="button" className="rsvp-remove-photo-btn" onClick={removePhoto}>
-                        Remove photo
-                      </button>
-                    </div>
-                  ) : (
-                    <label htmlFor="rsvp-photo-input" className="modern-photo-btn" title="Attach a photo with your wish">
-                      <span className="photo-btn-icon">📷</span>
-                      <span>Add Photo</span>
-                    </label>
-                  )}
+              <textarea
+                id="rsvp-wishes"
+                name="wishes"
+                className="rs-field rs-textarea"
+                rows={3}
+                placeholder="Leave us a little message or your blessings..."
+                value={wishes}
+                onChange={(e) => setWishes(e.target.value)}
+                maxLength={MAX_WISH_CHARS}
+              />
+              <input
+                id="rsvp-photo-input"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handlePhotoSelect}
+                hidden
+              />
+              {photoPreview && (
+                <div className="rsvp-inline-preview">
+                  <img src={photoPreview} alt="Attached photo" className="rsvp-inline-preview-img" />
+                  <button type="button" className="rd-btn rd-btn--line rsvp-remove-photo-btn" onClick={removePhoto}>
+                    Remove photo
+                  </button>
                 </div>
-              </div>
-
-              <div className="rsvp-textarea-wrap">
-                <textarea
-                  id="rsvp-wishes"
-                  name="wishes"
-                  className="rsvp-textarea"
-                  rows={3}
-                  placeholder="Leave us a little message or your blessings..."
-                  value={wishes}
-                  onChange={(e) => setWishes(e.target.value)}
-                  maxLength={MAX_WISH_CHARS}
-                />
-              </div>
-
+              )}
               <EmojiPicker onSelect={handleSelectEmoji}>
+                {!photoPreview && (
+                  <label htmlFor="rsvp-photo-input" className="rd-btn rd-btn--line modern-photo-btn" title="Attach a photo with your wish">
+                    <span className="photo-btn-icon" aria-hidden="true">📷</span>
+                    <span>Add Photo</span>
+                  </label>
+                )}
                 <span className={`char-counter ${wishes.length > MAX_WISH_CHARS ? 'error' : ''}`}>
                   {wishes.length}/{MAX_WISH_CHARS}
                 </span>
@@ -324,7 +317,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
 
               <button
                 type="submit"
-                className="btn rsvp-submit-btn"
+                className="rd-btn rd-btn--solid rsvp-submit-btn"
                 disabled={isSubmitting}
                 data-waiting={!bothAnswered || undefined}
                 aria-describedby="rsvp-submit-hint"

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 · RSVP — redesign mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap">
+<style>
+  /* ---------- mockup viewer chrome (not part of the design) ---------- */
+  :root { --ink:#3a1218; --burg:#5a1420; --gold-d:#b8892e; --line:#e5d2b0; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#efe6d6; color:var(--ink); font:400 15px/1.55 'Jost', system-ui, sans-serif; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:12px 24px; padding:12px 24px; background:#fbf6ec; border-bottom:1px solid var(--line); }
+  .bar h1 { margin:0; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .bar .sizes { display:flex; gap:6px; align-items:center; margin-left:auto; font-size:13px; }
+  .bar button { min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); font:500 13px 'Jost', sans-serif; cursor:pointer; }
+  .bar button[aria-pressed="true"] { background:var(--burg); border-color:var(--burg); color:#fbf6ec; }
+  .frames { display:flex; align-items:flex-start; gap:24px; padding:24px; }
+  .frame { flex:none; }
+  .frame > p { margin:0 0 8px; font:500 12px/1 'Jost', sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#8a6a3a; }
+  .frame-desk { flex:1 1 auto; min-width:0; }
+  .clip { overflow:hidden; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  iframe { display:block; border:0; transform-origin:0 0; }
+  .notes { max-width:1120px; margin:0 auto; padding:8px 24px 64px; display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; }
+  .notes section { background:#fbf6ec; border:1px solid var(--line); border-radius:8px; padding:20px 24px; }
+  .notes h2 { margin:0 0 12px; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .notes ul { margin:0; padding-left:18px; }
+  .notes li { margin:0 0 8px; }
+  .notes code { font-size:13px; background:#f1e6d2; padding:1px 4px; border-radius:3px; }
+  .ok { color:#1f6b3a; font-weight:500; } .warn { color:#9a5b00; font-weight:500; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:6px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:last-child { text-align:right; white-space:nowrap; }
+  @media (max-width:900px) { .frames { flex-direction:column; } .frame-desk { width:100%; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1>05 · RSVP — desktop &amp; mobile mockup</h1>
+  <div class="sizes" role="group" aria-label="Mobile preview width">
+    Mobile width:
+    <button type="button" data-w="320">320</button>
+    <button type="button" data-w="375">375</button>
+    <button type="button" data-w="390" aria-pressed="true">390</button>
+    <button type="button" data-w="430">430</button>
+  </div>
+</div>
+
+<div class="frames">
+  <div class="frame frame-desk">
+    <p>Desktop · 1440px (scaled to fit)</p>
+    <div class="clip" id="deskClip"><iframe id="desk" title="Desktop mockup" width="1440" scrolling="no"></iframe></div>
+  </div>
+  <div class="frame frame-mob">
+    <p id="mobLabel">Mobile · 390px</p>
+    <div class="clip"><iframe id="mob" title="Mobile mockup" width="390" scrolling="no"></iframe></div>
+  </div>
+</div>
+
+<div class="notes">
+  <section><h2>Audit: current section</h2><ul><li><b>The name field is barely visible.</b> Step 1 is just an underline with a floating label that only appears on focus, so the first thing guests must fill in looks empty.</li><li><b>Send button looks disabled.</b> It's muted brown with 13px text tracked wide (<code>RsvpSection.css:902–906</code>), and the hint above it is 13px.</li><li><b>Text and taps too small.</b> 10–11px labels (<code>:678, :855, :870, :1020, :1175</code>), an 11px character counter (<code>:294</code>), a 32px Add Emoji button (<code>:161, :558</code>), 36px steppers (<code>:264</code>) and a 40px photo button (<code>:862</code>).</li><li><b>Controls scattered around the wish box.</b> "Add photo" floats top-right above it while "Add Emoji" and the counter sit below.</li><li><b>Two style generations stacked.</b> The CSS is 1247 lines, and a full <code>#s5.rs</code> override set starts at <code>:576</code>. It's fragile to change.</li><li><b>Loose spacing.</b> Padding goes up to 90px (<code>:578</code>), and the steps on desktop leave wide gaps.</li></ul></section>
+  <section><h2>System (from 01 · Our Events)</h2><ul><li>Same header, spacing, type scale and 44px controls. Dark burgundy section, the same as Events.</li><li>New pattern, the <b>reply card</b>: an ivory card (<code>--card</code>) with a gold hairline and a soft second ring, used here for the form. It gives ink-on-ivory contrast for inputs.</li></ul></section>
+  <section><h2>Design decisions</h2><ul><li>The form becomes an ivory reply card inside the burgundy section, like the reply card in an invitation envelope. Inputs are white with a gold border, 48px tall, with 18px text and always-visible labels.</li><li>Each step has one header line: a numbered circle, a 20px title and 16px helper text. The steps are separated by hairlines, with no extra boxes.</li><li>The two celebrations are equal side-by-side panels on desktop, each with a Yes/Sorry segmented control. The wedding panel is shown answered "Yes" so the 44px guest stepper is visible. They stack on mobile.</li><li>Emoji, Photo and the counter sit in one row under the wish box. "Send my RSVP ❤️" is a solid burgundy 52px button. Until both celebrations are answered, the hint above it explains why, but the button no longer looks broken.</li><li>Kept as is: the wax-seal envelope animation and the confirmation panel (they would sit on this card), the "we've saved a seat for you" line for personal links, the error messages and the photo preview.</li></ul></section>
+  <section><h2>Self-check</h2><table><tr><td>Sharp: no blur or haze; ink on ivory</td><td class="ok">pass</td></tr><tr><td>Aligned: one column, shared left edge</td><td class="ok">pass</td></tr><tr><td>Balanced pairs: equal event panels</td><td class="ok">pass</td></tr><tr><td>No wasted space: desktop 1207px (was 1209), shown with the guest stepper open; mobile 1387px (was 1303) with 44–52px controls</td><td class="ok">pass</td></tr><tr><td>Clear hierarchy: 1 → 2 → 3 → send</td><td class="ok">pass</td></tr><tr><td>Text/image proportion: n/a (form)</td><td class="ok">pass</td></tr><tr><td>Desktop + 320/375/390/430: no overflow, taps ≥ 44px, body ≥ 16px</td><td class="ok">pass</td></tr><tr><td>Matches the system</td><td class="ok">pass</td></tr></table><h2 style="margin-top:20px">Missing</h2><ul><li>None. All labels, prompts and hints come from <code>RsvpSection.tsx</code> and <code>RsvpEventCard.tsx</code>.</li></ul></section>
+</div>
+
+<!-- ======================= THE DESIGN (rendered into both frames) ======================= -->
+<template id="design">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&family=Great+Vibes&display=swap">
+<style>
+  :root {
+    /* existing tokens (src/styles/variables.css) */
+    --maroon:#6b1a24; --burg:#5a1420; --burg-d:#3a0b14; --ink:#3a1218; --ivory:#f8efdc; --cream:#f8efdc; --card:#fffaf0; --paper-2:#fbf6ec;
+    --champ:#e9d3a4; --gold:#c19a3d; --gold-d:#b8892e; --gold-l:#f0d68e;
+    --gold-rgb:193 154 61; --gold-l-rgb:240 214 142; --gold-d-rgb:184 137 46; --burg-rgb:90 20 32; --burg-d-rgb:58 11 20; --ivory-rgb:248 239 220; --champ-rgb:233 211 164;
+    --leaf:#5f6f4a; /* muted botanical green — proposed new token (used sparingly) */
+    --fh:'Cormorant Garamond', Georgia, serif; --fb:'Jost', system-ui, sans-serif; --fs:'Great Vibes', 'Cormorant Garamond', cursive;
+    /* layout system (approved in 01 · Our Events) */
+    --max:1120px; --gutter:20px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+    --pad-y:40px;
+  }
+  @media (min-width:600px) { :root { --gutter:var(--s6); --pad-y:var(--s7); } }
+  @media (min-width:960px) { :root { --pad-y:var(--s8); } }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { -webkit-font-smoothing:antialiased; }
+  img { display:block; max-width:100%; height:auto; }
+  button { font:inherit; }
+
+  /* section shells */
+  .sec { padding:var(--pad-y) max(var(--gutter), env(safe-area-inset-left)) var(--pad-y) max(var(--gutter), env(safe-area-inset-right)); font:400 16px/1.5 var(--fb); }
+  .sec--light { background:linear-gradient(180deg, var(--paper-2), var(--ivory)); color:var(--ink);
+    --hair:1px solid rgb(var(--gold-rgb) / .35); --hair-soft:1px solid rgb(var(--gold-rgb) / .22); --t-kicker:var(--gold-d); --t-title:var(--burg); --t-label:var(--gold-d); --t-muted:#6a4a40; }
+  .sec--dark { background:radial-gradient(120% 60% at 50% 0%, #6e1d2b 0%, var(--burg) 45%, var(--burg-d) 100%); color:var(--ivory);
+    --hair:1px solid rgb(var(--gold-l-rgb) / .28); --hair-soft:1px solid rgb(var(--gold-l-rgb) / .16); --t-kicker:var(--gold-l); --t-title:var(--champ); --t-label:var(--gold); --t-muted:rgb(var(--ivory-rgb) / .78); }
+  .wrap { max-width:var(--max); margin:0 auto; }
+  .narrow { max-width:720px; margin-inline:auto; }
+
+  /* section header (same in every section) */
+  .head { text-align:center; margin-bottom:var(--s5); }
+  .kicker { margin:0 0 var(--s2); font:italic 500 22px/1.2 var(--fh); letter-spacing:.02em; color:var(--t-kicker); }
+  .head h2 { margin:0; font:500 clamp(40px, 4.4vw, 56px)/1.05 var(--fh); color:var(--t-title); letter-spacing:.005em; }
+  .orn { display:flex; align-items:center; justify-content:center; gap:var(--s3); margin-top:var(--s3); color:var(--gold); }
+  .orn::before, .orn::after { content:""; width:56px; height:1px; background:currentColor; opacity:.7; }
+  .orn svg { width:12px; height:12px; }
+  .lead { margin:var(--s3) auto 0; max-width:560px; font:italic 500 20px/1.4 var(--fh); color:var(--t-title); }
+
+  /* type scale */
+  .label { font:500 12px/1.2 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:var(--t-label); }
+  .t-h3 { margin:0; font:italic 500 clamp(34px, 3.2vw, 40px)/1 var(--fh); color:var(--t-title); }
+  .t-lead { font:500 20px/1.35 var(--fh); }
+  .t-body { font:400 16px/1.6 var(--fb); color:var(--t-muted); }
+
+  /* buttons: 44px, two styles */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:var(--s2); min-height:44px; padding:0 var(--s5); border-radius:6px;
+    font:500 15px/1 var(--fb); letter-spacing:.02em; text-decoration:none; cursor:pointer; white-space:nowrap; }
+  .btn--solid { background:var(--burg); color:var(--ivory); border:1px solid var(--burg); }
+  .sec--dark .btn--solid { background:var(--gold-l); color:var(--burg-d); border-color:var(--gold-l); }
+  .btn--line { background:transparent; color:var(--burg); border:1px solid rgb(var(--gold-rgb) / .6); }
+  .sec--dark .btn--line { color:var(--gold-l); border-color:rgb(var(--gold-l-rgb) / .55); }
+
+  .next { margin:var(--s5) 0 0; text-align:center; font:italic 500 20px/1.3 var(--fh); color:var(--t-kicker); }
+  .sec--light .next { color:var(--gold-d); }
+  .next svg { display:block; width:14px; height:14px; margin:var(--s1) auto 0; }
+
+
+  .reply { max-width:800px; margin:0 auto; padding:var(--s6); background:var(--card); color:var(--ink); border-radius:10px;
+    border:1px solid rgb(var(--gold-l-rgb) / .6); box-shadow:0 0 0 6px rgb(var(--gold-l-rgb) / .08), 0 20px 40px -28px rgba(0,0,0,.8);
+    --hair-soft:1px solid rgb(var(--gold-rgb) / .25); --t-label:var(--gold-d); --t-muted:#6a4a40; }
+  .step { display:flex; align-items:baseline; flex-wrap:wrap; gap:var(--s1) var(--s3); margin:0 0 var(--s3); }
+  .step .n { display:inline-grid; place-items:center; width:24px; height:24px; border-radius:50%; border:1px solid var(--gold-d); font:500 12px/1 var(--fb); color:var(--burg); transform:translateY(-2px); }
+  .step b { font:500 20px/1.2 var(--fh); color:var(--burg); }
+  .step em { font:400 16px/1.3 var(--fb); font-style:normal; color:var(--t-muted); }
+  .block + .block { margin-top:var(--s5); padding-top:var(--s5); border-top:var(--hair-soft); }
+
+  .field { display:block; width:100%; min-height:48px; padding:var(--s3) var(--s4); border:1px solid rgb(var(--gold-rgb) / .55); border-radius:6px;
+    background:#fff; color:var(--ink); font:400 18px/1.4 var(--fb); }
+  .field::placeholder { color:#9a8577; }
+  .field:focus { outline:2px solid var(--gold-d); outline-offset:1px; }
+  .flabel { display:block; margin-bottom:var(--s2); font:500 14px/1.2 var(--fb); color:var(--t-muted); }
+
+  .events { display:grid; grid-template-columns:1fr 1fr; gap:var(--s4); }
+  .ev { display:flex; flex-direction:column; padding:var(--s4); border:var(--hair-soft); border-radius:8px; background:var(--paper-2); }
+  .ev.is-yes { border-color:rgb(var(--gold-rgb) / .7); box-shadow:inset 0 0 0 1px rgb(var(--gold-rgb) / .3); }
+  .date { margin:var(--s2) 0 0; font:500 26px/1.15 var(--fh); color:var(--burg); }
+  .prompt { margin:var(--s1) 0 var(--s3); font:italic 500 18px/1.3 var(--fh); color:var(--t-muted); }
+  .seg { display:grid; grid-template-columns:1fr 1fr; gap:var(--s2); margin-top:auto; }
+  .opt { min-height:44px; padding:0 var(--s2); border:1px solid rgb(var(--gold-rgb) / .6); border-radius:6px; background:#fff; color:var(--burg);
+    font:500 14px/1.2 var(--fb); cursor:pointer; }
+  .opt.is-on { background:var(--burg); border-color:var(--burg); color:var(--ivory); }
+  .stepper { display:flex; align-items:center; justify-content:space-between; gap:var(--s3); margin-top:var(--s3); padding-top:var(--s3); border-top:var(--hair-soft); }
+  .stepper .lbl { font:400 16px/1.3 var(--fb); color:var(--t-muted); }
+  .ctr { display:flex; align-items:center; gap:var(--s2); }
+  .ctr button { width:44px; height:44px; border-radius:50%; border:1px solid rgb(var(--gold-rgb) / .6); background:#fff; color:var(--burg); font:400 22px/1 var(--fb); cursor:pointer; }
+  .ctr b { min-width:24px; text-align:center; font:500 22px/1 var(--fh); color:var(--burg); }
+
+  textarea.field { min-height:112px; resize:vertical; font:italic 500 19px/1.45 var(--fh); }
+  .tools { display:flex; align-items:center; gap:var(--s2); margin-top:var(--s2); }
+  .tools .btn { padding:0 var(--s3); font-size:14px; color:var(--burg); }
+  .count { margin-left:auto; font:400 14px/1 var(--fb); color:var(--t-muted); }
+
+  .send { margin-top:var(--s5); padding-top:var(--s5); border-top:var(--hair-soft); text-align:center; }
+  .send .hint { margin:0 0 var(--s3); font:400 16px/1.4 var(--fb); color:var(--t-muted); }
+  .send .btn { width:100%; max-width:360px; min-height:52px; font-size:17px; }
+  .reply .btn--solid { background:var(--burg); border-color:var(--burg); color:var(--ivory); }
+  .reply .btn--line { color:var(--burg); border-color:rgb(var(--gold-rgb) / .6); }
+
+  @media (max-width:639px) {
+    .reply { padding:var(--s5) var(--s4); }
+    .events { grid-template-columns:1fr; gap:var(--s3); }
+    .block + .block { margin-top:var(--s4); padding-top:var(--s4); }
+    .send { margin-top:var(--s4); padding-top:var(--s4); }
+    .prompt { margin-bottom:var(--s2); }
+    .send .btn { max-width:none; }
+    .opt { font-size:13px; padding:0 var(--s1); white-space:nowrap; }
+  }
+  @media (max-width:359px) {
+    .seg { grid-template-columns:1fr; }
+    .opt { font-size:14px; }
+    .tools { flex-wrap:wrap; }
+    .count { margin-left:0; width:100%; }
+  }
+
+</style>
+</head>
+<body>
+<section class="sec sec--dark" aria-labelledby="rsvp-title"><div class="wrap">
+  <header class="head"><p class="kicker">RSVP</p><h2 id="rsvp-title">Will you be celebrating with us?</h2><div class="orn" aria-hidden="true"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 -10C2 -6 2 -3 0 0C-2 -3 -2 -6 0 -10Z M0 10C2 6 2 3 0 0C-2 3 -2 6 0 10Z M-10 0C-6 -2 -3 -2 0 0C-3 2 -6 2 -10 0Z M10 0C6 -2 3 -2 0 0C3 2 6 2 10 0Z"/></svg></div></header>
+  <form class="reply" onsubmit="return false" novalidate>
+    <div class="block">
+      <p class="step"><span class="n" aria-hidden="true">1</span><label for="nm"><b>Your name *</b></label></p>
+      <input class="field" id="nm" type="text" autocomplete="name">
+    </div>
+    <div class="block">
+      <p class="step"><span class="n" aria-hidden="true">2</span><b>Will you be joining us?</b><em>Choose for each celebration</em></p>
+      <div class="events">
+        <div class="ev is-yes" role="group" aria-labelledby="wedding-l">
+    <span class="label" id="wedding-l">Our wedding</span>
+    <p class="date">29 November 2026</p>
+    <p class="prompt">Will you be there?</p>
+    <div class="seg" role="radiogroup" aria-labelledby="wedding-l">
+      <button type="button" role="radio" aria-checked="true" class="opt is-on">✓&nbsp; Yes, I’ll be there</button>
+      <button type="button" role="radio" aria-checked="false" class="opt">Sorry, can’t make it</button>
+    </div><div class="stepper"><span class="lbl">Guests (including you)</span>
+      <div class="ctr"><button type="button" aria-label="Decrease wedding guests">−</button><b>2</b><button type="button" aria-label="Increase wedding guests">+</button></div></div>
+  </div>
+        <div class="ev" role="group" aria-labelledby="reception-l">
+    <span class="label" id="reception-l">Our reception</span>
+    <p class="date">6 December 2026</p>
+    <p class="prompt">Will you be there?</p>
+    <div class="seg" role="radiogroup" aria-labelledby="reception-l">
+      <button type="button" role="radio" aria-checked="false" class="opt">✓&nbsp; Yes, I’ll be there</button>
+      <button type="button" role="radio" aria-checked="false" class="opt">Sorry, can’t make it</button>
+    </div>
+  </div>
+      </div>
+    </div>
+    <div class="block">
+      <p class="step"><span class="n" aria-hidden="true">3</span><b>A little wish for us</b><em>Optional · it will appear on our Wishes Wall</em></p>
+      <label class="flabel" for="wish" style="position:absolute;left:-9999px">A little wish for us</label>
+      <textarea class="field" id="wish" rows="3" placeholder="Leave us a little message or your blessings..." maxlength="200"></textarea>
+      <div class="tools">
+        <button type="button" class="btn btn--line">😊 Add Emoji</button>
+        <button type="button" class="btn btn--line">📷 Add Photo</button>
+        <span class="count">0/200</span>
+      </div>
+    </div>
+    <div class="send">
+      <p class="hint" id="sh">Answer both celebrations above to send your RSVP.</p>
+      <button type="submit" class="btn btn--solid" aria-describedby="sh">Send my RSVP ❤️</button>
+    </div>
+  </form>
+  <p class="next">Next: blessings from our people<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></p>
+</div></section>
+
+</body>
+</html>
+</template>
+
+<script>
+  const src = document.getElementById('design').innerHTML;
+  const desk = document.getElementById('desk'), mob = document.getElementById('mob'), deskClip = document.getElementById('deskClip');
+  const fitHeight = (f) => { try { const h = f.contentDocument.documentElement.scrollHeight; f.style.height = h + 'px'; return h; } catch { return 0; } };
+  const scaleDesk = () => {
+    const h = fitHeight(desk); const s = Math.min(1, deskClip.clientWidth / 1440);
+    desk.style.transform = `scale(${s})`; deskClip.style.height = (h * s) + 'px';
+  };
+  // srcdoc keeps relative image paths resolving against this file's folder
+  desk.srcdoc = src; mob.srcdoc = src;
+  desk.addEventListener('load', () => { scaleDesk(); setTimeout(scaleDesk, 600); });
+  mob.addEventListener('load', () => { fitHeight(mob); setTimeout(() => fitHeight(mob), 600); });
+  addEventListener('resize', scaleDesk);
+  new ResizeObserver(() => scaleDesk()).observe(deskClip);
+  document.querySelectorAll('.sizes button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.sizes button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    mob.width = b.dataset.w; document.getElementById('mobLabel').textContent = `Mobile · ${b.dataset.w}px`;
+    setTimeout(() => fitHeight(mob), 50); setTimeout(() => fitHeight(mob), 400);
+  }));
+</script>
+</body>
+</html>

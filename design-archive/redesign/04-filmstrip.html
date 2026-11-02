@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · Film Strip — redesign mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap">
+<style>
+  /* ---------- mockup viewer chrome (not part of the design) ---------- */
+  :root { --ink:#3a1218; --burg:#5a1420; --gold-d:#b8892e; --line:#e5d2b0; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#efe6d6; color:var(--ink); font:400 15px/1.55 'Jost', system-ui, sans-serif; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:12px 24px; padding:12px 24px; background:#fbf6ec; border-bottom:1px solid var(--line); }
+  .bar h1 { margin:0; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .bar .sizes { display:flex; gap:6px; align-items:center; margin-left:auto; font-size:13px; }
+  .bar button { min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); font:500 13px 'Jost', sans-serif; cursor:pointer; }
+  .bar button[aria-pressed="true"] { background:var(--burg); border-color:var(--burg); color:#fbf6ec; }
+  .frames { display:flex; align-items:flex-start; gap:24px; padding:24px; }
+  .frame { flex:none; }
+  .frame > p { margin:0 0 8px; font:500 12px/1 'Jost', sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#8a6a3a; }
+  .frame-desk { flex:1 1 auto; min-width:0; }
+  .clip { overflow:hidden; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  iframe { display:block; border:0; transform-origin:0 0; }
+  .notes { max-width:1120px; margin:0 auto; padding:8px 24px 64px; display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; }
+  .notes section { background:#fbf6ec; border:1px solid var(--line); border-radius:8px; padding:20px 24px; }
+  .notes h2 { margin:0 0 12px; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .notes ul { margin:0; padding-left:18px; }
+  .notes li { margin:0 0 8px; }
+  .notes code { font-size:13px; background:#f1e6d2; padding:1px 4px; border-radius:3px; }
+  .ok { color:#1f6b3a; font-weight:500; } .warn { color:#9a5b00; font-weight:500; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:6px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:last-child { text-align:right; white-space:nowrap; }
+  @media (max-width:900px) { .frames { flex-direction:column; } .frame-desk { width:100%; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1>04 · Film Strip — desktop &amp; mobile mockup</h1>
+  <div class="sizes" role="group" aria-label="Mobile preview width">
+    Mobile width:
+    <button type="button" data-w="320">320</button>
+    <button type="button" data-w="375">375</button>
+    <button type="button" data-w="390" aria-pressed="true">390</button>
+    <button type="button" data-w="430">430</button>
+  </div>
+</div>
+
+<div class="frames">
+  <div class="frame frame-desk">
+    <p>Desktop · 1440px (scaled to fit)</p>
+    <div class="clip" id="deskClip"><iframe id="desk" title="Desktop mockup" width="1440" scrolling="no"></iframe></div>
+  </div>
+  <div class="frame frame-mob">
+    <p id="mobLabel">Mobile · 390px</p>
+    <div class="clip"><iframe id="mob" title="Mobile mockup" width="390" scrolling="no"></iframe></div>
+  </div>
+</div>
+
+<div class="notes">
+  <section><h2>Audit: current section</h2><ul><li><b>Portrait photos badly cropped.</b> Every frame is forced to 3:2 landscape (<code>OurStoryAndFilmstripSection.css:274</code>), so the five portrait photos lose about half their height, sometimes cutting through faces.</li><li><b>Unreadable edge codes.</b> They are sized at <code>var(--rail) * .24</code> (<code>:322</code>), which is about 9px on desktop and 6px on mobile.</li><li><b>Pause control is detached and small.</b> It floats alone in the top-right corner, far from the strip (<code>:192–213</code>), as 11px tracked text in a 40px-tall button.</li><li><b>Hazy glow.</b> A large radial "light-table" glow sits behind the strip (<code>:177–187</code>), adding haze around otherwise crisp frames.</li><li><b>Big loose gaps.</b> The section is 530px tall on desktop for a 300px strip, with padding up to 36px and 40px plus the teaser's own margin.</li></ul></section>
+  <section><h2>System (from 01 · Our Events)</h2><ul><li>Same spacing, type and 44px button rules. Light surface, continuing Our Story.</li><li>Minimum 11px text applies to the decorative film edge codes too.</li></ul></section>
+  <section><h2>Design decisions</h2><ul><li><b>Every photo is shown whole.</b> Each frame keeps its photo's orientation: 3:2 for landscape, 4:5 for portrait, all at one height (224px desktop, 168px mobile). Nothing is cropped through a face. Real film frames are all landscape; this trades that detail for honest photos.</li><li>The rails keep the perforations and SCRL edge codes, now 11px IBM Plex Mono. The light-table glow is removed and the strip has one subtle shadow.</li><li>Pause/Play is a 44px button centred under the strip, where your eye already is. It still pauses on hover, and while a finger is held down on mobile.</li><li>The strip continues straight on from Our Story, so its top padding is 24px instead of a full section gap. Height: 508px on desktop (was 530). Mobile is 420px (was 377), because the rails carry 11px codes and the Pause button is 44px tall.</li><li>Kept as is: the 95px/s scroll, seamless loop, tap to open the lightbox, and frame numbers. The mockup is static.</li></ul></section>
+  <section><h2>Self-check</h2><table><tr><td>Sharp: no glow/haze; photos uncropped</td><td class="ok">pass</td></tr><tr><td>Aligned: frames share one height and baseline</td><td class="ok">pass</td></tr><tr><td>Balanced pairs: n/a (single strip)</td><td class="ok">pass</td></tr><tr><td>No wasted space: control tucked under the strip; mobile +43px for legible codes and a 44px button</td><td class="ok">pass</td></tr><tr><td>Clear hierarchy</td><td class="ok">pass</td></tr><tr><td>Text/image proportion: photos dominate</td><td class="ok">pass</td></tr><tr><td>Desktop + 320/375/390/430: no page overflow, taps ≥ 44px</td><td class="ok">pass</td></tr><tr><td>Matches the system</td><td class="ok">pass</td></tr></table><h2 style="margin-top:20px">Missing</h2><ul><li>None. All 13 photos and captions come from <code>src/assets/filmstrip/</code> and <code>captions.json</code>.</li><li>The strip has no heading of its own on the current site. I haven't added one, because there's no existing copy for it.</li></ul></section>
+</div>
+
+<!-- ======================= THE DESIGN (rendered into both frames) ======================= -->
+<template id="design">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&family=Great+Vibes&display=swap">
+<style>
+  :root {
+    /* existing tokens (src/styles/variables.css) */
+    --maroon:#6b1a24; --burg:#5a1420; --burg-d:#3a0b14; --ink:#3a1218; --ivory:#f8efdc; --cream:#f8efdc; --card:#fffaf0; --paper-2:#fbf6ec;
+    --champ:#e9d3a4; --gold:#c19a3d; --gold-d:#b8892e; --gold-l:#f0d68e;
+    --gold-rgb:193 154 61; --gold-l-rgb:240 214 142; --gold-d-rgb:184 137 46; --burg-rgb:90 20 32; --burg-d-rgb:58 11 20; --ivory-rgb:248 239 220; --champ-rgb:233 211 164;
+    --leaf:#5f6f4a; /* muted botanical green — proposed new token (used sparingly) */
+    --fh:'Cormorant Garamond', Georgia, serif; --fb:'Jost', system-ui, sans-serif; --fs:'Great Vibes', 'Cormorant Garamond', cursive;
+    /* layout system (approved in 01 · Our Events) */
+    --max:1120px; --gutter:20px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+    --pad-y:40px;
+  }
+  @media (min-width:600px) { :root { --gutter:var(--s6); --pad-y:var(--s7); } }
+  @media (min-width:960px) { :root { --pad-y:var(--s8); } }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { -webkit-font-smoothing:antialiased; }
+  img { display:block; max-width:100%; height:auto; }
+  button { font:inherit; }
+
+  /* section shells */
+  .sec { padding:var(--pad-y) max(var(--gutter), env(safe-area-inset-left)) var(--pad-y) max(var(--gutter), env(safe-area-inset-right)); font:400 16px/1.5 var(--fb); }
+  .sec--light { background:linear-gradient(180deg, var(--paper-2), var(--ivory)); color:var(--ink);
+    --hair:1px solid rgb(var(--gold-rgb) / .35); --hair-soft:1px solid rgb(var(--gold-rgb) / .22); --t-kicker:var(--gold-d); --t-title:var(--burg); --t-label:var(--gold-d); --t-muted:#6a4a40; }
+  .sec--dark { background:radial-gradient(120% 60% at 50% 0%, #6e1d2b 0%, var(--burg) 45%, var(--burg-d) 100%); color:var(--ivory);
+    --hair:1px solid rgb(var(--gold-l-rgb) / .28); --hair-soft:1px solid rgb(var(--gold-l-rgb) / .16); --t-kicker:var(--gold-l); --t-title:var(--champ); --t-label:var(--gold); --t-muted:rgb(var(--ivory-rgb) / .78); }
+  .wrap { max-width:var(--max); margin:0 auto; }
+  .narrow { max-width:720px; margin-inline:auto; }
+
+  /* section header (same in every section) */
+  .head { text-align:center; margin-bottom:var(--s5); }
+  .kicker { margin:0 0 var(--s2); font:italic 500 22px/1.2 var(--fh); letter-spacing:.02em; color:var(--t-kicker); }
+  .head h2 { margin:0; font:500 clamp(40px, 4.4vw, 56px)/1.05 var(--fh); color:var(--t-title); letter-spacing:.005em; }
+  .orn { display:flex; align-items:center; justify-content:center; gap:var(--s3); margin-top:var(--s3); color:var(--gold); }
+  .orn::before, .orn::after { content:""; width:56px; height:1px; background:currentColor; opacity:.7; }
+  .orn svg { width:12px; height:12px; }
+  .lead { margin:var(--s3) auto 0; max-width:560px; font:italic 500 20px/1.4 var(--fh); color:var(--t-title); }
+
+  /* type scale */
+  .label { font:500 12px/1.2 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:var(--t-label); }
+  .t-h3 { margin:0; font:italic 500 clamp(34px, 3.2vw, 40px)/1 var(--fh); color:var(--t-title); }
+  .t-lead { font:500 20px/1.35 var(--fh); }
+  .t-body { font:400 16px/1.6 var(--fb); color:var(--t-muted); }
+
+  /* buttons: 44px, two styles */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:var(--s2); min-height:44px; padding:0 var(--s5); border-radius:6px;
+    font:500 15px/1 var(--fb); letter-spacing:.02em; text-decoration:none; cursor:pointer; white-space:nowrap; }
+  .btn--solid { background:var(--burg); color:var(--ivory); border:1px solid var(--burg); }
+  .sec--dark .btn--solid { background:var(--gold-l); color:var(--burg-d); border-color:var(--gold-l); }
+  .btn--line { background:transparent; color:var(--burg); border:1px solid rgb(var(--gold-rgb) / .6); }
+  .sec--dark .btn--line { color:var(--gold-l); border-color:rgb(var(--gold-l-rgb) / .55); }
+
+  .next { margin:var(--s5) 0 0; text-align:center; font:italic 500 20px/1.3 var(--fh); color:var(--t-kicker); }
+  .sec--light .next { color:var(--gold-d); }
+  .next svg { display:block; width:14px; height:14px; margin:var(--s1) auto 0; }
+
+
+  .film { --ph:224px; --rail:34px; position:relative; }
+  .strip { overflow:hidden; background:#1b0f09; box-shadow:0 12px 24px -16px rgba(40,16,8,.55); }
+  .track { display:flex; width:max-content; transform:translateX(-120px); }
+  .fr { position:relative; flex:none; display:flex; flex-direction:column; padding:0 6px; border:0; cursor:pointer;
+    background:linear-gradient(180deg, #24150d, #1b0f09 50%, #24150d); }
+  .fr:focus-visible { outline:2px solid var(--gold-l); outline-offset:-4px; }
+  .pic { display:block; height:var(--ph); }
+  .fr--land .pic { aspect-ratio:3 / 2; }
+  .fr--port .pic { aspect-ratio:4 / 5; }
+  .pic img { width:100%; height:100%; object-fit:cover; border-radius:2px; }
+  /* rails: perforations + edge codes (≥ 11px) */
+  .edge { position:relative; display:flex; justify-content:space-between; align-items:flex-end; height:var(--rail); padding:0 var(--s2) 3px;
+    font:500 11px/1 'IBM Plex Mono', ui-monospace, monospace; letter-spacing:.06em; color:#d9a54a; }
+  .edge--b { align-items:flex-start; padding:3px var(--s2) 0; }
+  .edge::before { content:""; position:absolute; left:0; right:0; height:12px; top:5px;
+    background:linear-gradient(var(--paper-2), var(--paper-2)) 0 0 / 14px 12px space no-repeat; border-radius:2px; }
+  .edge--b::before { top:auto; bottom:5px; }
+  .edge span { position:relative; }
+  .edge--t span, .edge--b span { padding-top:0; }
+  .edge--t { align-items:flex-end; }
+
+  .ctrl { display:flex; justify-content:center; margin-top:var(--s4); }
+  .ctrl .btn { padding:0 var(--s4); }
+  .ctrl svg { width:14px; height:14px; }
+
+  @media (max-width:719px) {
+    .film { --ph:168px; --rail:30px; }
+    .track { transform:translateX(-40px); }
+  }
+
+  .edge--t { align-items:flex-end; }
+  .edge--t::before { top:4px; }
+  .edge--b::before { bottom:4px; }
+
+</style>
+</head>
+<body>
+<section class="sec sec--light" style="padding-inline:0;padding-top:var(--s5)" aria-label="35mm photographic memory filmstrip">
+  <div class="film">
+    <div class="strip" data-allow-overflow><div class="track"><button type="button" class="fr fr--land" aria-label="View photo 1: Lalith and Anjana among the lotus blooms">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 20</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/01-couple-among-lotus-blooms.jpg" alt="Lalith and Anjana among the lotus blooms" width="1500" height="1000" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>20</span><span>▸ 20A</span></span></button><button type="button" class="fr fr--land" aria-label="View photo 2: A quiet moment together on the lotus lake">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 21</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/02-lotus-lake-boat.jpg" alt="A quiet moment together on the lotus lake" width="1500" height="1000" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>21</span><span>▸ 21A</span></span></button><button type="button" class="fr fr--port" aria-label="View photo 3: Lalith and Anjana beneath the trees">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 22</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/03-beneath-the-trees.jpg" alt="Lalith and Anjana beneath the trees" width="1125" height="1500" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>22</span><span>▸ 22A</span></span></button><button type="button" class="fr fr--land" aria-label="View photo 4: A wide view across the lotus garden">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 23</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/04-lotus-garden-wide.jpg" alt="A wide view across the lotus garden" width="1500" height="1000" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>23</span><span>▸ 23A</span></span></button><button type="button" class="fr fr--port" aria-label="View photo 5: A close portrait among the lotus flowers">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 24</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/05-lotus-closeup-portrait.jpg" alt="A close portrait among the lotus flowers" width="1163" height="1500" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>24</span><span>▸ 24A</span></span></button><button type="button" class="fr fr--port" aria-label="View photo 6: Lalith and Anjana sharing a moment in a doorway">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 25</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/06-doorway-moment.jpg" alt="Lalith and Anjana sharing a moment in a doorway" width="1125" height="1500" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>25</span><span>▸ 25A</span></span></button><button type="button" class="fr fr--port" aria-label="View photo 7: The couple together against a white wall">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 26</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/07-white-wall.jpg" alt="The couple together against a white wall" width="960" height="1280" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>26</span><span>▸ 26A</span></span></button><button type="button" class="fr fr--land" aria-label="View photo 8: Anjana among lotus flowers by the water">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 27</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/08-bride-by-the-water.jpg" alt="Anjana among lotus flowers by the water" width="1500" height="1000" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>27</span><span>▸ 27A</span></span></button><button type="button" class="fr fr--land" aria-label="View photo 9: The couple surrounded by the lotus field">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 28</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/09-lotus-field.jpg" alt="The couple surrounded by the lotus field" width="1500" height="1000" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>28</span><span>▸ 28A</span></span></button><button type="button" class="fr fr--port" aria-label="View photo 10: Where our story began">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 29</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/10-where-our-story-began.jpg" alt="Where our story began" width="680" height="1500" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>29</span><span>▸ 29A</span></span></button><button type="button" class="fr fr--port" aria-label="View photo 11: The Wayanad getaway">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 30</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/11-wayanad-getaway.jpg" alt="The Wayanad getaway" width="1200" height="1500" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>30</span><span>▸ 30A</span></span></button><button type="button" class="fr fr--port" aria-label="View photo 12: Finding home in each other">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 31</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/12-finding-home.jpg" alt="Finding home in each other" width="1200" height="1500" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>31</span><span>▸ 31A</span></span></button><button type="button" class="fr fr--port" aria-label="View photo 13: Choosing each other, always">
+<span class="edge edge--t" aria-hidden="true"><span>SCRL E100</span><span>▸ 32</span></span>
+<span class="pic"><img src="../../src/assets/filmstrip/13-choosing-each-other.jpg" alt="Choosing each other, always" width="1071" height="1536" loading="lazy"></span>
+<span class="edge edge--b" aria-hidden="true"><span>32</span><span>▸ 32A</span></span></button></div></div>
+  </div>
+  <div class="ctrl"><button type="button" class="btn btn--line" aria-label="Pause filmstrip animation">
+    <svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12" fill="currentColor"/><rect x="8.5" y="1" width="3.5" height="12" fill="currentColor"/></svg>Pause</button></div>
+  <div class="wrap"><p class="next">Next: where &amp; when to celebrate<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></p></div>
+</section>
+
+</body>
+</html>
+</template>
+
+<script>
+  const src = document.getElementById('design').innerHTML;
+  const desk = document.getElementById('desk'), mob = document.getElementById('mob'), deskClip = document.getElementById('deskClip');
+  const fitHeight = (f) => { try { const h = f.contentDocument.documentElement.scrollHeight; f.style.height = h + 'px'; return h; } catch { return 0; } };
+  const scaleDesk = () => {
+    const h = fitHeight(desk); const s = Math.min(1, deskClip.clientWidth / 1440);
+    desk.style.transform = `scale(${s})`; deskClip.style.height = (h * s) + 'px';
+  };
+  // srcdoc keeps relative image paths resolving against this file's folder
+  desk.srcdoc = src; mob.srcdoc = src;
+  desk.addEventListener('load', () => { scaleDesk(); setTimeout(scaleDesk, 600); });
+  mob.addEventListener('load', () => { fitHeight(mob); setTimeout(() => fitHeight(mob), 600); });
+  addEventListener('resize', scaleDesk);
+  new ResizeObserver(() => scaleDesk()).observe(deskClip);
+  document.querySelectorAll('.sizes button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.sizes button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    mob.width = b.dataset.w; document.getElementById('mobLabel').textContent = `Mobile · ${b.dataset.w}px`;
+    setTimeout(() => fitHeight(mob), 50); setTimeout(() => fitHeight(mob), 400);
+  }));
+</script>
+</body>
+</html>

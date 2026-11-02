@@ -11,7 +11,7 @@
   --ink: #3a1218;
   --fh: 'Cormorant Garamond', Georgia, serif;
   --fb: 'Jost', system-ui, sans-serif;
-  --fs: 'Great Vibes', 'Cormorant Garamond', cursive; /* script: couple names, "Save the date", thank-you lines only */
+  --fs: 'Great Vibes', 'Bodoni Moda', cursive; /* script: couple names, "Save the date", thank-you lines only */
   --burg: #5a1420;
   --burg-d: #3a0b14;
   --ivory: #f8efdc;
@@ -21,6 +21,13 @@
   --gold-d: #b8892e;
   --card: #fffaf0;
   --paper-2: #fbf6ec;
+
+  /* Layout system (redesign, approved 2 Nov 2026) */
+  --max: 1120px;
+  --gutter: 20px;
+  --pad-y: 40px;
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px;
+  --leaf: #5f6f4a; /* muted botanical green (use sparingly) */
 
   /* Same colours as "R G B" triples, for rgb(var(--x) / alpha) */
   --gold-rgb: 193 154 61;
@@ -53,6 +60,9 @@
   --cover-cutout: url('/images/cover/wedding-couple-cutout-refined.webp');
 }
 
+
+@media (min-width: 600px) { :root { --gutter: 32px; --pad-y: 48px; } }
+@media (min-width: 960px) { :root { --pad-y: 64px; } }
 
 /* ==========================================================================
    TEAM THEMES — set on <html data-team="…"> by utils/teamTheme.ts

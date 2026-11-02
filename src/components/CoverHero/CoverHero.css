@@ -1,5 +1,8 @@
 /* ==========================================================================
-   COVER / HERO SECTION — Art-Directed South Indian Wedding Invitation Cover
+   COVER — page 2 (redesign 06-cover, approved 2 Nov 2026)
+   One readable centre column on the cover's own parchment ground. No tint,
+   grain, sparkle or blur layers: the art is shown as drawn.
+   Garland, lamps and procession sprites are shared with the temple doors.
    ========================================================================== */
 .sr-and {
   position: absolute;
@@ -13,44 +16,26 @@
   border: 0;
 }
 
-/* Page 2: the cover is now the first in-flow section of #main (revealed
-   behind the temple doors), so it scrolls away to the Wedding Events. */
+
 #hero {
   position: relative;
-  width: 100%;
-  min-height: 100svh;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  color: #5c1926;
-  color: color-mix(in oklab, #5c1926, var(--wash-d) var(--wash-d-amt));
-  background-color: #eae1d8;
-  background-color: color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt));
   overflow: hidden;
-  padding: 0;
   isolation: isolate;
+  text-align: center;
+  color: var(--burg);
+  background-color: color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt));
 }
 
 .cover-scene {
   position: absolute;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  z-index: 1;
-  background-color: #eae1d8;
-  background-color: color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt));
-  background-image: radial-gradient(ellipse 52% 46% at 50% 42%, #f6efe6 0%, #eee6dd 46%, #eae1d8 76%);
-  background-image: radial-gradient(ellipse 52% 46% at 50% 42%, color-mix(in oklab, #f6efe6, var(--wash-l) var(--wash-l-amt)) 0%, color-mix(in oklab, #eee6dd, var(--wash-l) var(--wash-l-amt)) 46%, color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt)) 76%);
+  background: radial-gradient(60% 50% at 50% 40%, color-mix(in oklab, #f6efe6, var(--wash-l) var(--wash-l-amt)) 0%, color-mix(in oklab, #eee6dd, var(--wash-l) var(--wash-l-amt)) 50%, color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt)) 80%);
 }
 
-.cover-light {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 62% 52% at 50% 38%, rgba(255, 251, 242, 0.5) 0%, rgb(var(--gold-rgb) / 0.05) 55%, rgba(90, 26, 38, 0.03) 100%);
-  background: radial-gradient(ellipse 62% 52% at 50% 38%, rgba(255, 251, 242, 0.5) 0%, rgb(var(--gold-rgb) / 0.05) 55%, color-mix(in oklab, rgba(90, 26, 38, 0.03), rgb(var(--wash-d-rgb) / 0.03) var(--wash-d-amt)) 100%);
-}
-
-/* Upper floral & jasmine garland stage + brass lamps (media-gated so only 1 garland loads) */
+/* ---------- garland canopy + brass lamps (shared) ---------- */
 .cover-garland-stage {
   position: absolute;
   left: 0;
@@ -155,7 +140,6 @@
     rgba(226, 114, 24, 0.82) 90%,
     rgba(226, 114, 24, 0) 100%
   );
-  filter: blur(0.45px);
   mix-blend-mode: screen;
   transform-origin: 50% 88%;
   translate: -50% 0;
@@ -218,6 +202,8 @@
 }
 
 /* Lower-right outer corner: blooming pink lotuses, scattered petals & floral sprays */
+
+/* ---------- procession sprites (shared with TempleDoors .tp-side) ---------- */
 .cover-decor-right {
   position: absolute;
   right: 0;
@@ -252,7 +238,7 @@
   background-position: 3.333% 100%;
   background-repeat: no-repeat;
   mix-blend-mode: multiply;
-  filter: brightness(1.3) contrast(1.18) sepia(0.14) saturate(1.08);
+  filter: brightness(1.3) contrast(1.18); /* lifts the sprite's grey ground so multiply drops it */
   z-index: 2;
   -webkit-mask-image:
     linear-gradient(180deg, transparent 0%, #000 12%, #000 93%, transparent 100%),
@@ -277,7 +263,7 @@
   background-position: 97.414% 100%;
   background-repeat: no-repeat;
   mix-blend-mode: multiply;
-  filter: brightness(1.3) contrast(1.18) sepia(0.14) saturate(1.08);
+  filter: brightness(1.3) contrast(1.18); /* lifts the sprite's grey ground so multiply drops it */
   z-index: 2;
   -webkit-mask-image:
     linear-gradient(180deg, transparent 0%, #000 14%, #000 94%, transparent 100%),
@@ -290,861 +276,107 @@
 }
 
 /* Subtle warm sandy-parchment ground wash across the lower ceremonial stage */
-.cover-floor {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 13%;
-  background:
-    radial-gradient(ellipse 85% 65% at 50% 100%, rgba(210, 189, 162, 0.34) 0%, rgba(234, 225, 216, 0) 76%),
-    linear-gradient(0deg, rgba(214, 195, 174, 0.28) 0%, rgba(234, 225, 216, 0) 100%);
-  z-index: 3;
+
+/* on the cover the lotus-altar corner is retired; the procession flanks the
+   column on wide screens and sits in a row under the buttons below 1200px */
+#hero .cover-decor-right { display: none; }
+.cover-procrow { display: none; }
+@media (max-width: 1199px) {
+  .cover-scene .cover-procession-left,
+  .cover-scene .cover-procession-elephant { display: none; }
+  .cover-procrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    max-width: 560px;
+    margin: var(--s5) auto 0;
+  }
+  .cover-procrow .cover-procession-left,
+  .cover-procrow .cover-procession-elephant {
+    position: static;
+    height: 96px;
+    max-width: none;
+  }
+}
+@media (min-width: 1200px) {
+  .cover-scene .cover-procession-left { left: clamp(24px, 4vw, 88px); bottom: var(--s5); height: clamp(160px, 17vw, 248px); max-width: none; }
+  .cover-scene .cover-procession-elephant { right: clamp(32px, 6vw, 120px); bottom: var(--s5); height: clamp(156px, 16.5vw, 240px); max-width: none; }
 }
 
-.cover-tint {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 80% 76% at 50% 48%, transparent 56%, rgba(88, 34, 24, 0.08) 100%);
-  background: radial-gradient(ellipse 80% 76% at 50% 48%, transparent 56%, color-mix(in oklab, rgba(88, 34, 24, 0.08), rgb(var(--wash-d-rgb) / 0.08) var(--wash-d-amt)) 100%);
-  z-index: 4;
-}
-
-.cover-paper-grain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.035;
-  z-index: 4;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-.cover-sparkle {
-  position: absolute;
-  bottom: -20px;
-  width: var(--s, 3.5px);
-  height: var(--s, 3.5px);
-  border-radius: 50%;
-  background: #f9eab8;
-  background: color-mix(in oklab, #f9eab8, var(--wash-l) var(--wash-l-amt));
-  box-shadow: 0 0 7px #efd079;
-  box-shadow: 0 0 7px color-mix(in oklab, #efd079, var(--wash-g) var(--wash-g-amt));
-  animation: float-sparkle var(--d, 11s) linear var(--dl, 0s) infinite;
-  opacity: 0;
-  z-index: 4;
-}
-
-@keyframes float-sparkle {
-  0% { transform: translateY(0) scale(0.8); opacity: 0; }
-  20% { opacity: 0.65; }
-  80% { opacity: 0.55; }
-  100% { transform: translateY(-105vh) scale(1.15); opacity: 0; }
-}
-
-/* Central Cover Focal Stack */
+/* ---------- the column ---------- */
 .cv {
-  position: relative;
-  z-index: 5;
-  width: 100%;
-  max-width: 720px;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(32px, 5svh, 58px) 24px clamp(38px, 6svh, 68px);
+  position: relative; /* no z-index: stays in #hero's isolation group so the procession can multiply */
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(64px, 7vw, 104px) var(--gutter) var(--s7);
 }
-
-.cover-couple {
-  position: relative;
-  display: block;
-  margin: 0;
-  line-height: 0;
-}
-
-.cover-halo {
-  position: absolute;
-  left: 50%;
-  top: 47%;
-  transform: translate(-50%, -50%);
-  width: 142%;
-  aspect-ratio: 1;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 72%, transparent 90%);
-  mask-image: linear-gradient(180deg, #000 0%, #000 72%, transparent 90%);
-}
-
-.cover-halo .cover-lotus-mandala {
-  width: 100%;
-  height: 100%;
-  animation: spin 110s linear infinite;
-  opacity: 0.38;
-}
-
-.cover-halo .cover-lotus-mandala * {
-  fill: none;
-  stroke: #b5882c;
-  stroke: color-mix(in oklab, #b5882c, var(--wash-g) var(--wash-g-amt));
-  stroke-width: 0.55;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.cover-couple::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 4%;
-  width: 74%;
-  height: 24%;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(72, 23, 29, 0.16) 0%, rgba(72, 23, 29, 0) 72%);
-  background: radial-gradient(ellipse at center, color-mix(in oklab, rgba(72, 23, 29, 0.16), rgb(var(--wash-d-rgb) / 0.16) var(--wash-d-amt)) 0%, color-mix(in oklab, rgba(72, 23, 29, 0), rgb(var(--wash-d-rgb) / 0) var(--wash-d-amt)) 72%);
-  pointer-events: none;
-  z-index: 0;
-}
-
+.cover-couple { width: clamp(220px, 22vw, 300px); margin: 0 auto; }
 .cover-couple img {
-  position: relative;
-  z-index: 1;
   display: block;
-  width: auto;
-  height: clamp(210px, 38svh, 375px);
-  max-width: min(78vw, 395px);
-  object-fit: contain;
-  object-position: center top;
-  -webkit-mask-image:
-    linear-gradient(to bottom, #000 0%, #000 90%, transparent 100%),
-    linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to bottom, #000 0%, #000 90%, transparent 100%),
-    linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
-  mask-composite: intersect;
-  animation: cover-couple-float 7.5s ease-in-out infinite;
+  width: 100%;
+  height: auto;
+  -webkit-mask-image: linear-gradient(180deg, #000 0 86%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0 86%, transparent 100%);
 }
+.cover-greeting { margin: var(--s3) 0 0; font: italic 500 20px/1.3 var(--fh); color: var(--burg); }
+.cover-greeting b { font-weight: 600; }
 
-@keyframes cover-couple-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
+#hero .names { margin: var(--s3) 0 0; font: 500 clamp(56px, 6.4vw, 88px)/0.95 var(--fh); color: var(--burg); letter-spacing: 0.005em; }
+#hero .names i { font-style: italic; color: var(--gold-d); padding: 0 0.12em; }
+#hero .names .n2 { display: block; }
 
-.cover-greeting {
-  position: relative;
-  z-index: 2;
-  margin: clamp(6px, 1.1svh, 12px) 0 0;
-  max-width: 34ch;
-  color: #6b4e31;
-  color: color-mix(in oklab, #6b4e31, var(--wash-g) var(--wash-g-amt));
-  font: italic 400 clamp(15px, 1.6vw, 20px) / 1.32 var(--fh);
-  letter-spacing: 0.02em;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 16px #f6efe6;
-}
-
-.cover-greeting b {
-  font-weight: 600;
-  font-style: italic;
-  color: #5c1926;
-  color: color-mix(in oklab, #5c1926, var(--wash-d) var(--wash-d-amt));
-}
-
-#hero .names {
-  position: relative;
-  z-index: 2;
-  margin: clamp(4px, 0.9svh, 10px) 0 0;
-  color: #5e1623;
-  color: color-mix(in oklab, #5e1623, var(--wash-d) var(--wash-d-amt));
-  font: 500 clamp(44px, 6.4vw, 80px) / 0.98 var(--fh);
-  letter-spacing: 0.02em;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65), 0 6px 22px rgba(246, 239, 230, 0.85);
-}
-
-#hero .names i {
-  display: inline-block;
-  margin: 0 0.14em;
-  font-family: 'Playfair Display', var(--fh);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 0.68em;
-  line-height: 1;
-  vertical-align: -0.02em;
-  text-shadow: none;
-  color: #b8892b;
-  color: color-mix(in oklab, #b8892b, var(--wash-g) var(--wash-g-amt));
-  background: linear-gradient(180deg, #d7ab4e 0%, #996b17 100%);
-  background: linear-gradient(180deg, color-mix(in oklab, #d7ab4e, var(--wash-g) var(--wash-g-amt)) 0%, color-mix(in oklab, #996b17, var(--wash-g) var(--wash-g-amt)) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.55));
-}
-
-/* Ornamental antique-gold floret divider beneath names */
-.cover-ornament {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin: clamp(6px, 1svh, 11px) 0 0;
-}
-
-.cover-ornament-line {
-  width: clamp(44px, 5vw, 72px);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(var(--gold-d-rgb) / 0.8));
-}
-
-.cover-ornament-line:last-child {
-  background: linear-gradient(270deg, transparent, rgb(var(--gold-d-rgb) / 0.8));
-}
-
-.cover-ornament-floret {
-  width: 16px;
-  height: 16px;
-  overflow: visible;
-}
-
-.cover-ornament-floret path {
-  fill: none;
-  stroke: #b7892e;
-  stroke: color-mix(in oklab, #b7892e, var(--wash-g) var(--wash-g-amt));
-  stroke-width: 1.05;
-}
-
-.cover-ornament-floret circle {
-  fill: #b7892e;
-  fill: color-mix(in oklab, #b7892e, var(--wash-g) var(--wash-g-amt));
-}
-
-.cover-date {
-  position: relative;
-  z-index: 2;
-  margin: clamp(6px, 0.9svh, 10px) 0 0;
-  color: #4f2a1f;
-  color: color-mix(in oklab, #4f2a1f, var(--wash-d) var(--wash-d-amt));
-  font: 500 clamp(11px, 1.08vw, 13px) / 1.45 var(--fb);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-}
+.cv > .hrule { margin-top: var(--s3); gap: var(--s3); }
+.cv > .hrule::before, .cv > .hrule::after { width: 56px; background: currentColor; opacity: 0.7; }
+.cv > .hrule svg { width: 12px; height: 12px; }
+.cover-invite { margin: var(--s4) auto 0; max-width: 520px; font: italic 500 clamp(20px, 1.9vw, 24px)/1.4 var(--fh); color: var(--burg); text-wrap: balance; }
+.cover-invite-note { margin: var(--s2) 0 0; font: 300 17px/1.5 var(--fb); color: var(--rd-muted, #6a4a40); color: color-mix(in oklab, #6a4a40, var(--wash-d) var(--wash-d-amt)); }
+.cover-std { margin: var(--s5) 0 0; font: 400 clamp(34px, 3.2vw, 42px)/1 var(--fs); color: var(--gold-d); }
+.cover-date { margin: var(--s2) 0 0; font: 500 12px/1.2 var(--fb); letter-spacing: 0.16em; text-transform: uppercase; color: var(--burg); }
 
 .cover-countdown {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(14px, 1.9vw, 24px);
-  margin: clamp(10px, 1.4svh, 15px) 0 0;
+  display: inline-grid;
+  grid-template-columns: repeat(3, 88px);
+  margin-top: var(--s4);
+  border-top: 1px solid rgb(var(--gold-rgb) / 0.4);
+  border-bottom: 1px solid rgb(var(--gold-rgb) / 0.4);
 }
+.ccd-unit { padding: var(--s3) 0; }
+.ccd-sep { display: none; }
+.ccd-unit + .ccd-sep + .ccd-unit { border-left: 1px solid rgb(var(--gold-rgb) / 0.3); }
+.ccd-unit b { display: block; font: 500 36px/1 var(--fh); color: var(--burg); font-variant-numeric: lining-nums tabular-nums; }
+.ccd-unit small { display: block; margin-top: var(--s1); font: 500 11px/1 var(--fb); letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-d); }
 
-.ccd-unit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 52px;
-}
+.cover-acts { display: flex; justify-content: center; align-items: center; gap: var(--s3); margin-top: var(--s5); }
+.cover-acts .rd-btn { padding: 0 var(--s4); }
+.cover-scroll svg { animation: cover-scroll-cue 1.8s var(--ease) infinite; }
+@keyframes cover-scroll-cue { 50% { transform: translateY(3px); } }
 
-.ccd-unit b {
-  font: 500 clamp(22px, 2.3vw, 30px) / 1 var(--fh);
-  color: #9b7124;
-  color: color-mix(in oklab, #9b7124, var(--wash-g) var(--wash-g-amt));
-  background: linear-gradient(180deg, #c59b43 0%, #865f1a 100%);
-  background: linear-gradient(180deg, color-mix(in oklab, #c59b43, var(--wash-g) var(--wash-g-amt)) 0%, color-mix(in oklab, #865f1a, var(--wash-g) var(--wash-g-amt)) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-variant-numeric: lining-nums tabular-nums;
-}
+/* staged reveal as the temple doors open */
+.cv > * { opacity: 0; transform: translateY(14px); transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+body.revealed .cv > * { opacity: 1; transform: none; }
+body.revealed .cv > :nth-child(2) { transition-delay: 0.2s; }
+body.revealed .cv > :nth-child(3) { transition-delay: 0.3s; }
+body.revealed .cv > :nth-child(4) { transition-delay: 0.4s; }
+body.revealed .cv > :nth-child(5) { transition-delay: 0.5s; }
+body.revealed .cv > :nth-child(6) { transition-delay: 0.6s; }
+body.revealed .cv > :nth-child(7) { transition-delay: 0.7s; }
+body.revealed .cv > :nth-child(8) { transition-delay: 0.8s; }
+body.revealed .cv > :nth-child(n+9) { transition-delay: 0.9s; }
 
-.ccd-unit small {
-  margin-top: 4px;
-  font: 500 8.5px / 1 var(--fb);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #6d5030;
-  color: color-mix(in oklab, #6d5030, var(--wash-g) var(--wash-g-amt));
-}
-
-.ccd-sep {
-  width: 1px;
-  height: 28px;
-  background: linear-gradient(180deg, rgb(var(--gold-d-rgb) / 0.08), rgb(var(--gold-d-rgb) / 0.65), rgb(var(--gold-d-rgb) / 0.08));
-}
-
-
-
-/* Tablet layout (721px – 1023px): balanced portrait stage with lower flanking procession & elephant */
-@media (min-width: 721px) and (max-width: 1023px) {
-  .cv {
-    padding-top: clamp(46px, 6.5svh, 74px);
-    padding-bottom: clamp(170px, 20svh, 215px);
-  }
-
-  .cover-couple img {
-    height: clamp(200px, 33svh, 315px);
-  }
-
-  .cover-procession-left {
-    left: 62px;
-    bottom: 14px;
-    height: clamp(128px, 15.5svh, 162px);
-    max-width: 34vw;
-  }
-
-  .cover-procession-elephant {
-    right: 64px;
-    bottom: 16px;
-    height: clamp(122px, 14.8svh, 154px);
-    max-width: 26vw;
-  }
-
-  .cover-decor-right {
-    width: clamp(108px, 15vw, 138px);
-  }
-}
-
-/* Mobile composition (<= 720px): deliberate portrait hierarchy with symmetric lower ceremonial aisle */
 @media (max-width: 720px) {
-  .cv {
-    justify-content: center;
-    padding: clamp(38px, 6svh, 62px) 18px clamp(132px, 18svh, 168px);
-  }
-
-  .cover-couple img {
-    height: clamp(168px, 28.5svh, 255px);
-    max-width: min(72vw, 270px);
-  }
-
-  .cover-halo {
-    width: 136%;
-  }
-
-  #hero .names {
-    font-size: clamp(38px, 10.6vw, 52px);
-    margin-top: clamp(4px, 0.8svh, 8px);
-  }
-
-  .cover-ornament {
-    margin-top: 5px;
-    gap: 8px;
-  }
-
-  .cover-ornament-line {
-    width: 38px;
-  }
-
-  .cover-ornament-floret {
-    width: 13px;
-    height: 13px;
-  }
-
-  .cover-date {
-    margin-top: 5px;
-    font-size: 10.5px;
-    letter-spacing: 0.25em;
-  }
-
-  .cover-countdown {
-    margin-top: 8px;
-    gap: 12px;
-  }
-
-  .ccd-unit {
-    min-width: 42px;
-  }
-
-  .ccd-unit b {
-    font-size: 21px;
-  }
-
-  .ccd-unit small {
-    font-size: 7.5px;
-    letter-spacing: 0.18em;
-  }
-
-  .ccd-sep {
-    height: 22px;
-  }
-
-
-
-  .cover-procession-left {
-    left: 42px;
-    bottom: calc(-6px + env(safe-area-inset-bottom, 0px));
-    height: clamp(88px, 12.2svh, 112px);
-    max-width: 40vw;
-    filter: brightness(1.28) contrast(1.14) sepia(0.16) saturate(1.06);
-    -webkit-mask-image:
-      radial-gradient(125% 118% at 32% 112%, #000 68%, rgba(0, 0, 0, 0.8) 84%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 8%, #000 94%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image:
-      radial-gradient(125% 118% at 32% 112%, #000 68%, rgba(0, 0, 0, 0.8) 84%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 8%, #000 94%, transparent 100%);
-    mask-composite: intersect;
-  }
-
-  .cover-procession-elephant {
-    right: 26px;
-    bottom: calc(-4px + env(safe-area-inset-bottom, 0px));
-    height: clamp(84px, 11.6svh, 106px);
-    max-width: 30vw;
-    filter: brightness(1.28) contrast(1.14) sepia(0.16) saturate(1.06);
-    -webkit-mask-image:
-      radial-gradient(128% 118% at 58% 112%, #000 66%, rgba(0, 0, 0, 0.8) 83%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 6%, #000 96%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image:
-      radial-gradient(128% 118% at 58% 112%, #000 66%, rgba(0, 0, 0, 0.8) 83%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 6%, #000 96%, transparent 100%);
-    mask-composite: intersect;
-  }
-
-  .cover-decor-right {
-    right: 0;
-    bottom: 0;
-    width: clamp(68px, 19vw, 88px);
-    -webkit-mask-image:
-      radial-gradient(115% 100% at 100% 100%, #000 62%, rgba(0, 0, 0, 0.8) 84%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 30%, #000 100%);
-    -webkit-mask-composite: source-in;
-    mask-image:
-      radial-gradient(115% 100% at 100% 100%, #000 62%, rgba(0, 0, 0, 0.8) 84%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 30%, #000 100%);
-    mask-composite: intersect;
-  }
-
-  .cover-floor {
-    height: 22%;
-    background:
-      radial-gradient(ellipse 92% 78% at 50% 100%, rgba(210, 189, 162, 0.42) 0%, rgba(234, 225, 216, 0) 82%),
-      linear-gradient(0deg, rgba(214, 195, 174, 0.34) 0%, rgba(234, 225, 216, 0) 100%);
-  }
+  .cv { padding-top: clamp(56px, 16vw, 72px); padding-bottom: var(--s5); }
+  .cover-couple { width: min(64vw, 240px); }
+  #hero .names { font-size: clamp(48px, 14vw, 60px); }
+  .cover-countdown { grid-template-columns: repeat(3, 80px); }
 }
-
-/* Compact small-mobile refinement (<= 360px, e.g. 320px width) */
-@media (max-width: 360px) {
-  .cv {
-    padding: 30px 14px 108px;
-  }
-
-  .cover-couple img {
-    height: clamp(142px, 25svh, 188px);
-    max-width: 66vw;
-  }
-
-  #hero .names {
-    font-size: clamp(32px, 10.2vw, 37px);
-  }
-
-  .cover-ornament {
-    margin-top: 4px;
-  }
-
-  .cover-ornament-line {
-    width: 30px;
-  }
-
-  .cover-date {
-    font-size: 9.5px;
-    letter-spacing: 0.2em;
-  }
-
-  .cover-countdown {
-    margin-top: 6px;
-    gap: 9px;
-  }
-
-  .ccd-unit {
-    min-width: 36px;
-  }
-
-  .ccd-unit b {
-    font-size: 18px;
-  }
-
-  .ccd-sep {
-    height: 19px;
-  }
-
-
-  .cover-procession-left {
-    left: 42px;
-    bottom: 6px;
-    height: 74px;
-    max-width: 108px;
-  }
-
-  .cover-procession-elephant {
-    right: 24px;
-    bottom: 7px;
-    height: 70px;
-    max-width: 78px;
-  }
-
-  .cover-decor-right {
-    right: 0;
-    width: 58px;
-  }
+@media (max-width: 359px) {
+  .cover-procrow .cover-procession-left,
+  .cover-procrow .cover-procession-elephant { height: 76px; }
+  .cover-acts { flex-direction: column; }
 }
-
-/* Short-landscape desktop safeguard */
-@media (min-width: 721px) and (max-height: 740px) {
-  .cv {
-    padding-top: 28px;
-    padding-bottom: 28px;
-  }
-
-  .cover-couple img {
-    height: min(33svh, 240px);
-  }
-
-  #hero .names {
-    font-size: clamp(38px, 5.2vw, 58px);
-  }
-
-}
-
-/* Accessibility: respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .cover-lamp-glow,
-  .cover-lamp-flame,
-  .cover-sparkle,
-  .cover-halo .cover-lotus-mandala,
-  .cover-couple img {
-    animation: none !important;
-  }
-
-  .cover-lamp-glow {
-    opacity: 0.8;
-  }
-
-  .cover-lamp-flame {
-    opacity: 0.92;
-  }
-}
-
-
-/* ==========================================================================
-   PAGE 2 ADDITIONS — invitation words, scroll cue, staged reveal
-   ========================================================================== */
-.cover-greeting {
-  margin-top: clamp(10px, 1.6svh, 16px);
-}
-
-.cover-invite {
-  position: relative;
-  z-index: 2;
-  max-width: 32ch;
-  margin: clamp(8px, 1.4svh, 14px) auto 0;
-  color: #5c1926;
-  color: color-mix(in oklab, #5c1926, var(--wash-d) var(--wash-d-amt));
-  font: italic 400 clamp(17px, 1.9vw, 21px) / 1.45 var(--fh);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 16px #f6efe6;
-}
-
-.cover-invite-note {
-  position: relative;
-  z-index: 2;
-  max-width: 36ch;
-  margin: 6px auto 0;
-  color: #6b4e31;
-  color: color-mix(in oklab, #6b4e31, var(--wash-g) var(--wash-g-amt));
-  font: 400 clamp(13px, 1.2vw, 15px) / 1.55 var(--fb);
-  letter-spacing: 0.01em;
-  text-shadow: 0 0 12px #f6efe6;
-}
-
-.cover-scroll {
-  position: relative;
-  z-index: 2;
-  margin-top: clamp(12px, 2svh, 20px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  min-height: 44px;
-  justify-content: center;
-  padding: 0 16px;
-  color: #8a6219;
-  color: color-mix(in oklab, #8a6219, var(--wash-g) var(--wash-g-amt));
-  font: 500 9px / 1 var(--fb);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-.cover-scroll svg {
-  width: 16px;
-  height: 16px;
-  animation: cover-scroll-cue 1.8s ease-in-out infinite;
-}
-
-@keyframes cover-scroll-cue {
-  0%, 100% { transform: translateY(0); opacity: 0.6; }
-  50% { transform: translateY(4px); opacity: 1; }
-}
-
-/* Desktop / tablet: keep the couple clear of the hanging centre garland and
-   the text column clear of the procession & elephant on either side. */
-@media (min-width: 721px) {
-  .cover-couple {
-    margin-top: clamp(40px, 7svh, 70px);
-  }
-
-  .cover-couple img {
-    height: clamp(190px, 30svh, 320px);
-  }
-}
-
-/* Mobile: smaller portrait so the full invitation fits, and enough bottom
-   padding that no line of text can sit over the procession, elephant or
-   lotus corner (tallest of those is the lotus corner, ~140px). */
-@media (max-width: 720px) {
-  .cv {
-    padding-bottom: clamp(150px, 19svh, 172px);
-  }
-
-  .cover-couple img {
-    height: clamp(150px, 24svh, 220px);
-  }
-}
-
-@media (max-width: 360px) {
-  .cv {
-    padding-bottom: 128px;
-  }
-
-  .cover-couple img {
-    height: clamp(128px, 21svh, 170px);
-  }
-
-  .cover-invite {
-    font-size: 15.5px;
-  }
-
-  .cover-invite-note {
-    font-size: 12.5px;
-  }
-}
-
-/* Staged reveal: text rises in as the temple doors swing open */
-.cv > * {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-body.revealed .cv > * {
-  opacity: 1;
-  transform: none;
-}
-
-body.revealed .cv > :nth-child(2) { transition-delay: 0.25s; }
-body.revealed .cv > :nth-child(3) { transition-delay: 0.4s; }
-body.revealed .cv > :nth-child(4) { transition-delay: 0.5s; }
-body.revealed .cv > :nth-child(5) { transition-delay: 0.65s; }
-body.revealed .cv > :nth-child(6) { transition-delay: 0.75s; }
-body.revealed .cv > :nth-child(7) { transition-delay: 0.9s; }
-body.revealed .cv > :nth-child(8) { transition-delay: 1s; }
-body.revealed .cv > :nth-child(9) { transition-delay: 1.15s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .cv > * {
-    transform: none;
-    transition: opacity 0.4s ease;
-  }
-
-  body.revealed .cv > * {
-    transition-delay: 0s !important;
-  }
-
-  .cover-scroll svg {
-    animation: none;
-  }
-}
-
-/* Wide-but-short screens (e.g. 1024×768 tablets in landscape, small laptops):
-   keep the procession and elephant inside the side margins so they never
-   reach the centred invitation text. */
-@media (min-width: 1024px) {
-  .cover-procession-left {
-    max-width: calc(50vw - 230px);
-  }
-
-  .cover-procession-elephant {
-    max-width: calc(50vw - 250px);
-  }
-}
-
-/* Desktop/tablet garland: the centre strand and its two low brass lamps hang
-   to the very bottom of the artwork, which put them behind the greeting and
-   names. Fade out just that lower-centre column (the upper leaves, flowers
-   and lit lamps stay). Applies to the page-1 doors copy as well. */
-@media (min-width: 721px) {
-  .cover-garland {
-    -webkit-mask-image:
-      linear-gradient(180deg, #000 0%, #000 80%, transparent 100%),
-      radial-gradient(ellipse 11% 52% at 50% 100%, transparent 0 70%, #000 100%);
-    -webkit-mask-composite: source-in;
-    mask-image:
-      linear-gradient(180deg, #000 0%, #000 80%, transparent 100%),
-      radial-gradient(ellipse 11% 52% at 50% 100%, transparent 0 70%, #000 100%);
-    mask-composite: intersect;
-  }
-}
-
-/* Phones held sideways: the tall portrait garland would fill the whole screen,
-   so use the wide desktop garland (same centre fade as desktop). */
-@media (max-width: 720px) and (min-aspect-ratio: 3/2) {
-  .cover-garland-stage {
-    top: calc(-100vw * 0.011);
-    aspect-ratio: 2160 / 760;
-  }
-
-  .cover-garland {
-    background-image: var(--wT);
-    -webkit-mask-image:
-      linear-gradient(180deg, #000 0%, #000 80%, transparent 100%),
-      radial-gradient(ellipse 11% 52% at 50% 100%, transparent 0 70%, #000 100%);
-    -webkit-mask-composite: source-in;
-    mask-image:
-      linear-gradient(180deg, #000 0%, #000 80%, transparent 100%),
-      radial-gradient(ellipse 11% 52% at 50% 100%, transparent 0 70%, #000 100%);
-    mask-composite: intersect;
-  }
-
-  .cover-lamps--desktop {
-    display: block;
-  }
-
-  .cover-lamps--mobile {
-    display: none;
-  }
-}
-
-/* Mobile: sit the invitation lower with a larger portrait, so there is no
-   empty band between the text and the procession. */
-@media (max-width: 720px) {
-  .cv {
-    justify-content: flex-end;
-    padding-top: clamp(70px, 10svh, 96px);
-    padding-bottom: clamp(120px, 15svh, 140px);
-  }
-
-  .cover-couple img {
-    height: clamp(170px, 30svh, 270px);
-  }
-}
-
-@media (max-width: 360px) {
-  .cv {
-    padding-bottom: 118px;
-  }
-
-  .cover-couple img {
-    height: clamp(130px, 24svh, 190px);
-  }
-}
-
-/* Lotus portrait band after the cover */
-.cover-band {
-  position: relative;
-  margin: 0;
-  height: clamp(380px, 72svh, 760px);
-  overflow: hidden;
-  background: #2a0a10;
-  background: color-mix(in oklab, #2a0a10, var(--wash-d) var(--wash-d-amt));
-}
-
-.cover-band img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 30%;
-}
-
-.cover-band::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, #eae1d8 0%, rgba(234, 225, 216, 0) 14%, rgba(42, 10, 16, 0) 55%, rgba(42, 10, 16, 0.82) 100%);
-  background: linear-gradient(180deg, #eae1d8 0%, rgba(234, 225, 216, 0) 14%, color-mix(in oklab, rgba(42, 10, 16, 0), rgb(var(--wash-d-rgb) / 0) var(--wash-d-amt)) 55%, color-mix(in oklab, rgba(42, 10, 16, 0.82), rgb(var(--wash-d-rgb) / 0.82) var(--wash-d-amt)) 100%);
-  background: linear-gradient(180deg, color-mix(in oklab, #eae1d8, var(--wash-l) var(--wash-l-amt)) 0%, rgba(234, 225, 216, 0) 14%, rgba(42, 10, 16, 0) 55%, rgba(42, 10, 16, 0.82) 100%);
-}
-
-.cover-band figcaption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: clamp(28px, 6svh, 60px);
-  z-index: 2;
-  padding: 0 24px;
-  text-align: center;
-  color: var(--ivory);
-}
-
-.cover-band-quote {
-  display: block;
-  max-width: 30ch;
-  margin: 0 auto;
-  font: italic 400 clamp(22px, 5.4vw, 34px) / 1.3 var(--fh);
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-}
-
-.cover-band small {
-  display: block;
-  margin-top: 10px;
-  color: #f3dc8e;
-  color: color-mix(in oklab, #f3dc8e, var(--wash-g) var(--wash-g-amt));
-  font: 500 10px / 1.4 var(--fb);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-}
-
-/* Names in the script face with a gold-foil sweep (see .foil in global.css) */
-#hero .names.foil {
-  font-family: var(--fs);
-  font-weight: 400;
-  font-size: clamp(54px, 14vw, 104px);
-  line-height: 1.05;
-  letter-spacing: 0.01em;
-  padding: 0 0.12em;
-  text-shadow: none;
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.4));
-}
-
-#hero .names.foil i {
-  font: inherit;
-  margin: 0 0.08em;
-  background: none;
-  filter: none;
-  -webkit-text-fill-color: inherit;
-  color: inherit;
-}
-
-.cover-std {
-  position: relative;
-  z-index: 2;
-  margin: clamp(10px, 1.6svh, 16px) 0 -2px;
-  color: #9a7022;
-  color: color-mix(in oklab, #9a7022, var(--wash-g) var(--wash-g-amt));
-  font: 400 clamp(26px, 6vw, 34px) / 1 var(--fs);
-}
-
-.cover-band figcaption {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.cover-band-credit {
-  font-size: 8.5px !important;
-  opacity: 0.6;
-  letter-spacing: 0.24em !important;
+  .cover-lamp-glow, .cover-lamp-flame { animation: none; }
+  .cv > * { opacity: 1; transform: none; transition: none; }
+  .cover-scroll svg { animation: none; }
 }

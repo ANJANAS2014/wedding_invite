@@ -30,7 +30,6 @@ const TEAM_LABEL: Record<TeamSide, string> = { groom: 'Team Groom', bride: 'Team
 const PERSON = {
   groom: {
     name: WEDDING_CONTENT.groom,
-    role: 'The Groom',
     story: WEDDING_CONTENT.groomStory,
     img: WEDDING_IMAGES.p12,
     w: 700,
@@ -41,7 +40,6 @@ const PERSON = {
   },
   bride: {
     name: WEDDING_CONTENT.bride,
-    role: 'The Bride',
     story: WEDDING_CONTENT.brideStory,
     img: WEDDING_IMAGES.bride_portrait,
     w: 600,
@@ -149,7 +147,6 @@ export const CoupleSection: React.FC<CoupleSectionProps> = ({ guestName = '', in
             {mine ? `★ ${TEAM_LABEL[key]}` : TEAM_LABEL[key]}
           </span>
         </button>
-        <span className="cp-role">{p.role}</span>
         <h3>{p.name}</h3>
         <span className="cp-home">
           <svg viewBox="0 0 12 16" aria-hidden="true" focusable="false">
@@ -159,21 +156,21 @@ export const CoupleSection: React.FC<CoupleSectionProps> = ({ guestName = '', in
           {p.home.town}
           <span className="cp-home-r"> · {p.home.region}</span>
         </span>
-        <p className="cp-story">{p.story}</p>
       </article>
     );
   };
 
   return (
-    <section className={`cp grain${side ? ` cp--team-${side}` : ''}`} id="couple" aria-labelledby="couple-title">
-      <header className="cp-head reveal">
-        <div className="eyebrow">The couple</div>
+    <section className={`cp rd-sec rd-light${side ? ` cp--team-${side}` : ''}`} id="couple" aria-labelledby="couple-title">
+      <div className="rd-wrap">
+      <header className="rd-head reveal">
+        <span className="rd-kicker">The couple</span>
         <h2 id="couple-title">Bride &amp; Groom</h2>
         <HeaderRule />
-        <p className="cp-ask">
+        <p className="rd-lead">
           {firstName ? `${firstName}, are` : 'Are'} you <em>Team Groom</em> or <em>Team Bride</em>?
-          <span>Tap a photo to pick your side.</span>
         </p>
+        <p className="rd-hint">Tap a photo to pick your side.</p>
       </header>
 
       <div className="cp-pair reveal" ref={pairRef}>
@@ -189,6 +186,15 @@ export const CoupleSection: React.FC<CoupleSectionProps> = ({ guestName = '', in
         </div>
 
         {renderPerson('bride')}
+      </div>
+
+      <div className="cp-stories reveal">
+        {(['groom', 'bride'] as TeamSide[]).map((key) => (
+          <p key={key} className="cp-story">
+            <span className="cp-story-who">{PERSON[key].name}.</span>
+            {PERSON[key].story}
+          </p>
+        ))}
       </div>
 
       {totals && total > 0 && (
@@ -222,15 +228,16 @@ export const CoupleSection: React.FC<CoupleSectionProps> = ({ guestName = '', in
 
       <div className="cp-vows reveal">
         <blockquote className="vow">
-          <span className="vow-label">His vow</span>
+          <span className="rd-label">His vow</span>
           <p>{WEDDING_CONTENT.groomVow}</p>
         </blockquote>
         <blockquote className="vow">
-          <span className="vow-label">Her vow</span>
+          <span className="rd-label">Her vow</span>
           <p>{WEDDING_CONTENT.brideVow}</p>
         </blockquote>
       </div>
       <NextTeaser label="Next: how a Malayali girl beat the language barrier" targetId="story-filmstrip-section" />
+      </div>
     </section>
   );
 };

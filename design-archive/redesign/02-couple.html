@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 · Bride & Groom — redesign mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap">
+<style>
+  /* ---------- mockup viewer chrome (not part of the design) ---------- */
+  :root { --ink:#3a1218; --burg:#5a1420; --gold-d:#b8892e; --line:#e5d2b0; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#efe6d6; color:var(--ink); font:400 15px/1.55 'Jost', system-ui, sans-serif; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:12px 24px; padding:12px 24px; background:#fbf6ec; border-bottom:1px solid var(--line); }
+  .bar h1 { margin:0; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .bar .sizes { display:flex; gap:6px; align-items:center; margin-left:auto; font-size:13px; }
+  .bar button { min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); font:500 13px 'Jost', sans-serif; cursor:pointer; }
+  .bar button[aria-pressed="true"] { background:var(--burg); border-color:var(--burg); color:#fbf6ec; }
+  .frames { display:flex; align-items:flex-start; gap:24px; padding:24px; }
+  .frame { flex:none; }
+  .frame > p { margin:0 0 8px; font:500 12px/1 'Jost', sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#8a6a3a; }
+  .frame-desk { flex:1 1 auto; min-width:0; }
+  .clip { overflow:hidden; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  iframe { display:block; border:0; transform-origin:0 0; }
+  .notes { max-width:1120px; margin:0 auto; padding:8px 24px 64px; display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; }
+  .notes section { background:#fbf6ec; border:1px solid var(--line); border-radius:8px; padding:20px 24px; }
+  .notes h2 { margin:0 0 12px; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .notes ul { margin:0; padding-left:18px; }
+  .notes li { margin:0 0 8px; }
+  .notes code { font-size:13px; background:#f1e6d2; padding:1px 4px; border-radius:3px; }
+  .ok { color:#1f6b3a; font-weight:500; } .warn { color:#9a5b00; font-weight:500; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:6px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:last-child { text-align:right; white-space:nowrap; }
+  @media (max-width:900px) { .frames { flex-direction:column; } .frame-desk { width:100%; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1>02 · Bride &amp; Groom — desktop &amp; mobile mockup</h1>
+  <div class="sizes" role="group" aria-label="Mobile preview width">
+    Mobile width:
+    <button type="button" data-w="320">320</button>
+    <button type="button" data-w="375">375</button>
+    <button type="button" data-w="390" aria-pressed="true">390</button>
+    <button type="button" data-w="430">430</button>
+  </div>
+</div>
+
+<div class="frames">
+  <div class="frame frame-desk">
+    <p>Desktop · 1440px (scaled to fit)</p>
+    <div class="clip" id="deskClip"><iframe id="desk" title="Desktop mockup" width="1440" scrolling="no"></iframe></div>
+  </div>
+  <div class="frame frame-mob">
+    <p id="mobLabel">Mobile · 390px</p>
+    <div class="clip"><iframe id="mob" title="Mobile mockup" width="390" scrolling="no"></iframe></div>
+  </div>
+</div>
+
+<div class="notes">
+  <section><h2>Audit: current section</h2><ul><li><b>Very tall.</b> The section is 1649px on desktop. Padding goes up to 96px (<code>CoupleSection.css:9</code>), with up to 56px gaps above the portraits (<code>:35</code>) and 40–50px above the game and the vows (<code>:422, :521, :691</code>).</li><li><b>Labels too small.</b> Many labels are 9–10px uppercase (<code>CoupleSection.css:148, 165, 376, 414, 451, 501, 528, 594, 678, 702</code>), including the "Tap a photo" hint.</li><li><b>Game cards waste space.</b> Each card is about 175px tall for a one-line question, and the Lalith/Anjana buttons are under 44px. On mobile the carousel cuts the next card with no sign there are more.</li><li><b>Narrow story columns on mobile.</b> At 390px each portrait's story is squeezed into about 160px, so it runs to 4–5 centred lines.</li><li><b>Unbalanced pairing on desktop.</b> The portraits sit far apart, the "&" and thali float high, and the chain droops below the photo line. The two vows break onto different line counts.</li><li><b>Soft effects.</b> A grain texture over the section (<code>.grain</code>) and blur-up image reveals (<code>.bu</code>) soften the photos.</li></ul></section>
+  <section><h2>System (from 01 · Our Events)</h2><ul><li>Same 1120px wrap, spacing scale, type scale, header (kicker / title / ornament) and 44px buttons as 01.</li><li>Light-surface version of the system: ivory background, burgundy titles, antique-gold labels and hairlines at 22–35% opacity. Same rules as the dark Events section.</li><li>Proposes one new token, <code>--leaf</code> (muted botanical green), for later sections. It isn't used here.</li></ul></section>
+  <section><h2>Design decisions</h2><ul><li>The "The Groom" / "The Bride" labels are dropped, because the heading and the Team pills already say it. That's the same call as Keralam/Chennai in Events.</li><li>Portraits, "&" and thali sit on one centred axis, at 216px on desktop and 128px on mobile. The heritage rings stay: Kanjeevaram temple border for Lalith, kasavu for Anjana. The "Team" pill sits on the ring's lower edge, the same tab pattern as "Next celebration" in Events.</li><li>The stories sit below the pair. On desktop they're two equal centred columns; on mobile they're two full-width paragraphs led by the name, which removes the narrow columns.</li><li>Game: a compact 3×2 grid on desktop, and a snap carousel with dots on mobile. Card 01 is shown answered, to document the back of the card. All buttons are 44px.</li><li>Height: desktop is 6% shorter. Mobile grows by about 200px: the old section used 9–15px text and 30px buttons, which the system no longer allows. The answered game card shown here is also the tallest card state.</li><li>Vows: two equal columns split by a hairline, with balanced line breaks. They stack on mobile.</li><li>Kept from the current site (shown static here): the tug-of-war tally and the "You're on Team…" note appear once a side is picked, along with the toast, the pinned badge and the chain draw-in animation.</li></ul></section>
+  <section><h2>Self-check</h2><table><tr><td>Sharp: no grain, blur-up or backdrop effects</td><td class="ok">pass</td></tr><tr><td>Aligned: one centre axis for pair, stories, quiz, vows</td><td class="ok">pass</td></tr><tr><td>Balanced pairs: equal portraits, equal story & vow columns</td><td class="ok">pass</td></tr><tr><td>No wasted space: desktop 1545px (was 1649). Mobile 1450px (was 1252), taller because text is now ≥16px and every tap ≥44px</td><td class="warn">partial</td></tr><tr><td>Clear hierarchy: header → pair → game → vows</td><td class="ok">pass</td></tr><tr><td>Text/image proportion: portraits lead, text secondary</td><td class="ok">pass</td></tr><tr><td>Desktop + 320/375/390/430: no overflow, taps ≥ 44px</td><td class="ok">pass</td></tr><tr><td>Matches the system</td><td class="ok">pass</td></tr></table><h2 style="margin-top:20px">Missing</h2><ul><li>None. All copy comes from <code>weddingData.ts</code> and <code>CoupleQuiz.tsx</code>, and the photos from <code>public/images/couple/</code>.</li><li>The live Team tally numbers come from the server, so the mockup doesn't show the bar. It would use a thin two-colour bar (burgundy / gold) with 12px labels.</li></ul></section>
+</div>
+
+<!-- ======================= THE DESIGN (rendered into both frames) ======================= -->
+<template id="design">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&family=Great+Vibes&display=swap">
+<style>
+  :root {
+    /* existing tokens (src/styles/variables.css) */
+    --maroon:#6b1a24; --burg:#5a1420; --burg-d:#3a0b14; --ink:#3a1218; --ivory:#f8efdc; --cream:#f8efdc; --card:#fffaf0; --paper-2:#fbf6ec;
+    --champ:#e9d3a4; --gold:#c19a3d; --gold-d:#b8892e; --gold-l:#f0d68e;
+    --gold-rgb:193 154 61; --gold-l-rgb:240 214 142; --gold-d-rgb:184 137 46; --burg-rgb:90 20 32; --burg-d-rgb:58 11 20; --ivory-rgb:248 239 220; --champ-rgb:233 211 164;
+    --leaf:#5f6f4a; /* muted botanical green — proposed new token (used sparingly) */
+    --fh:'Cormorant Garamond', Georgia, serif; --fb:'Jost', system-ui, sans-serif; --fs:'Great Vibes', 'Cormorant Garamond', cursive;
+    /* layout system (approved in 01 · Our Events) */
+    --max:1120px; --gutter:20px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+    --pad-y:40px;
+  }
+  @media (min-width:600px) { :root { --gutter:var(--s6); --pad-y:var(--s7); } }
+  @media (min-width:960px) { :root { --pad-y:var(--s8); } }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { -webkit-font-smoothing:antialiased; }
+  img { display:block; max-width:100%; height:auto; }
+  button { font:inherit; }
+
+  /* section shells */
+  .sec { padding:var(--pad-y) max(var(--gutter), env(safe-area-inset-left)) var(--pad-y) max(var(--gutter), env(safe-area-inset-right)); font:400 16px/1.5 var(--fb); }
+  .sec--light { background:linear-gradient(180deg, var(--paper-2), var(--ivory)); color:var(--ink);
+    --hair:1px solid rgb(var(--gold-rgb) / .35); --hair-soft:1px solid rgb(var(--gold-rgb) / .22); --t-kicker:var(--gold-d); --t-title:var(--burg); --t-label:var(--gold-d); --t-muted:#6a4a40; }
+  .sec--dark { background:radial-gradient(120% 60% at 50% 0%, #6e1d2b 0%, var(--burg) 45%, var(--burg-d) 100%); color:var(--ivory);
+    --hair:1px solid rgb(var(--gold-l-rgb) / .28); --hair-soft:1px solid rgb(var(--gold-l-rgb) / .16); --t-kicker:var(--gold-l); --t-title:var(--champ); --t-label:var(--gold); --t-muted:rgb(var(--ivory-rgb) / .78); }
+  .wrap { max-width:var(--max); margin:0 auto; }
+  .narrow { max-width:720px; margin-inline:auto; }
+
+  /* section header (same in every section) */
+  .head { text-align:center; margin-bottom:var(--s5); }
+  .kicker { margin:0 0 var(--s2); font:italic 500 22px/1.2 var(--fh); letter-spacing:.02em; color:var(--t-kicker); }
+  .head h2 { margin:0; font:500 clamp(40px, 4.4vw, 56px)/1.05 var(--fh); color:var(--t-title); letter-spacing:.005em; }
+  .orn { display:flex; align-items:center; justify-content:center; gap:var(--s3); margin-top:var(--s3); color:var(--gold); }
+  .orn::before, .orn::after { content:""; width:56px; height:1px; background:currentColor; opacity:.7; }
+  .orn svg { width:12px; height:12px; }
+  .lead { margin:var(--s3) auto 0; max-width:560px; font:italic 500 20px/1.4 var(--fh); color:var(--t-title); }
+
+  /* type scale */
+  .label { font:500 12px/1.2 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:var(--t-label); }
+  .t-h3 { margin:0; font:italic 500 clamp(34px, 3.2vw, 40px)/1 var(--fh); color:var(--t-title); }
+  .t-lead { font:500 20px/1.35 var(--fh); }
+  .t-body { font:400 16px/1.6 var(--fb); color:var(--t-muted); }
+
+  /* buttons: 44px, two styles */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:var(--s2); min-height:44px; padding:0 var(--s5); border-radius:6px;
+    font:500 15px/1 var(--fb); letter-spacing:.02em; text-decoration:none; cursor:pointer; white-space:nowrap; }
+  .btn--solid { background:var(--burg); color:var(--ivory); border:1px solid var(--burg); }
+  .sec--dark .btn--solid { background:var(--gold-l); color:var(--burg-d); border-color:var(--gold-l); }
+  .btn--line { background:transparent; color:var(--burg); border:1px solid rgb(var(--gold-rgb) / .6); }
+  .sec--dark .btn--line { color:var(--gold-l); border-color:rgb(var(--gold-l-rgb) / .55); }
+
+  .next { margin:var(--s5) 0 0; text-align:center; font:italic 500 20px/1.3 var(--fh); color:var(--t-kicker); }
+  .sec--light .next { color:var(--gold-d); }
+  .next svg { display:block; width:14px; height:14px; margin:var(--s1) auto 0; }
+
+
+  .pair { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:start; column-gap:var(--s5); max-width:760px; margin:0 auto; }
+  .person { display:flex; flex-direction:column; align-items:center; text-align:center; min-width:0; }
+  .pic { position:relative; display:block; width:clamp(128px, 18vw, 216px); aspect-ratio:1; padding:0; border:0; background:none; cursor:pointer; border-radius:50%; }
+  .pic:focus-visible { outline:2px solid var(--gold-d); outline-offset:4px; }
+  .ring { position:absolute; inset:0; width:100%; height:100%; }
+  .photo { position:absolute; inset:9%; border-radius:50%; overflow:hidden; }
+  .photo img { width:100%; height:100%; object-fit:cover; }
+  .team { position:absolute; left:50%; bottom:-2px; transform:translate(-50%, 50%); padding:6px 12px; border-radius:999px; background:var(--card);
+    border:1px solid rgb(var(--gold-rgb) / .6); font:500 11px/1 var(--fb); letter-spacing:.14em; text-transform:uppercase; color:var(--burg); white-space:nowrap; }
+  .person .t-h3 { margin-top:var(--s6); font-size:clamp(32px, 3.4vw, 44px); }
+  .home { display:inline-flex; align-items:center; gap:6px; margin-top:var(--s2); font:500 12px/1.2 var(--fb); letter-spacing:.12em; text-transform:uppercase; color:var(--t-muted); }
+  .home svg { width:10px; height:13px; color:var(--gold-d); flex:none; }
+
+  .amp { display:flex; flex-direction:column; align-items:center; padding-top:calc(clamp(128px, 18vw, 216px) * .28); }
+  .amp b { font:italic 500 clamp(44px, 5vw, 64px)/1 var(--fh); color:var(--gold-d); }
+  .thali { width:24px; height:auto; margin-top:var(--s2); }
+
+  .stories { display:grid; grid-template-columns:1fr 1fr; gap:var(--s6); max-width:760px; margin:var(--s4) auto 0; text-align:center; }
+  .stories p { margin:0 auto; max-width:340px; font:400 17px/1.55 var(--fb); color:var(--t-muted); text-wrap:balance; }
+  .stories .who { display:none; }
+
+  .hint { margin:var(--s2) 0 0; font:400 16px/1.4 var(--fb); color:var(--t-muted); }
+
+  /* quiz */
+  .quiz { margin-top:var(--s6); padding-top:var(--s6); border-top:var(--hair-soft); }
+  .quiz .head { margin-bottom:var(--s5); }
+  .quiz h3 { margin:var(--s1) 0 0; font:italic 500 clamp(30px, 3vw, 36px)/1.1 var(--fh); color:var(--burg); }
+  .cards { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--s4); margin:0; padding:0; list-style:none; }
+  .qc { position:relative; display:flex; flex-direction:column; align-items:center; gap:var(--s3); padding:var(--s4); text-align:center;
+    background:var(--card); border:var(--hair); border-radius:8px; box-shadow:0 8px 20px -18px rgba(58,11,20,.5); }
+  .q { margin:0; flex:1; display:flex; align-items:center; font:italic 500 21px/1.3 var(--fh); color:var(--burg); }
+  .picks { display:grid; grid-template-columns:1fr 1fr; gap:var(--s2); width:100%; max-width:240px; }
+  .picks .btn { padding:0 var(--s3); }
+  .qc.is-answered { background:var(--burg); border-color:var(--burg); }
+  .qc.is-answered .label { color:var(--gold-l); }
+  .qc.is-answered .q { color:var(--champ); font-size:18px; flex:none; }
+  .qc.is-answered .label { align-self:flex-start; }
+  .ans { display:flex; align-items:center; gap:var(--s3); text-align:left; }
+  .face { width:44px; height:44px; flex:none; border-radius:50%; object-fit:cover; border:1px solid var(--gold-l); }
+  .ans b { font:500 16px/1.2 var(--fb); color:var(--gold-l); }
+  .ans .note { margin:var(--s1) 0 0; font:400 16px/1.4 var(--fb); color:rgb(var(--ivory-rgb) / .9); }
+  .flip { position:absolute; top:var(--s1); right:var(--s1); min-height:44px; padding:0 var(--s3); background:none; border:0; color:var(--gold-l); font:500 14px/1 var(--fb); cursor:pointer; }
+
+  /* vows */
+  .vows { display:grid; grid-template-columns:1fr 1fr; margin-top:var(--s6); border-top:var(--hair-soft); }
+  .vow { margin:0; padding:var(--s5) var(--s6) 0; text-align:center; }
+  .vow + .vow { border-left:var(--hair-soft); }
+  .vow p { margin:var(--s3) 0 0; font:italic 500 clamp(22px, 2.2vw, 26px)/1.35 var(--fh); color:var(--burg); text-wrap:balance; }
+
+  @media (max-width:719px) {
+    .pair { column-gap:var(--s2); }
+    .amp { padding-top:calc(clamp(128px, 18vw, 216px) * .3); }
+    .amp b { font-size:40px; }
+    .thali { width:20px; }
+    .person .t-h3 { margin-top:var(--s5); }
+    .home .region { display:none; }
+    .stories { grid-template-columns:1fr; gap:var(--s3); margin-top:var(--s5); text-align:left; }
+    .stories p { font-size:16px; }
+    .stories .who { display:inline; font:italic 500 20px/1 var(--fh); color:var(--burg); margin-right:var(--s1); }
+    .cards { display:flex; gap:var(--s3); overflow-x:auto; scroll-snap-type:x mandatory; margin-inline:calc(var(--gutter) * -1); padding:0 var(--gutter) var(--s2);
+      scrollbar-width:none; }
+    .cards::-webkit-scrollbar { display:none; }
+    .qc { flex:0 0 82%; scroll-snap-align:center; }
+    .dots { display:flex; justify-content:center; gap:var(--s2); margin-top:var(--s3); }
+    .dots i { width:6px; height:6px; border-radius:50%; background:rgb(var(--gold-rgb) / .35); }
+    .dots i:first-child { background:var(--burg); }
+    .vows { grid-template-columns:1fr; }
+    .vow { padding:var(--s4) 0 0; }
+    .vow + .vow { border-left:0; margin-top:var(--s4); border-top:var(--hair-soft); }
+    .vow p { font-size:22px; margin-top:var(--s2); }
+    .quiz { margin-top:var(--s5); padding-top:var(--s5); }
+    .vows { margin-top:var(--s5); }
+  }
+  @media (min-width:720px) { .dots { display:none; } }
+  @media (max-width:359px) {
+    .pic { width:112px; }
+    .amp { padding-top:30px; }
+    .amp b { font-size:34px; }
+    .person .t-h3 { font-size:30px; }
+    .team { font-size:11px; letter-spacing:.08em; padding:5px 8px; }
+  }
+
+</style>
+</head>
+<body>
+<section class="sec sec--light" aria-labelledby="couple-title"><div class="wrap">
+  <header class="head"><p class="kicker">The couple</p><h2 id="couple-title">Bride &amp; Groom</h2><div class="orn" aria-hidden="true"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 -10C2 -6 2 -3 0 0C-2 -3 -2 -6 0 -10Z M0 10C2 6 2 3 0 0C-2 3 -2 6 0 10Z M-10 0C-6 -2 -3 -2 0 0C-3 2 -6 2 -10 0Z M10 0C6 -2 3 -2 0 0C3 2 6 2 10 0Z"/></svg></div><p class="lead">Are you <em style="color:var(--gold-d)">Team Groom</em> or <em style="color:var(--gold-d)">Team Bride</em>?</p></header>
+  <p class="hint" style="text-align:center;margin-top:calc(var(--s5) * -1 + var(--s2));margin-bottom:var(--s5)">Tap a photo to pick your side.</p>
+
+  <div class="pair">
+    <article class="person person--groom">
+  <button type="button" class="pic" aria-pressed="false" aria-label="Team Groom: Lalith’s side">
+    <svg class="ring ring--groom" viewBox="0 0 200 200" aria-hidden="true"></svg>
+    <span class="photo"><img src="../../public/images/couple/groom-park-portrait.jpg" alt="Lalith portrait" width="700" height="764" style="object-position:50% 25%"></span>
+    <span class="team">Team Groom</span>
+  </button>
+  <h3 class="t-h3">Lalith</h3>
+  <span class="home"><svg viewBox="0 0 12 16" aria-hidden="true"><path d="M6 15.2S1 9.6 1 6a5 5 0 0 1 10 0c0 3.6-5 9.2-5 9.2Z" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="6" r="1.7" fill="currentColor"/></svg>Chennai<span class="region"> · Tamil Nadu</span></span>
+</article>
+    <div class="amp" aria-hidden="true"><b>&amp;</b><svg class="thali" viewBox="0 0 40 58" aria-hidden="true"><defs>
+<linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".28" stop-color="#e8c463"/><stop offset=".6" stop-color="#c0912e"/><stop offset="1" stop-color="#8a6219"/></linearGradient></defs>
+<ellipse cx="20" cy="5" rx="3.6" ry="4" fill="none" stroke="url(#tg)" stroke-width="1.8"/><circle cx="20" cy="11.5" r="2.4" fill="#d9ac45"/>
+<path d="M20 14 C31 17 37 27 34 37 C31.5 45 25 50 20 56 C15 50 8.5 45 6 37 C3 27 9 17 20 14 Z" fill="url(#tg)" stroke="#7d5816" stroke-width=".7"/>
+<path d="M20 19 V49" stroke="#8a6219" stroke-width=".8" stroke-linecap="round"/>
+<path d="M20 26 L14 22.5 M20 26 L26 22.5 M20 33 L12.5 29.5 M20 33 L27.5 29.5 M20 40 L14 37.5 M20 40 L26 37.5" stroke="#8a6219" stroke-opacity=".7" stroke-width=".55" stroke-linecap="round"/></svg></div>
+    <article class="person person--bride">
+  <button type="button" class="pic" aria-pressed="false" aria-label="Team Bride: Anjana’s side">
+    <svg class="ring ring--bride" viewBox="0 0 200 200" aria-hidden="true"></svg>
+    <span class="photo"><img src="../../public/images/couple/bride-portrait-crop.jpg" alt="Anjana portrait" width="600" height="600" style="object-position:50% 50%"></span>
+    <span class="team">Team Bride</span>
+  </button>
+  <h3 class="t-h3">Anjana</h3>
+  <span class="home"><svg viewBox="0 0 12 16" aria-hidden="true"><path d="M6 15.2S1 9.6 1 6a5 5 0 0 1 10 0c0 3.6-5 9.2-5 9.2Z" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="6" r="1.7" fill="currentColor"/></svg>North Paravur<span class="region"> · Keralam</span></span>
+</article>
+  </div>
+  <div class="stories">
+    <p><span class="who">Lalith.</span>A gentle soul with a laugh that fills every room. Always the first to say yes to an adventure.</p>
+    <p><span class="who">Anjana.</span>Graceful, warm and full of wonder. She turns every ordinary day into a celebration.</p>
+  </div>
+
+  <div class="quiz">
+    <header class="head"><span class="label">A little game</span><h3>Who’s more likely to…?</h3><p class="hint">Tap a name to guess, then see if you know them.</p></header>
+    <ul class="cards" data-allow-overflow><li class="qc is-answered"><span class="label">01</span><p class="q">Who speaks more languages?</p>
+<div class="ans"><img class="face" src="../../public/images/couple/groom-park-portrait.jpg" alt="" width="700" height="764" style="object-position:50% 25%"><div><b>You got it!</b><p class="note">Almost every South Indian language… except Malayalam. Fate noticed.</p></div></div>
+<button type="button" class="flip">↺ Flip back</button></li><li class="qc"><span class="label">02</span><p class="q">Who came with a checklist for love?</p>
+<div class="picks"><button type="button" class="btn btn--line">Lalith</button><button type="button" class="btn btn--line">Anjana</button></div></li><li class="qc"><span class="label">03</span><p class="q">Who brings the music?</p>
+<div class="picks"><button type="button" class="btn btn--line">Lalith</button><button type="button" class="btn btn--line">Anjana</button></div></li><li class="qc"><span class="label">04</span><p class="q">Who turns any ordinary moment into fun?</p>
+<div class="picks"><button type="button" class="btn btn--line">Lalith</button><button type="button" class="btn btn--line">Anjana</button></div></li><li class="qc"><span class="label">05</span><p class="q">Who notices the little things first?</p>
+<div class="picks"><button type="button" class="btn btn--line">Lalith</button><button type="button" class="btn btn--line">Anjana</button></div></li><li class="qc"><span class="label">06</span><p class="q">Who sings off-key on road trips?</p>
+<div class="picks"><button type="button" class="btn btn--line">Lalith</button><button type="button" class="btn btn--line">Anjana</button></div></li></ul>
+    <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+
+  <div class="vows">
+    <blockquote class="vow"><span class="label">His vow</span><p>“In my every lifetime, I will find my way to you.”</p></blockquote>
+    <blockquote class="vow"><span class="label">Her vow</span><p>“Until I am alive, your happiness and every little dream will be taken care of.”</p></blockquote>
+  </div>
+  <p class="next">Next: how a Malayali girl beat the language barrier<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></p>
+</div></section>
+<script>
+  // heritage rings (same geometry as PortraitRing.tsx)
+  const C = 100, NS = 'http://www.w3.org/2000/svg';
+  const ring = (svg, kind) => { let h = '';
+    if (kind === 'bride') {
+      h += `<circle cx="${C}" cy="${C}" r="98" fill="none" stroke="#c19a3d" stroke-width=".7"/><circle cx="${C}" cy="${C}" r="95.3" fill="none" stroke="#c19a3d" stroke-width="3.2"/><circle cx="${C}" cy="${C}" r="92.4" fill="none" stroke="#c19a3d" stroke-width=".6"/>`;
+      for (let i = 0; i < 60; i++) h += `<circle cx="${C}" cy="${C - 89.6}" r=".75" fill="#c19a3d" transform="rotate(${i * 6} ${C} ${C})"/>`;
+    } else {
+      h += `<circle cx="${C}" cy="${C}" r="93.8" fill="none" stroke="#5a1420" stroke-width="8"/><circle cx="${C}" cy="${C}" r="98.6" fill="none" stroke="#c19a3d" stroke-width=".8"/><circle cx="${C}" cy="${C}" r="89" fill="none" stroke="#c19a3d" stroke-width=".8"/>`;
+      for (let i = 0; i < 40; i++) h += `<path d="M${C - 3.4} ${C - 97.2} L${C + 3.4} ${C - 97.2} L${C} ${C - 90.6} Z" fill="#f0d68e" transform="rotate(${i * 9} ${C} ${C})"/>`;
+    }
+    svg.innerHTML = h; };
+  ring(document.querySelector('.ring--groom'), 'groom'); ring(document.querySelector('.ring--bride'), 'bride');
+</script>
+</body>
+</html>
+</template>
+
+<script>
+  const src = document.getElementById('design').innerHTML;
+  const desk = document.getElementById('desk'), mob = document.getElementById('mob'), deskClip = document.getElementById('deskClip');
+  const fitHeight = (f) => { try { const h = f.contentDocument.documentElement.scrollHeight; f.style.height = h + 'px'; return h; } catch { return 0; } };
+  const scaleDesk = () => {
+    const h = fitHeight(desk); const s = Math.min(1, deskClip.clientWidth / 1440);
+    desk.style.transform = `scale(${s})`; deskClip.style.height = (h * s) + 'px';
+  };
+  // srcdoc keeps relative image paths resolving against this file's folder
+  desk.srcdoc = src; mob.srcdoc = src;
+  desk.addEventListener('load', () => { scaleDesk(); setTimeout(scaleDesk, 600); });
+  mob.addEventListener('load', () => { fitHeight(mob); setTimeout(() => fitHeight(mob), 600); });
+  addEventListener('resize', scaleDesk);
+  new ResizeObserver(() => scaleDesk()).observe(deskClip);
+  document.querySelectorAll('.sizes button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.sizes button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    mob.width = b.dataset.w; document.getElementById('mobLabel').textContent = `Mobile · ${b.dataset.w}px`;
+    setTimeout(() => fitHeight(mob), 50); setTimeout(() => fitHeight(mob), 400);
+  }));
+</script>
+</body>
+</html>

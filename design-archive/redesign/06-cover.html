@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06 · Cover — redesign mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap">
+<style>
+  /* ---------- mockup viewer chrome (not part of the design) ---------- */
+  :root { --ink:#3a1218; --burg:#5a1420; --gold-d:#b8892e; --line:#e5d2b0; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#efe6d6; color:var(--ink); font:400 15px/1.55 'Jost', system-ui, sans-serif; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:12px 24px; padding:12px 24px; background:#fbf6ec; border-bottom:1px solid var(--line); }
+  .bar h1 { margin:0; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .bar .sizes { display:flex; gap:6px; align-items:center; margin-left:auto; font-size:13px; }
+  .bar button { min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); font:500 13px 'Jost', sans-serif; cursor:pointer; }
+  .bar button[aria-pressed="true"] { background:var(--burg); border-color:var(--burg); color:#fbf6ec; }
+  .frames { display:flex; align-items:flex-start; gap:24px; padding:24px; }
+  .frame { flex:none; }
+  .frame > p { margin:0 0 8px; font:500 12px/1 'Jost', sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#8a6a3a; }
+  .frame-desk { flex:1 1 auto; min-width:0; }
+  .clip { overflow:hidden; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  iframe { display:block; border:0; transform-origin:0 0; }
+  .notes { max-width:1120px; margin:0 auto; padding:8px 24px 64px; display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; }
+  .notes section { background:#fbf6ec; border:1px solid var(--line); border-radius:8px; padding:20px 24px; }
+  .notes h2 { margin:0 0 12px; font:500 22px/1.2 'Cormorant Garamond', Georgia, serif; color:var(--burg); }
+  .notes ul { margin:0; padding-left:18px; }
+  .notes li { margin:0 0 8px; }
+  .notes code { font-size:13px; background:#f1e6d2; padding:1px 4px; border-radius:3px; }
+  .ok { color:#1f6b3a; font-weight:500; } .warn { color:#9a5b00; font-weight:500; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:6px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:last-child { text-align:right; white-space:nowrap; }
+  @media (max-width:900px) { .frames { flex-direction:column; } .frame-desk { width:100%; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1>06 · Cover — desktop &amp; mobile mockup</h1>
+  <div class="sizes" role="group" aria-label="Mobile preview width">
+    Mobile width:
+    <button type="button" data-w="320">320</button>
+    <button type="button" data-w="375">375</button>
+    <button type="button" data-w="390" aria-pressed="true">390</button>
+    <button type="button" data-w="430">430</button>
+  </div>
+</div>
+
+<div class="frames">
+  <div class="frame frame-desk">
+    <p>Desktop · 1440px (scaled to fit)</p>
+    <div class="clip" id="deskClip"><iframe id="desk" title="Desktop mockup" width="1440" scrolling="no"></iframe></div>
+  </div>
+  <div class="frame frame-mob">
+    <p id="mobLabel">Mobile · 390px</p>
+    <div class="clip"><iframe id="mob" title="Mobile mockup" width="390" scrolling="no"></iframe></div>
+  </div>
+</div>
+
+<div class="notes">
+  <section><h2>Audit: current section</h2><ul><li><b>Hazy, layered effects.</b> Light, floor, tint, paper-grain and sparkle layers all sit over the art (<code>CoverHero.css:46, 293, 305, 313</code>), plus a literal <code>filter: blur(.45px)</code> (<code>:158</code>) and sepia/saturate colour grading on the procession (<code>:255, :280</code>). The result looks washed out.</li><li><b>Names hard to read.</b> They're set in pale gold-foil gradient text (<code>:1110–1122</code>), about 2.6:1 contrast on the ivory ground. "Lalith&amp;" runs together with no space.</li><li><b>Tiny labels.</b> The countdown labels (<code>:563</code>) and "Scroll" are 9–10px (<code>:875, :1105</code>), and the scroll cue is not a 44px target.</li><li><b>Forced full-screen height.</b> <code>min-height:100svh</code> (<code>:21, :349</code>) stretches the cover on tall screens and squeezes it on short ones. The content should set the height.</li><li><b>Procession too small on mobile.</b> The mobile procession shrinks to a tiny strip, cut by the masks at the bottom edge.</li></ul></section>
+  <section><h2>System (from 01 · Our Events)</h2><ul><li>Same spacing, type scale and 44px buttons. "Save the date" is the only script (Great Vibes) moment, as <code>variables.css</code> intends (<code>--fs</code>).</li><li>Light ground stays the cover's own warm parchment <code>#eae1d8</code>, matching the existing art.</li></ul></section>
+  <section><h2>Design decisions</h2><ul><li>All the haze layers are removed: no grain, tint, sparkles, blur or sepia grading. The art is shown as drawn. Two technical treatments stay: the soft lower edges on the garland and photo (those images have opaque backgrounds), and a brightness lift on the procession sprite so its grey ground disappears into the page.</li><li>Names are solid burgundy (about 10:1 contrast), with an antique-gold italic "&" given proper space.</li><li>One readable column: names → invitation → note → "Save the date" → date → countdown. The countdown units sit between hairlines, with 11px labels and 36px numerals.</li><li>"Take the tour" and "Scroll" become two matching 44px outline buttons.</li><li>The procession flanks the content on screens 1200px and wider. On mobile and tablet it becomes a 96px row under the buttons (umbrellas left, elephant right) instead of a clipped strip.</li><li>No forced 100svh: the content sets the height (about 1040px on desktop, about 1000px at 390px).</li></ul></section>
+  <section><h2>Self-check</h2><table><tr><td>Sharp: no blur/tint/grain/filters</td><td class="ok">pass</td></tr><tr><td>Aligned: one centre axis</td><td class="ok">pass</td></tr><tr><td>Balanced pairs: procession left ↔ elephant right</td><td class="ok">pass</td></tr><tr><td>No wasted space: content-height, no 100svh</td><td class="ok">pass</td></tr><tr><td>Clear hierarchy: photo → names → invitation → date</td><td class="ok">pass</td></tr><tr><td>Text/image proportion</td><td class="ok">pass</td></tr><tr><td>Desktop + 320/375/390/430</td><td class="ok">pass</td></tr><tr><td>Matches the system</td><td class="ok">pass</td></tr></table><h2 style="margin-top:20px">Missing</h2><ul><li>None. The personal greeting ("Dear {name},") appears only on personal invite links, so it isn't shown here. It would sit above the names as 20px italic burgundy.</li><li>The garland art has the brass lamps painted in. The current flickering flame overlay would stay, but isn't drawn here.</li></ul></section>
+</div>
+
+<!-- ======================= THE DESIGN (rendered into both frames) ======================= -->
+<template id="design">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&family=Great+Vibes&display=swap">
+<style>
+  :root {
+    /* existing tokens (src/styles/variables.css) */
+    --maroon:#6b1a24; --burg:#5a1420; --burg-d:#3a0b14; --ink:#3a1218; --ivory:#f8efdc; --cream:#f8efdc; --card:#fffaf0; --paper-2:#fbf6ec;
+    --champ:#e9d3a4; --gold:#c19a3d; --gold-d:#b8892e; --gold-l:#f0d68e;
+    --gold-rgb:193 154 61; --gold-l-rgb:240 214 142; --gold-d-rgb:184 137 46; --burg-rgb:90 20 32; --burg-d-rgb:58 11 20; --ivory-rgb:248 239 220; --champ-rgb:233 211 164;
+    --leaf:#5f6f4a; /* muted botanical green — proposed new token (used sparingly) */
+    --fh:'Cormorant Garamond', Georgia, serif; --fb:'Jost', system-ui, sans-serif; --fs:'Great Vibes', 'Cormorant Garamond', cursive;
+    /* layout system (approved in 01 · Our Events) */
+    --max:1120px; --gutter:20px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+    --pad-y:40px;
+  }
+  @media (min-width:600px) { :root { --gutter:var(--s6); --pad-y:var(--s7); } }
+  @media (min-width:960px) { :root { --pad-y:var(--s8); } }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { -webkit-font-smoothing:antialiased; }
+  img { display:block; max-width:100%; height:auto; }
+  button { font:inherit; }
+
+  /* section shells */
+  .sec { padding:var(--pad-y) max(var(--gutter), env(safe-area-inset-left)) var(--pad-y) max(var(--gutter), env(safe-area-inset-right)); font:400 16px/1.5 var(--fb); }
+  .sec--light { background:linear-gradient(180deg, var(--paper-2), var(--ivory)); color:var(--ink);
+    --hair:1px solid rgb(var(--gold-rgb) / .35); --hair-soft:1px solid rgb(var(--gold-rgb) / .22); --t-kicker:var(--gold-d); --t-title:var(--burg); --t-label:var(--gold-d); --t-muted:#6a4a40; }
+  .sec--dark { background:radial-gradient(120% 60% at 50% 0%, #6e1d2b 0%, var(--burg) 45%, var(--burg-d) 100%); color:var(--ivory);
+    --hair:1px solid rgb(var(--gold-l-rgb) / .28); --hair-soft:1px solid rgb(var(--gold-l-rgb) / .16); --t-kicker:var(--gold-l); --t-title:var(--champ); --t-label:var(--gold); --t-muted:rgb(var(--ivory-rgb) / .78); }
+  .wrap { max-width:var(--max); margin:0 auto; }
+  .narrow { max-width:720px; margin-inline:auto; }
+
+  /* section header (same in every section) */
+  .head { text-align:center; margin-bottom:var(--s5); }
+  .kicker { margin:0 0 var(--s2); font:italic 500 22px/1.2 var(--fh); letter-spacing:.02em; color:var(--t-kicker); }
+  .head h2 { margin:0; font:500 clamp(40px, 4.4vw, 56px)/1.05 var(--fh); color:var(--t-title); letter-spacing:.005em; }
+  .orn { display:flex; align-items:center; justify-content:center; gap:var(--s3); margin-top:var(--s3); color:var(--gold); }
+  .orn::before, .orn::after { content:""; width:56px; height:1px; background:currentColor; opacity:.7; }
+  .orn svg { width:12px; height:12px; }
+  .lead { margin:var(--s3) auto 0; max-width:560px; font:italic 500 20px/1.4 var(--fh); color:var(--t-title); }
+
+  /* type scale */
+  .label { font:500 12px/1.2 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:var(--t-label); }
+  .t-h3 { margin:0; font:italic 500 clamp(34px, 3.2vw, 40px)/1 var(--fh); color:var(--t-title); }
+  .t-lead { font:500 20px/1.35 var(--fh); }
+  .t-body { font:400 16px/1.6 var(--fb); color:var(--t-muted); }
+
+  /* buttons: 44px, two styles */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:var(--s2); min-height:44px; padding:0 var(--s5); border-radius:6px;
+    font:500 15px/1 var(--fb); letter-spacing:.02em; text-decoration:none; cursor:pointer; white-space:nowrap; }
+  .btn--solid { background:var(--burg); color:var(--ivory); border:1px solid var(--burg); }
+  .sec--dark .btn--solid { background:var(--gold-l); color:var(--burg-d); border-color:var(--gold-l); }
+  .btn--line { background:transparent; color:var(--burg); border:1px solid rgb(var(--gold-rgb) / .6); }
+  .sec--dark .btn--line { color:var(--gold-l); border-color:rgb(var(--gold-l-rgb) / .55); }
+
+  .next { margin:var(--s5) 0 0; text-align:center; font:italic 500 20px/1.3 var(--fh); color:var(--t-kicker); }
+  .sec--light .next { color:var(--gold-d); }
+  .next svg { display:block; width:14px; height:14px; margin:var(--s1) auto 0; }
+
+
+  body { background:#eae1d8; }
+  .cover { position:relative; overflow:hidden; isolation:isolate; text-align:center; color:var(--burg);
+    background:radial-gradient(60% 50% at 50% 40%, #f6efe6 0%, #eee6dd 50%, #eae1d8 80%);
+    padding:0 var(--gutter) var(--s7); }
+  /* garland canopy (art has its own ivory ground, so its lower edge fades into the page) */
+  .garland { position:absolute; left:0; right:0; top:calc(-100vw * .011); aspect-ratio:2160 / 760; z-index:0;
+    background:url(../../public/images/cover/hero-decoration-desktop-wide.jpg) center top / 100% 100% no-repeat;
+    -webkit-mask-image:linear-gradient(180deg, #000 0 80%, transparent 100%); mask-image:linear-gradient(180deg, #000 0 80%, transparent 100%); }
+  .inner { position:relative; z-index:2; max-width:640px; margin:0 auto; padding-top:clamp(64px, 7vw, 104px); }
+  .couple { width:clamp(220px, 22vw, 300px); margin:0 auto; }
+  .couple img { width:100%; height:auto;
+    -webkit-mask-image:linear-gradient(180deg, #000 0 86%, transparent 100%); mask-image:linear-gradient(180deg, #000 0 86%, transparent 100%); }
+  h1 { margin:var(--s3) 0 0; font:500 clamp(56px, 6.4vw, 88px)/.95 var(--fh); color:var(--burg); letter-spacing:.005em; }
+  h1 i { font-style:italic; color:var(--gold-d); padding:0 .12em; }
+  h1 .n2 { display:block; }
+  .inv { margin:var(--s4) auto 0; max-width:520px; font:italic 500 clamp(20px, 1.9vw, 24px)/1.4 var(--fh); color:var(--burg); text-wrap:balance; }
+  .note { margin:var(--s2) 0 0; font:400 17px/1.5 var(--fb); color:#6a4a40; }
+  .std { margin:var(--s5) 0 0; font:400 clamp(34px, 3.2vw, 42px)/1 var(--fs); color:var(--gold-d); }
+  .date { margin:var(--s2) 0 0; }
+  .cd { display:inline-grid; grid-template-columns:repeat(3, 88px); margin-top:var(--s4); border-top:1px solid rgb(var(--gold-rgb) / .4); border-bottom:1px solid rgb(var(--gold-rgb) / .4); }
+  .cd span { padding:var(--s3) 0; }
+  .cd span + span { border-left:1px solid rgb(var(--gold-rgb) / .3); }
+  .cd b { display:block; font:500 36px/1 var(--fh); color:var(--burg); font-variant-numeric:lining-nums tabular-nums; }
+  .cd small { display:block; margin-top:var(--s1); font:500 11px/1 var(--fb); letter-spacing:.16em; text-transform:uppercase; color:var(--gold-d); }
+  .acts { display:flex; justify-content:center; align-items:center; gap:var(--s3); margin-top:var(--s5); }
+  .acts .btn { padding:0 var(--s4); }
+  .acts svg { width:14px; height:14px; }
+
+  /* procession flanking the content on wide screens (sprites from wedding-procession.png, multiplied onto the ground) */
+  .proc { position:absolute; bottom:var(--s5); z-index:1; mix-blend-mode:multiply; background:url(../../public/images/cover/wedding-procession.png) no-repeat;
+    filter:brightness(1.3) contrast(1.18); /* lifts the sprite's grey ground to white so multiply drops it */
+    -webkit-mask-image:linear-gradient(180deg, transparent 0, #000 12%, #000 93%, transparent 100%), linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%); -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(180deg, transparent 0, #000 12%, #000 93%, transparent 100%), linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%); mask-composite:intersect; }
+  .proc--l { left:clamp(24px, 4vw, 88px); height:clamp(160px, 17vw, 248px); aspect-ratio:550 / 392; background-size:181.818% 100%; background-position:3.333% 100%; }
+  .proc--r { right:clamp(32px, 6vw, 120px); height:clamp(156px, 16.5vw, 240px); aspect-ratio:420 / 392; background-size:238.095% 100%; background-position:97.414% 100%; }
+
+  @media (max-width:1199px) {
+    .proc { position:static; display:inline-block; height:96px; vertical-align:bottom; }
+    .procrow { display:flex; justify-content:space-between; align-items:flex-end; max-width:560px; margin:var(--s5) auto 0; }
+  }
+  @media (min-width:1200px) { .procrow { display:contents; } }
+  @media (max-width:720px) {
+    .garland { top:calc(-100vw * .022); aspect-ratio:1080 / 760; background-image:url(../../public/images/cover/hero-decoration-mobile.jpg); }
+    .inner { padding-top:clamp(56px, 16vw, 72px); }
+    .couple { width:min(64vw, 240px); }
+    h1 { font-size:clamp(48px, 14vw, 60px); }
+    .cd { grid-template-columns:repeat(3, 80px); }
+    .cover { padding-bottom:var(--s5); }
+  }
+  @media (max-width:359px) { .proc { height:76px; } .acts { flex-direction:column; } }
+
+</style>
+</head>
+<body>
+<section class="cover" aria-label="Lalith and Anjana — invitation">
+  <div class="garland" aria-hidden="true"></div>
+  <div class="inner">
+    <figure class="couple" style="margin-inline:auto;margin-block:0"><img src="../../public/images/cover/wedding-couple-cutout-refined.webp" alt="Lalith and Anjana together" width="1600" height="1612"></figure>
+    <h1>Lalith<i aria-hidden="true">&amp;</i><span class="sr" style="position:absolute;left:-9999px"> and </span><span class="n2">Anjana</span></h1>
+    <div class="orn" aria-hidden="true"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 -10C2 -6 2 -3 0 0C-2 -3 -2 -6 0 -10Z M0 10C2 6 2 3 0 0C-2 3 -2 6 0 10Z M-10 0C-6 -2 -3 -2 0 0C-3 2 -6 2 -10 0Z M10 0C6 -2 3 -2 0 0C3 2 6 2 10 0Z"/></svg></div>
+    <p class="inv">We cordially invite you to celebrate our wedding and reception with the blessings of our families and elders.</p>
+    <p class="note">Your presence would make our celebration truly special.</p>
+    <p class="std">Save the date</p>
+    <p class="date label">November 29, 2026</p>
+    <div class="cd" role="timer" aria-label="countdown"><span><b>26</b><small>Days</small></span><span><b>18</b><small>Hours</small></span><span><b>14</b><small>Minutes</small></span></div>
+    <div class="acts">
+      <button type="button" class="btn btn--line">▶ Take the tour</button>
+      <a class="btn btn--line" href="#couple" aria-label="Scroll to the invitation">Scroll <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></a>
+    </div>
+  </div>
+  <div class="procrow" aria-hidden="true"><span class="proc proc--l"></span><span class="proc proc--r"></span></div>
+</section>
+
+</body>
+</html>
+</template>
+
+<script>
+  const src = document.getElementById('design').innerHTML;
+  const desk = document.getElementById('desk'), mob = document.getElementById('mob'), deskClip = document.getElementById('deskClip');
+  const fitHeight = (f) => { try { const h = f.contentDocument.documentElement.scrollHeight; f.style.height = h + 'px'; return h; } catch { return 0; } };
+  const scaleDesk = () => {
+    const h = fitHeight(desk); const s = Math.min(1, deskClip.clientWidth / 1440);
+    desk.style.transform = `scale(${s})`; deskClip.style.height = (h * s) + 'px';
+  };
+  // srcdoc keeps relative image paths resolving against this file's folder
+  desk.srcdoc = src; mob.srcdoc = src;
+  desk.addEventListener('load', () => { scaleDesk(); setTimeout(scaleDesk, 600); });
+  mob.addEventListener('load', () => { fitHeight(mob); setTimeout(() => fitHeight(mob), 600); });
+  addEventListener('resize', scaleDesk);
+  new ResizeObserver(() => scaleDesk()).observe(deskClip);
+  document.querySelectorAll('.sizes button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.sizes button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    mob.width = b.dataset.w; document.getElementById('mobLabel').textContent = `Mobile · ${b.dataset.w}px`;
+    setTimeout(() => fitHeight(mob), 50); setTimeout(() => fitHeight(mob), 400);
+  }));
+</script>
+</body>
+</html>

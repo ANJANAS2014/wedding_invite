@@ -159,7 +159,7 @@ body.doors-busy {
   filter:drop-shadow(0 8px 16px rgba(0,0,0,.45));transition:opacity .5s ease .2s,transform .7s ease}
 .tp-medal .lotus{position:absolute;left:50%;top:12%;width:30%;transform:translateX(-50%)}
 .tp-mono{position:absolute;left:0;right:0;top:50%;transform:translateY(-40%);text-align:center;color:#5e1623;font:500 calc(var(--mh)*.6)/1 var(--fh);letter-spacing:.02em}
-.tp-mono i{font:italic 400 .8em/1 'Playfair Display',var(--fh);margin:0 .12em;color:#b8892b;background:linear-gradient(180deg,#d7ab4e,#996b17);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tp-mono i{font:italic 400 .8em/1 var(--fh);margin:0 .12em;color:#b8892b;background:linear-gradient(180deg,#d7ab4e,#996b17);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .tp-medal small{position:absolute;left:0;right:0;bottom:21%;text-align:center;color:#8a6219;font:500 max(7.5px,calc(var(--mh)*.08))/1 var(--fb);letter-spacing:.16em;white-space:nowrap}
 .tp-medal::after{content:"";position:absolute;inset:-14%;border-radius:50%;opacity:0;background:radial-gradient(circle,rgba(255,236,170,.95),rgba(255,214,120,0) 65%);mix-blend-mode:screen}
 .temple.is-unlocking .tp-medal::after{animation:tp-mglow .5s ease-out forwards}

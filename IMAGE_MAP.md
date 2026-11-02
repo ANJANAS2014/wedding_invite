@@ -11,7 +11,7 @@ public/
 │   ├── gallery/       Two lotus photos used by the "Our Story" cards (p4, p7)
 │   ├── couple/        Bride & groom portraits (couple + story photos)
 │   ├── venues/        Wedding & reception venue photos
-│   ├── events/        Wedding card scene art (mandapam, couple, homa kundam, musicians, sadya) + journey train
+│   ├── events/        Wedding card scene art (mandapam, couple, homa kundam, musicians, sadya) + journey train + reception couple
 ├── audio/             background-music.mp3
 └── icons/             favicon.svg
 
@@ -28,7 +28,7 @@ src/assets/filmstrip/  Filmstrip + lightbox photos (auto-loaded) + captions.json
 | `src/assets/filmstrip/` | `src/data/filmstrip.ts` (auto-scan) → filmstrip, lightbox |
 | `images/couple/` | `weddingData.ts` (p10, p12, story_photo_one–four), `CoupleSection.tsx`. `groom-studio-portrait.jpg` is currently not displayed anywhere. |
 | `images/venues/` | `weddingData.ts` (w1, r1) → `src/data/events.ts` → `EventsSection` |
-| `images/events/` | `src/data/events.ts` (`WEDDING_SCENE`) → `EventsSection/WeddingCard.tsx`, `TrainJourney.tsx` |
+| `images/events/` | `src/data/events.ts` (`WEDDING_SCENE`) → `EventsSection/WeddingCard.tsx`, `TrainJourney.tsx`; `RECEPTION_SCENE` → `ReceptionCard.tsx` |
 | `audio/` | `src/components/MusicPlayer/MusicPlayer.tsx` |
 | `icons/` | `index.html` favicon |
 

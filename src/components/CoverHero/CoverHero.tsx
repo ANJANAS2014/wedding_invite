@@ -8,6 +8,7 @@ import type { Language } from '../../types';
 import { TOUR_START_EVENT } from '../../utils/motion';
 import '../ScrollGuide/ScrollGuide.css';
 import { CoverGarland, CoverProcession } from './CoverArt';
+import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
 
 interface CoverHeroProps {
   guestName: string;
@@ -28,54 +29,12 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => 
     <>
     <section id="hero">
       <div className="cover-scene" aria-hidden="true">
-        <div className="cover-light" />
         <CoverGarland />
         <CoverProcession />
-
-        {/* Warm sandy-parchment ground wash unifying the lower ceremonial stage */}
-        <div className="cover-floor" />
-
-        {/* Warm champagne unifier & subtle handmade paper grain */}
-        <div className="cover-tint" />
-        <div className="cover-paper-grain" />
-
-        {/* Delicate rising golden motes */}
-        {Array.from({ length: 10 }, (_, i) => (
-          <i
-            key={i}
-            className="cover-sparkle"
-            style={{
-              left: `${((i * 37 + 13) % 88) + 6}%`,
-              ['--d' as string]: `${10 + ((i * 7) % 8)}s`,
-              ['--dl' as string]: `-${(i * 5) % 13}s`,
-              ['--s' as string]: `${2.5 + ((i * 2) % 3)}px`
-            }}
-          />
-        ))}
       </div>
 
       <div className="cv">
         <figure className="cover-couple">
-          <span className="cover-halo" aria-hidden="true">
-            <svg viewBox="-60 -60 120 120" className="man cover-lotus-mandala">
-              {Array.from({ length: 12 }, (_, i) => (
-                <path
-                  key={`outer_${i}`}
-                  d="M 0 -14 C 7.5 -26, 8.5 -42, 0 -54 C -8.5 -42, -7.5 -26, 0 -14 Z"
-                  transform={`rotate(${i * 30})`}
-                />
-              ))}
-              {Array.from({ length: 12 }, (_, i) => (
-                <path
-                  key={`inner_${i}`}
-                  d="M 0 -10 C 4.5 -19, 5 -31, 0 -40 C -5 -31, -4.5 -19, 0 -10 Z"
-                  transform={`rotate(${i * 30 + 15})`}
-                  opacity="0.65"
-                />
-              ))}
-              <circle r="14" opacity="0.45" />
-            </svg>
-          </span>
           <img
             src={WEDDING_IMAGES.hero_cover}
             alt={`${WEDDING_CONTENT.groom} and ${WEDDING_CONTENT.bride} together`}
@@ -92,28 +51,13 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => 
           </p>
         )}
 
-        <h1 className="names foil">
+        <h1 className="names">
           <span className="n1">{WEDDING_CONTENT.groom}</span>
           <i aria-hidden="true">&amp;</i>
-          <span className="sr-and"> and </span>
           <span className="n2">{WEDDING_CONTENT.bride}</span>
         </h1>
 
-        <div className="cover-ornament" aria-hidden="true">
-          <span className="cover-ornament-line" />
-          <svg viewBox="-12 -12 24 24" className="cover-ornament-floret">
-            {Array.from({ length: 8 }, (_, i) => (
-              <path
-                key={i}
-                d="M 0 -2 C 1.8 -5, 1.8 -8.5, 0 -10.5 C -1.8 -8.5, -1.8 -5, 0 -2 Z"
-                transform={`rotate(${i * 45})`}
-              />
-            ))}
-            <circle r="1.6" />
-          </svg>
-          <span className="cover-ornament-line" />
-        </div>
-
+        <HeaderRule />
         <p className="cover-invite" lang={language}>{text.inv1}</p>
         <p className="cover-invite-note" lang={language}>{text.inv3}</p>
 
@@ -144,15 +88,20 @@ export const CoverHero: React.FC<CoverHeroProps> = ({ guestName, language }) => 
           </div>
         )}
 
-        <a className="cover-scroll" href="#couple" aria-label="Scroll to the invitation">
-          <span>Scroll</span>
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
-            <path d="M3 6l5 5 5-5" />
-          </svg>
-        </a>
-        <button type="button" className="tour-start" onClick={() => window.dispatchEvent(new Event(TOUR_START_EVENT))}>
-          ▶ Take the tour
-        </button>
+        <div className="cover-acts">
+          <button type="button" className="rd-btn rd-btn--line tour-start" onClick={() => window.dispatchEvent(new Event(TOUR_START_EVENT))}>
+            ▶ Take the tour
+          </button>
+          <a className="rd-btn rd-btn--line cover-scroll" href="#couple" aria-label="Scroll to the invitation">
+            Scroll
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
+              <path d="M3 6l5 5 5-5" />
+            </svg>
+          </a>
+        </div>
+        <div className="cover-procrow" aria-hidden="true">
+          <CoverProcession />
+        </div>
       </div>
     </section>
     </>

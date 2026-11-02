@@ -2,11 +2,11 @@ import './EventsSection.css';
 import React from 'react';
 import { WEDDING_EVENTS } from '../../data/events';
 import { useNow } from '../../hooks/useNow';
-import { makeGoogleCalendarUrl } from '../../utils/calendar';
 import { HeaderRule } from '../shared/HeaderRule/HeaderRule';
 import { NextTeaser } from '../ScrollGuide/NextTeaser';
 import { WeddingCard } from './WeddingCard';
 import { TrainJourney } from './TrainJourney';
+import { ReceptionCard } from './ReceptionCard';
 
 /** Index of the next celebration: the reception once the wedding has ended. */
 const nextEventIndex = (now: number): number =>
@@ -24,11 +24,10 @@ export const EventsSection: React.FC = () => {
   const activeEventIndex = nextEventIndex(now);
 
   return (
-    <section className="mar ev" id="s2" aria-labelledby="events-title">
-      <div id="date">
-        <header className="ev-head reveal">
-          <div className="ev-bless">Shubha Muhurtham</div>
-          <div className="eyebrow">Join us for</div>
+    <section className="ev rd-sec rd-dark" id="s2" aria-labelledby="events-title">
+      <div id="date" className="rd-wrap">
+        <header className="rd-head reveal">
+          <span className="rd-kicker">Shubha Muhurtham</span>
           <h2 id="events-title">Our Events</h2>
           <HeaderRule />
         </header>
@@ -45,61 +44,7 @@ export const EventsSection: React.FC = () => {
               </React.Fragment>
             );
           }
-          return (
-            <article key={ev.id} className={`ev-ch ev-ch--solo ec reveal ${isNext ? 'on' : ''}`}>
-              <figure className="ev-ph bu">
-                <img className="vi" src={ev.image} alt={ev.venue} width={900} height={720} loading="lazy" decoding="async" />
-              </figure>
-              <div className="ev-tx">
-                {isNext && <span className="ev-next">Next celebration</span>}
-                <div className="ev-date">
-                  <b>{d.day}</b>
-                  <span>
-                    {d.monthYear}
-                    <br />
-                    {d.weekday}
-                  </span>
-                </div>
-                <h3>{ev.name}</h3>
-                <div className="ev-sub">{ev.sub}</div>
-                <ul className="ev-det">
-                  <li>
-                    <small>Time</small>
-                    <b>{ev.timeStr}</b>
-                  </li>
-                  <li>
-                    <small>Venue</small>
-                    <b>
-                      {ev.venue}
-                      <em>{ev.address}</em>
-                    </b>
-                  </li>
-                </ul>
-                <div className="ev-acts">
-                  <a target="_blank" rel="noopener noreferrer" href={ev.mapUrl}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                      <path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z" />
-                      <circle cx="12" cy="10" r="2.5" />
-                    </svg>
-                    Directions
-                  </a>
-                  <a
-                    className="cal-btn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={makeGoogleCalendarUrl(ev)}
-                    aria-label={`Add the ${ev.name} to Google Calendar`}
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                      <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
-                      <path d="M3.5 10h17M8 3v4M16 3v4" />
-                    </svg>
-                    Add to calendar
-                  </a>
-                </div>
-              </div>
-            </article>
-          );
+          return <ReceptionCard key={ev.id} ev={ev} isNext={isNext} date={d} />;
         })}
 
         </div>

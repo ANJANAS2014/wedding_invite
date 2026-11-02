@@ -30,12 +30,12 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({ onSelect, children }) 
       <div className="emoji-picker-wrapper">
         <button
           type="button"
-          className="emoji-trigger-btn"
+          className="rd-btn rd-btn--line emoji-trigger-btn"
           onClick={() => setOpen(!open)}
           aria-expanded={open}
           aria-label="Add emoji"
         >
-          <span className="emoji-trigger-icon">😊</span>
+          <span className="emoji-trigger-icon" aria-hidden="true">😊</span>
           <span>Add Emoji</span>
         </button>
 
