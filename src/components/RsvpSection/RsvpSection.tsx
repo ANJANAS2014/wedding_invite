@@ -265,7 +265,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                     id="rsvp-wishes"
                     name="wishes"
                     className="rt-field rt-textarea"
-                    rows={4}
+                    rows={5}
                     placeholder="Your blessings or a little message…"
                     value={wishes}
                     onChange={(e) => setWishes(e.target.value)}

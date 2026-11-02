@@ -1103,3 +1103,6 @@
   border-radius: 6px;
 }
 .postcard-monogram-ring { display: none; }
+
+/* longer wishes (up to 1000 characters): keep the guest's paragraphs in the full view */
+.modal-wish-text, .postcard-message { white-space: pre-line; -webkit-hyphens: manual; hyphens: manual; }

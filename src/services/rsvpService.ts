@@ -4,7 +4,7 @@ import { uploadRsvpPhoto } from './photoUploadService';
 import { STORAGE_KEYS, readJson, writeJson } from './storage';
 
 export const MAX_GUESTS_PER_EVENT = 10;
-export const MAX_WISH_CHARS = 200;
+export const MAX_WISH_CHARS = 1000; // matches api/rsvp.js and the database check (char_length <= 1000)
 
 export interface RsvpFormValues {
   name: string;

@@ -311,3 +311,5 @@
   .rt-stamp,
   .rt-conf { transition: none; animation: none; }
 }
+.rt-conf-wish p { white-space: pre-line; max-height: 9.5em; overflow-y: auto; }
+.rt-textarea { max-height: 50vh; }
