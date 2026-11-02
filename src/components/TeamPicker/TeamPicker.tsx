@@ -75,24 +75,24 @@ export const TeamPicker: React.FC<TeamPickerProps> = ({ guestName = '', inviteTo
   const bridePct = total ? Math.round((totals!.bride / total) * 100) : 50;
 
   return (
-    <section className="tp" id="team" ref={sectionRef} aria-labelledby="team-title">
-      <header className="tp-head reveal">
+    <section className="tm" id="team" ref={sectionRef} aria-labelledby="team-title">
+      <header className="tm-head reveal">
         <div className="eyebrow">{firstName ? `${firstName}, before you scroll on` : 'Before you scroll on'}</div>
         <h2 id="team-title">Are you Team Bride or Team Groom?</h2>
         <HeaderRule />
       </header>
 
-      <div className="tp-sides reveal" role="group" aria-label="Choose your side">
+      <div className="tm-sides reveal" role="group" aria-label="Choose your side">
         {(['bride', 'groom'] as TeamSide[]).map((s) => (
           <button
             key={s}
             type="button"
-            className={`tp-side${side === s ? ' is-on' : ''}`}
+            className={`tm-side${side === s ? ' is-on' : ''}`}
             aria-pressed={side === s}
             onClick={(e) => choose(s, e.currentTarget)}
           >
-            <span className="tp-tick" aria-hidden="true">✓</span>
-            <span className="tp-mono" aria-hidden="true">
+            <span className="tm-tick" aria-hidden="true">✓</span>
+            <span className="tm-mono" aria-hidden="true">
               {(s === 'bride' ? WEDDING_CONTENT.bride : WEDDING_CONTENT.groom).charAt(0)}
             </span>
             <b>{LABEL[s]}</b>
@@ -104,12 +104,12 @@ export const TeamPicker: React.FC<TeamPickerProps> = ({ guestName = '', inviteTo
       </div>
 
       {totals && total > 0 && (
-        <div className="tp-tug reveal" aria-label={`Team Bride ${totals.bride}, Team Groom ${totals.groom}`}>
-          <div className="tp-bar">
-            <i className="tp-bar-b" style={{ width: `${bridePct}%` }} />
-            <i className="tp-bar-g" style={{ width: `${100 - bridePct}%` }} />
+        <div className="tm-tug reveal" aria-label={`Team Bride ${totals.bride}, Team Groom ${totals.groom}`}>
+          <div className="tm-bar">
+            <i className="tm-bar-b" style={{ width: `${bridePct}%` }} />
+            <i className="tm-bar-g" style={{ width: `${100 - bridePct}%` }} />
           </div>
-          <div className="tp-lbls" aria-hidden="true">
+          <div className="tm-lbls" aria-hidden="true">
             <span>Bride · {totals.bride}</span>
             <span>{totals.groom} · Groom</span>
           </div>
@@ -117,17 +117,17 @@ export const TeamPicker: React.FC<TeamPickerProps> = ({ guestName = '', inviteTo
       )}
 
       {side && (
-        <p className="tp-note">
+        <p className="tm-note">
           You're on <em>{LABEL[side]}</em>. Changed your mind? Just tap the other side.
         </p>
       )}
 
-      <div className={`tp-toast${toast ? ' is-on' : ''}`} role="status" aria-live="polite">
+      <div className={`tm-toast${toast ? ' is-on' : ''}`} role="status" aria-live="polite">
         {toast}
       </div>
 
       {side && (
-        <a href="#team" className={`tp-pin${pinVisible ? ' is-on' : ''}`} aria-label={`${LABEL[side]} — change your side`}>
+        <a href="#team" className={`tm-pin${pinVisible ? ' is-on' : ''}`} aria-label={`${LABEL[side]} — change your side`}>
           ★ {LABEL[side]}
         </a>
       )}

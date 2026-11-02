@@ -58,3 +58,39 @@
   background: #46141d;
 }
 
+
+/* Phones: the photo gets the full width; arrows sit below it instead of
+   squeezing the image between two 48px columns and 76px side padding. */
+@media (max-width: 720px) {
+  #lb {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 14px 24px;
+    padding: 68px 12px max(18px, env(safe-area-inset-bottom, 0px));
+  }
+
+  #lb img {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    width: auto;
+    max-width: 100%;
+    max-height: calc(100svh - 170px);
+  }
+
+  #lb .lb-prev,
+  #lb .lb-next {
+    grid-row: 2;
+    width: 48px;
+    height: 48px;
+  }
+
+  #lb .lb-prev {
+    grid-column: 1;
+    justify-self: end;
+  }
+
+  #lb .lb-next {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

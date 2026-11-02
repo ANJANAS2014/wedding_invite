@@ -1195,9 +1195,25 @@
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.12);
   color: var(--ivory);
-  font: 400 14px var(--fb);
+  font: 400 14px / 1.2 var(--fb);
+  letter-spacing: 0; /* the base .rsvp-attend-toggle has 0.12em; keep Yes and Sorry identical */
+  text-transform: none;
+  white-space: nowrap;
   text-align: center;
   transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+@media (max-width: 380px) {
+  #s5.rs .rsvp-opt {
+    padding: 0 6px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 330px) {
+  #s5.rs .rsvp-choice {
+    grid-template-columns: 1fr;
+  }
 }
 
 #s5.rs .rsvp-attend-toggle.active {
